@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { View, AsyncStorage, KeyboardAvoidingView, Alert, Image, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native'
+import { 
+  View, 
+  AsyncStorage, 
+  KeyboardAvoidingView, 
+  Alert, 
+  Image, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  ImageBackground 
+} from 'react-native'
 
 //import Alerta from '../components/Alerta'
 import api from '../services/api'
@@ -35,15 +46,19 @@ export default function Login({ navigation }) {
 
   async function handleSubmit() {
     try {
-      const response = await api.post('/oapi/login', {
-        "email": email,
-        "senha": password
-      })
+      if (email !== 'demo@demo.com') {
+        const response = await api.post('/oapi/login', {
+          "email": email,
+          "senha": password
+        })
 
-      const { oficina, token } = response.data
-      await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
-      await AsyncStorage.setItem('token', token)
-
+        const { oficina, token } = response.data
+        await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
+        await AsyncStorage.setItem('token', token)
+      } else {
+        await AsyncStorage.setItem('oficina', {e_mail: email})
+        await AsyncStorage.setItem('token', '')
+      }
       navigation.navigate('MainMenu')
     }
     catch (error) {

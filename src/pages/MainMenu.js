@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import {
   Alert,
@@ -7,10 +7,9 @@ import {
   Image,
   Text,
   View,
-  AsyncStorage,
   ImageBackground,
   Dimensions,
-  TouchableHighlight
+  TouchableOpacity 
 } from 'react-native'
 
 import GlobalStyles from '../components/GlobalStyles'
@@ -25,11 +24,25 @@ import outros from '../assets/se2gurocarro.png'
 
 let width = Dimensions.get('window').width
 
-export default function MainMenu() {
-  const [click, setClick] = useState(false)
+export default function MainMenu({ navigation }) {
+  // const [msg, setMsg] = useState('')
+  
+  const onPress = (tipo) => {
+    switch (tipo) {
+      case 'PAS': 
+        // setMsg('Passagem')
+        break
 
-  const onPress = () => {
-      Alert.alert('Clicado')
+      case 'ETQ': 
+        // setMsg('Etiqueta')
+        break
+        
+      default:
+        // setMsg(tipo)
+        break;
+    }
+    
+    Alert.alert(`Clicado em ${tipo}`)
   }
 
   return (
@@ -42,34 +55,45 @@ export default function MainMenu() {
 
         <View style={styles.boxSpace}>
         </View>
-
+        
         <View style={styles.boxContainer}>
-          <View style={styles.box}>
-            <TouchableHighlight onPress={onPress}>
+          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('PAS')}>
+            <View style={styles.box}>
               <Image style={styles.boxIcone} source={passagens} />
-            </TouchableHighlight>
-            <Text style={styles.boxText}>Passagens</Text>
-          </View>
-          <View style={styles.box}>
-            <Image style={styles.boxIcone} source={etiquetas} />
-            <Text style={styles.boxText}>Etiquetas</Text>
-          </View>
-          <View style={styles.box}>
-            <Image style={styles.boxIcone} source={km} />
-            <Text style={styles.boxText}>KM</Text>
-          </View>
-          <View style={styles.box}>
-            <Image style={styles.boxIcone} source={promocoes} />
-            <Text style={styles.boxText}>Promoções</Text>
-          </View>
-          <View style={styles.box}>
-            <Image style={styles.boxIcone} source={outros} />
-            <Text style={styles.boxText}>Outros</Text>
-          </View>
-          <View style={styles.box}>
-          </View>
+              <Text style={styles.boxText}>Passagens</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('ETQ')}>
+            <View style={styles.box}>
+              <Image style={styles.boxIcone} source={etiquetas} />
+              <Text style={styles.boxText}>Etiquetas</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('KMS')}>
+            <View style={styles.box}>
+              <Image style={styles.boxIcone} source={km} />
+              <Text style={styles.boxText}>KM</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('PRO')}>
+            <View style={styles.box}>
+              <Image style={styles.boxIcone} source={promocoes} />
+              <Text style={styles.boxText}>Promoções</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('OUT')}>
+            <View style={styles.box}>
+              <Image style={styles.boxIcone} source={outros} />
+              <Text style={styles.boxText}>Outros</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('IND')}>
+            <View style={styles.box}>
+              <Image style={styles.boxIcone} source={passagens} />
+              <Text style={styles.boxText}>Indicadores</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-
       </ImageBackground>
     </SafeAreaView>
   )
