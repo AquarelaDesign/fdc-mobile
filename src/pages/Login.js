@@ -117,6 +117,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: -50,
   },
 
   background: {
@@ -125,6 +126,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: -50,
   },
 
   form: {

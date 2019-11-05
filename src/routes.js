@@ -1,4 +1,5 @@
-import { createAppContainer, createSwitchNavigator } from 'react-navigation'
+import { createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
 
 import Login from './pages/Login'
 import MainMenu from './pages/MainMenu'
@@ -6,12 +7,38 @@ import Passagens from './pages/Passagens'
 import Indicadores from './pages/Indicadores'
 
 const Routes = createAppContainer(
-   createSwitchNavigator({
+   createStackNavigator({
       Login,
-      MainMenu,
-      Passagens,
-      Indicadores,
-   })
+      MainMenu: {
+         screen: MainMenu,
+         navigationOptions: {
+            headerTitle: 'Home'
+         }
+      },
+      Passagens: {
+         screen: Passagens,
+         navigationOptions: {
+            headerTitle: 'Passagens'
+         }
+      },
+      Indicadores: {
+         screen: Indicadores,
+         navigationOptions: {
+            headerTitle: 'Indicadores'
+         }
+      },
+   },{
+      /* The header config from HomeScreen is now here */
+      defaultNavigationOptions: {
+        headerStyle: {
+          backgroundColor: '#00B2EE',
+        },
+        headerTintColor: '#007189',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    })
 )
 
 export default Routes
