@@ -32,7 +32,7 @@ export default function Indicadores({ navigation }) {
         break
         
       case 'DOC': 
-        navigation.navigate('BarChartScreen')
+        navigation.navigate('Documentos')
         break
         
       default:

@@ -5,7 +5,7 @@ import Login from './pages/Login'
 import MainMenu from './pages/MainMenu'
 import Passagens from './pages/Passagens'
 import Indicadores from './pages/Indicadores'
-import BarChartScreen from './pages/BarChartScreen'
+import Documentos from './pages/Documentos'
 
 const Routes = createAppContainer(
    createStackNavigator({
@@ -28,10 +28,10 @@ const Routes = createAppContainer(
             headerTitle: 'Indicadores'
          }
       },
-      BarChartScreen: {
-         screen: BarChartScreen,
+      Documentos: {
+         screen: Documentos,
          navigationOptions: {
-            headerTitle: 'BarChart'
+            headerTitle: 'Documentos'
          }
       },
    },{
