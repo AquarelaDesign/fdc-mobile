@@ -17,11 +17,6 @@ import GlobalStyles from '../components/GlobalStyles'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
-import passagens from '../assets/passagens-icon4.png'
-import etiquetas from '../assets/icon-etiqueta.png'
-import km from '../assets/ICON-KM2.png'
-import promocoes from '../assets/icon-promotion2.png'
-import outros from '../assets/se2gurocarro.png'
 
 export default function Indicadores({ navigation }) {
   // const [msg, setMsg] = useState('')
@@ -36,8 +31,8 @@ export default function Indicadores({ navigation }) {
         // navigation.navigate('MainMenu')
         break
         
-      case 'IND': 
-        navigation.navigate('Indicadores')
+      case 'DOC': 
+        navigation.navigate('BarChartScreen')
         break
         
       default:

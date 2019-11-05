@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import MainMenu from './pages/MainMenu'
 import Passagens from './pages/Passagens'
 import Indicadores from './pages/Indicadores'
+import BarChartScreen from './pages/BarChartScreen'
 
 const Routes = createAppContainer(
    createStackNavigator({
@@ -25,6 +26,12 @@ const Routes = createAppContainer(
          screen: Indicadores,
          navigationOptions: {
             headerTitle: 'Indicadores'
+         }
+      },
+      BarChartScreen: {
+         screen: BarChartScreen,
+         navigationOptions: {
+            headerTitle: 'BarChart'
          }
       },
    },{
