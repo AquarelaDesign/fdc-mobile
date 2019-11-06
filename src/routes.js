@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import MainMenu from './pages/MainMenu'
 import Passagens from './pages/Passagens'
 import Indicadores from './pages/Indicadores'
+import Recebimentos from './pages/Recebimentos'
 import Documentos from './pages/Documentos'
 
 const Routes = createAppContainer(
@@ -26,6 +27,12 @@ const Routes = createAppContainer(
          screen: Indicadores,
          navigationOptions: {
             headerTitle: 'Indicadores'
+         }
+      },
+      Recebimentos: {
+         screen: Recebimentos,
+         navigationOptions: {
+            headerTitle: 'Recebimentos'
          }
       },
       Documentos: {

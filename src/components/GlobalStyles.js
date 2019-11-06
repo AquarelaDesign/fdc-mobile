@@ -46,7 +46,7 @@ export default StyleSheet.create({
   },
 
   boxText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#FFF',
     marginTop: 10,
   },

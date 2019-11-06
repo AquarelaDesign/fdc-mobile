@@ -31,6 +31,10 @@ export default function Indicadores({ navigation }) {
         // navigation.navigate('MainMenu')
         break
         
+      case 'REC': 
+        navigation.navigate('Recebimentos')
+        break
+        
       case 'DOC': 
         navigation.navigate('Documentos')
         break

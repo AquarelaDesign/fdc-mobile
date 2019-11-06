@@ -14,6 +14,7 @@ import {
 
 //import Alerta from '../components/Alerta'
 import api from '../services/api'
+import { getEmail } from '../globais'
 
 import logo from '../assets/logo.png'
 import bg from '../assets/splash.png'
@@ -27,6 +28,7 @@ export default function Login({ navigation }) {
   //const [showAlert, setShowAlert] = useState([false])
 
   useEffect(() => {
+    const email = getEmail()
     AsyncStorage.getItem('token').then(token => {
       async function validateToken() {
         const response = await api.post('/oapi/validateToken', {
@@ -53,9 +55,11 @@ export default function Login({ navigation }) {
         })
 
         const { oficina, token } = response.data
+        await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
         await AsyncStorage.setItem('token', token)
       } else {
+        await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('oficina', {e_mail: email})
         await AsyncStorage.setItem('token', '')
       }
