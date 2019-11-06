@@ -28,7 +28,11 @@ export default function Login({ navigation }) {
   //const [showAlert, setShowAlert] = useState([false])
 
   useEffect(() => {
-    const email = getEmail()
+    // const email = getEmail()
+    AsyncStorage.getItem('email').then(Email => {
+      setEmail(Email)
+    })
+
     AsyncStorage.getItem('token').then(token => {
       async function validateToken() {
         const response = await api.post('/oapi/validateToken', {

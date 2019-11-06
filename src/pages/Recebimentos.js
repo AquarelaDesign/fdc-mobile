@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
   Alert,
+  AsyncStorage,
   SafeAreaView,
   StyleSheet,
   ScrollView,
@@ -10,18 +11,21 @@ import {
   View,
   ImageBackground,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  processColor,
 } from 'react-native'
 
-import { Bar } from 'react-chartjs-2'
+import { BarChart } from 'react-native-charts-wrapper';
 
-import { getEmail, dataInicial, dataFinal } from '../globais'
+import Axios from 'axios'
+
+import { dataInicial, dataFinal } from '../globais'
 import GlobalStyles from '../components/GlobalStyles'
 import bg from '../assets/fundo-app.png'
 
-const email = getEmail()
-
 export default function Recebimentos({ navigation }) {
+  const [email, setEmail] = useState('')
+  
   const [totais, setTotais] = useState([
     {
       canval: 0,
@@ -39,19 +43,73 @@ export default function Recebimentos({ navigation }) {
     }
   ])
 
-  const [legendas, setLegendas] = useState({})
-  const [cores, setCores] = useState({})
+  const [legendas, setLegendas] = useState({
+    canval: "Cancelada com DANFE",
+    cancel: "Cancelado",
+    inu: "Inutilizada",
+    dev: "NFe Devolução",
+    imp: "NFe Importada",
+    pas: "Passagem",
+    rps: "RPS",
+    nfse: "NFSe",
+    err: "Com Erro",
+    orc: "Orçamento",
+    val: "NFe",
+    geral: "Total",
+  })
+
+  const [cores, setCores] = useState({
+    canval: "#FF6384",
+    cancel: "#FF0000",
+    inu: "#000000",
+    dev: "#191970",
+    imp: "#4682B4",
+    pas: "#FFCE56",
+    rps: "#00FFFF",
+    nfse: "#008080",
+    err: "#800000",
+    orc: "#FF8C00",
+    val: "#00FF00",
+    geral: "#FFFFFF",
+  })
   
-  const [grDocs, setGrdocs] = useState([{
-    data: [],
-    labels: [],
-    cores: [],
-  }])
+  const [grData, setGrdata] = useState({})
+  const [grLabels, setGrlabels] = useState({})
+  const [grCores, setGrcores] = useState({})
 
   useEffect(() => {
-    const email = getEmail()
+    async function montaGraficoDocs(totais) {
+      
+      let labels = []
+      let data = []
+      let cor = []
+      
+      for (let [key, value] of Object.entries(totais)) {
+        if (value > 0 && key !== 'geral') {
+          for (let [k, v] of Object.entries(legendas)) {
+            if (k === key) {
+              labels.push(v)
+              break
+            }
+          }
+          
+          for (let [k, v] of Object.entries(cores)) {
+            if (k === key) {
+              cor.push(v)
+              break
+            }
+          }
+          
+          data.push(value)
+        }
+      }
+  
+      setGrdata(data)
+      setGrlabels(labels)
+      setGrcores(cor)
+    }
 
-    async function calculaNotas(ListaDocs, state) {
+    async function calculaNotas(ListaDocs) {
       let totais = {}
           totais.canval = 0
           totais.cancel = 0
@@ -66,34 +124,6 @@ export default function Recebimentos({ navigation }) {
           totais.val = 0
           totais.geral = 0
       
-      let legendas = {}
-          legendas.canval = 'Cancelada com DANFE'
-          legendas.cancel = 'Cancelado'
-          legendas.inu = 'Inutilizada'
-          legendas.dev = 'NFe Devolução'
-          legendas.imp = 'NFe Importada'
-          legendas.pas = 'Passagem'
-          legendas.rps = 'RPS'
-          legendas.nfse = 'NFSe'
-          legendas.err = 'Com Erro'
-          legendas.orc = 'Orçamento'
-          legendas.val = 'NFe'
-          legendas.geral = 'Total'
-
-      let cores = {}
-          cores.canval = '#FF6384'
-          cores.cancel = '#FF0000'
-          cores.inu = '#000000'
-          cores.dev = '#191970'
-          cores.imp = '#4682B4'
-          cores.pas = '#FFCE56'
-          cores.rps = '#00FFFF'
-          cores.nfse = '#008080'
-          cores.err = '#800000'
-          cores.orc = '#FF8C00'
-          cores.val = '#00FF00'
-          cores.geral = '#FFFFFF'
-
       if (ListaDocs !== undefined) {
         ListaDocs.forEach((value, key) => {
           const _tipo = value.TipoNF;
@@ -172,84 +202,53 @@ export default function Recebimentos({ navigation }) {
           }
     
         })
-      } else {
-        // const grDocs = { data: totais, labels: legendas, cores }
-        // this.setState({ grDocs: grDocs })
-      }
+      } 
 
       setTotais(totais)
-      setLegendas(legendas)
-      setCores(cores)
-      return totais
+
+      montaGraficoDocs(totais)
     }
 
-    const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
-    const url = `${uri}?prog=wsimporc&email=${email}&di=${dataInicial}&df=${dataFinal}&t=R`
-    
-    async function buscaNotas(state) {
-      try {
-        await Axios.get(
-          url
-        ).then(response => {
-          if (response.status === 200) {
-            const { ListaDocs } = response.data.Lista
-            calculaNotas(ListaDocs, state)
+    AsyncStorage.getItem('email').then(Email => {
+      setEmail(Email)
+      // console.log('Email', Email)
+
+      const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
+      const url = `${uri}?prog=wsimporc&email=${email}&di=${dataInicial}&df=${dataFinal}&t=R`
+      // console.log('email', email, dataInicial, dataFinal, url)
+      
+      async function buscaNotas() {
+        try {
+          await Axios.get(
+            url
+          ).then(response => {
+            if (response.status === 200) {
+              const { ListaDocs } = response.data.Lista
+              // console.log('ListaDocs', ListaDocs)
+              calculaNotas(ListaDocs)
+            } else {
+              buscaNotas()
+            }
+          })
+        } catch (error) {
+          const { response } = error
+          if (response !== undefined) {
+            console.log('err1', response.data.errors[0])
           } else {
-            buscaNotas(state)
-          }
-        })
-      } catch (error) {
-        const { response } = error
-        if (response !== undefined) {
-          console.log('err1', response.data.errors[0], {type: 'error'})
-        } else {
-          console.log('err2', error, {type: 'error'})
-        }
-      }
-      state.montaGraficoDocs()
-    }
-    buscaNotas(this)
-
-  }, [])
-
-  const montaGraficoDocs = () => {
-    const { totais, legendas, cores } = this.state
-    
-    let labels = []
-    let data = []
-    let cor = []
-    
-    for (let [key, value] of Object.entries(totais)) {
-      if (value > 0 && key !== 'geral') {
-        for (let [k, v] of Object.entries(legendas)) {
-          if (k === key) {
-            labels.push(v)
-            break
+            console.log('err2', error)
           }
         }
         
-        for (let [k, v] of Object.entries(cores)) {
-          if (k === key) {
-            cor.push(v)
-            break
-          }
-        }
-        
-        data.push(value)
       }
-    }
+      buscaNotas(this)
+    })
 
-    const grDocs = { data, labels, cores: cor }
-    setGrdocs(grDocs)
-
-//    const height = document.getElementById('chartDocs').clientHeight
-//    const clRec = { height: height }
-//    this.setState({ hGrafDocs: clRec })
-  }
-
+  }, [email])
 
   const width = Dimensions.get('window').width - 30
   const height = 220
+
+  console.log('grDocs', grData, grLabels, grCores)
 
   return (
       <SafeAreaView style={GlobalStyles.container}>
@@ -263,3 +262,9 @@ export default function Recebimentos({ navigation }) {
       </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  chart: {
+    flex: 1
+  }
+})

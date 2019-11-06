@@ -17,7 +17,11 @@ export const getOficina = () => {
     console.log('2', e)
   }
 }
-export const getEmail = () => AsyncStorage.getItem('email')
+export const getEmail = () => {
+  const email = AsyncStorage.getItem('email')
+  console.log('getEmail', email)
+  return email
+}
 
 // Período do Mês
 moment.locale('pt-BR')
