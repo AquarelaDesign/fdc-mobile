@@ -12,7 +12,7 @@ import {
   processColor
 } from 'react-native'
 
-import { LineChart, BarChart, Grid } from 'react-native-svg-charts'
+import {BarChart} from 'react-native-charts-wrapper'
 
 import Axios from 'axios'
 
@@ -40,6 +40,46 @@ export default function Documentos({ navigation }) {
       geral: 0,
     }
   ])
+
+  const [legend, setLegend] = useState({
+    enabled: true,
+    textSize: 14,
+    form: 'SQUARE',
+    formSize: 14,
+    xEntrySpace: 10,
+    yEntrySpace: 5,
+    formToTextSpace: 5,
+    wordWrapEnabled: true,
+    maxSizePercent: 0.5
+  })
+
+  const [data, setData] = useState({
+    dataSets: [{
+      values: [{y: 100}, {y: 105}, {y: 102}, {y: 110}, {y: 114}, {y: 109}, {y: 105}, {y: 99}, {y: 95}],
+      label: 'Bar dataSet',
+      config: {
+        color: processColor('teal'),
+        barShadowColor: processColor('lightgrey'),
+        highlightAlpha: 90,
+        highlightColor: processColor('red'),
+      }
+    }],
+
+    config: {
+      barWidth: 0.7,
+    }
+  })
+
+  const [highlights, setHighlights] = useState([
+    {x: 3}, 
+    {x: 6}
+  ])
+
+  const [xAxis, setXaxis] = useState({
+    valueFormatter: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+    granularityEnabled: true,
+    granularity : 1,
+  })
 
   const [legendas, setLegendas] = useState({
     canval: "Cancelada com DANFE",
@@ -281,10 +321,7 @@ export default function Documentos({ navigation }) {
     return () => isSubscribed = false
   }, [email])
 
-  const fill = 'rgb(134, 65, 244)'
-  const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
-
-  console.log('data', data, fill)
+  console.log('data', dataPie, dataLin)
 
   return (
       <SafeAreaView style={GlobalStyles.container}>
@@ -292,13 +329,35 @@ export default function Documentos({ navigation }) {
           style={GlobalStyles.background}
           source={bg}
         >
-          
+          <View style={{flex: 1}}>
 
+            <View style={{height:80}}>
+              <Text> selected entry</Text>
+              <Text> {selectedEntry}</Text>
+            </View>
+
+            <View style={styles.container}>
+              <BarChart
+                style={styles.chart}
+                data={data}
+                xAxis={xAxis}
+                animation={{durationX: 2000}}
+                legend={legend}
+                gridBackgroundColor={processColor('#ffffff')}
+                visibleRange={{x: { min: 5, max: 5 }}}
+                drawBarShadow={false}
+                drawValueAboveBar={true}
+                drawHighlightArrow={true}
+                // onSelect={this.handleSelect.bind(this)}
+                highlights={highlights}
+                onChange={(event) => console.log(event.nativeEvent)}
+              />
+            </View>
+          </View>
         </ImageBackground>
       </SafeAreaView>
   )
 }
-
 
 const styles = StyleSheet.create({
   container: {

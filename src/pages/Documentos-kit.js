@@ -6,13 +6,15 @@ import {
   StyleSheet,
   ScrollView,
   ImageBackground,
-  Dimensions,
-  View,
-  Text,
-  processColor
+  Dimensions
 } from 'react-native'
 
-import { LineChart, BarChart, Grid } from 'react-native-svg-charts'
+import {
+  LineChart,
+  PieChart,
+  ProgressChart,
+  BarChart,
+} from 'react-native-chart-kit'
 
 import Axios from 'axios'
 
@@ -22,7 +24,6 @@ import bg from '../assets/fundo-app.png'
 
 export default function Documentos({ navigation }) {
   const [email, setEmail] = useState('')
-  const [selectedEntry, setSelectedEntry] = useState('')
   
   const [totais, setTotais] = useState([
     {
@@ -75,9 +76,32 @@ export default function Documentos({ navigation }) {
   const [grLabels, setGrlabels] = useState({})
   const [grCores, setGrcores] = useState({})
   
-  const [dataLin, setDatalin] = useState([])
-  
+  const [dataLin, setDatalin] = useState({})
+  // const [dataLin, setDatalin] = useState(
+  //   {
+  //     labels: [""],
+  //     datasets: [
+  //       {
+  //         data: [0]
+  //       }
+  //     ]
+  //   }
+  // )
+
+  const [dataProg, setDataprog] = useState([])
+  // const [dataProg, setDataprog] = useState([{
+  //   labels: ["NFe Importada","NFe"],
+  //   data: [0.0, 0.0]
+  // }])
+
   const [dataPie, setDatapie] = useState([])
+  // const [dataPie, setDatapie] = useState([{
+  //   name: '',
+  //   population: 0,
+  //   color: '#1E90FF',
+  //   legendFontColor: '#1E90FF',
+  //   legendFontSize: 12,
+  // }])
 
   useEffect(() => {
     let isSubscribed = true
@@ -88,7 +112,7 @@ export default function Documentos({ navigation }) {
       let cor = []
 
       let dPie = []
-      let dBar = []
+      let dPro = []
       
       for (let [key, value] of Object.entries(totais)) {
         if (value > 0 && key !== 'geral') {
@@ -120,26 +144,34 @@ export default function Documentos({ navigation }) {
             legendFontSize: 12,
           })
 
-          dBar.push({
-            x: l,
-            y: value,
-          })
-
+          dPro.push(value / totais.geral)
           data.push(value)
         }
       }
 
-      setDatalin([{
-        seriesName: 'Serie',
-        data: dBar,
-        color: '#297AB1'
-      }])
+      const dadosPro = []
+      
+      dadosPro.push({
+        labels: labels,
+        data: dPro
+      })
 
+      console.log('dadosPro', dadosPro)
+
+      setDatalin({
+        labels: labels,
+        datasets: [
+          {
+            data: data
+          }
+        ]
+      })
+      setDataprog(dPro)
       setDatapie(dPie)
       setGrdata(data)
       setGrlabels(labels)
       setGrcores(cor)
-
+      // return () => someHowCancelFetchBananas
       return () => isSubscribed = false
     }
 
@@ -281,10 +313,118 @@ export default function Documentos({ navigation }) {
     return () => isSubscribed = false
   }, [email])
 
-  const fill = 'rgb(134, 65, 244)'
-  const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
+  const width = Dimensions.get('window').width - 30
+  const height = 220
 
-  console.log('data', data, fill)
+  // console.log('grDocs', grData, grLabels, grCores)
+  console.log('data', dataPie, dataProg, dataLin)
+
+  const chartConfig = {
+    backgroundColor: "#00008B",
+    backgroundGradientFrom: "#0000FF",
+    backgroundGradientTo: "#87CEFA",
+    decimalPlaces: 2, // optional, defaults to 2dp
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    style: {
+      borderRadius: 16
+    },
+    propsForDots: {
+      r: "6",
+      strokeWidth: "2",
+      stroke: "#87CEFA"
+    }
+  }
+
+  const geraPie = () => {
+    return (
+      <PieChart
+        data={dataPie}
+        width={Dimensions.get('window').width - 16}
+        height={220}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+        accessor="population"
+        backgroundColor="#1E90FF"
+        paddingLeft="15"
+        // absolute //for the absolute number remove if you want percentage
+      />
+    )
+  }
+  
+  const geraPro = () => {
+    return (
+      <ProgressChart
+        data={dataProg}
+        labels={legendas}
+        width={Dimensions.get('window').width - 16}
+        height={220}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
+    )
+  }
+
+  const geraBar = () => {
+    return (
+      <BarChart
+        data={{
+          labels: ["January","February","March","April","May","June"],
+          datasets: [
+            {
+              data: [20, 45, 28, 80, 99, 43]
+            }
+          ]
+        }}
+        width={Dimensions.get('window').width - 16}
+        height={220}
+        yAxisLabel={'Rs'}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16
+        }}
+      />
+    )
+  }
+
+  const geraLin = () => {
+    return (
+      <LineChart
+        // data={dataLin}
+        data={{
+          labels: ["January", "February", "March", "April", "May", "June"],
+          datasets: [
+            {
+              data: [
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100
+              ]
+            }
+          ]
+        }}
+        width={width} // from react-native
+        height={height}
+        yAxisLabel={"$"}
+        yAxisSuffix={"k"}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
+    )
+  }
 
   return (
       <SafeAreaView style={GlobalStyles.container}>
@@ -292,22 +432,30 @@ export default function Documentos({ navigation }) {
           style={GlobalStyles.background}
           source={bg}
         >
-          
-
+          <ScrollView>
+            {dataPie !== [] ? geraPie() : ''}
+            {dataProg !== [] ? geraPro() : ''}
+            {dataLin !== [] ? geraLin() : ''}
+          </ScrollView>
         </ImageBackground>
       </SafeAreaView>
   )
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    justifyContent: 'center',
+    padding: 8,
+    paddingTop: 30,
+    backgroundColor: '#ecf0f1',
   },
 
-  chart: {
-    flex: 1,
+  logo: {
+    height: 100,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginTop: 50,
   },
 
 })

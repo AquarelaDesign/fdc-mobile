@@ -7,12 +7,10 @@ import {
   ScrollView,
   ImageBackground,
   Dimensions,
-  View,
-  Text,
-  processColor
+  View
 } from 'react-native'
 
-import { LineChart, BarChart, Grid } from 'react-native-svg-charts'
+import PureChart from 'react-native-pure-chart'
 
 import Axios from 'axios'
 
@@ -22,7 +20,6 @@ import bg from '../assets/fundo-app.png'
 
 export default function Documentos({ navigation }) {
   const [email, setEmail] = useState('')
-  const [selectedEntry, setSelectedEntry] = useState('')
   
   const [totais, setTotais] = useState([
     {
@@ -78,6 +75,22 @@ export default function Documentos({ navigation }) {
   const [dataLin, setDatalin] = useState([])
   
   const [dataPie, setDatapie] = useState([])
+  // [ (Pizza)
+  //   {
+  //     value: 50,
+  //     label: 'Marketing',
+  //     color: 'red',
+  //   }, {
+  //     value: 40,
+  //     label: 'Sales',
+  //     color: 'blue'
+  //   }, {
+  //     value: 25,
+  //     label: 'Support',
+  //     color: 'green'
+  //   }
+  // ]
+
 
   useEffect(() => {
     let isSubscribed = true
@@ -139,6 +152,22 @@ export default function Documentos({ navigation }) {
       setGrdata(data)
       setGrlabels(labels)
       setGrcores(cor)
+
+      // (Barras / Linhas)
+      // [{
+      //   seriesName: 'series1',
+      //   data: [
+      //     {x: '2018-02-01', y: 30},
+      //     {x: '2018-02-02', y: 200},
+      //     {x: '2018-02-03', y: 170},
+      //     {x: '2018-02-04', y: 250},
+      //     {x: '2018-02-05', y: 10}
+      //   ],
+      //   color: '#297AB1'
+      // }]
+
+
+
 
       return () => isSubscribed = false
     }
@@ -281,10 +310,71 @@ export default function Documentos({ navigation }) {
     return () => isSubscribed = false
   }, [email])
 
-  const fill = 'rgb(134, 65, 244)'
-  const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
+  console.log('data', dataPie, dataLin)
 
-  console.log('data', data, fill)
+  const geraPie = () => {
+    //let sampleData = [30, 200, 170, 250, 10]
+    
+    // pie
+    // let sampleData = [
+    //   {
+    //     value: 50,
+    //     label: 'Marketing',
+    //     color: 'red',
+    //   }, {
+    //     value: 40,
+    //     label: 'Sales',
+    //     color: 'blue'
+    //   }, {
+    //     value: 25,
+    //     label: 'Support',
+    //     color: 'green'
+    //   }
+    // ]
+
+    // Line
+    // let sampleData = [
+    //   {x: '2018-01-01', y: 30},
+    //   {x: '2018-01-02', y: 200},
+    //   {x: '2018-01-03', y: 170},
+    //   {x: '2018-01-04', y: 250},
+    //   {x: '2018-01-05', y: 10}
+    // ]
+    
+    // Bar / Line
+    // let sampleData = [
+    //   {
+    //     seriesName: 'series1', 
+    //     data: [30, 200, 170, 250, 10], 
+    //     color: '#297AB1'
+    //   }
+    // ]
+
+    // Bar / Line
+    let sampleData = [
+      {
+        seriesName: 'series1',
+        data: [
+          {x: '2018-02-01', y: 30},
+          {x: '2018-02-02', y: 200},
+          {x: '2018-02-03', y: 170},
+          {x: '2018-02-04', y: 250},
+          {x: '2018-02-05', y: 10}
+        ],
+        color: '#297AB1'
+      }
+    ]
+
+    return (
+      <PureChart 
+        style={styles.chart} 
+        data={dataLin} 
+        type='bar'
+        height={300}
+      />
+    )
+  }
+
 
   return (
       <SafeAreaView style={GlobalStyles.container}>
@@ -292,22 +382,32 @@ export default function Documentos({ navigation }) {
           style={GlobalStyles.background}
           source={bg}
         >
-          
-
+          <ScrollView>
+            <View style={styles.container}>
+              {geraPie()}
+            </View>
+          </ScrollView>
         </ImageBackground>
       </SafeAreaView>
   )
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    justifyContent: 'center',
+    padding: 8,
+    paddingTop: 10,
+    width: Dimensions.get('window').width - 15,
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 10
   },
 
   chart: {
-    flex: 1,
+    alignSelf: "center",
+    width: "100%",
+    height: 300,
   },
 
 })

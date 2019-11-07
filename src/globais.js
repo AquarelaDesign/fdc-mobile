@@ -4,23 +4,24 @@
 import { AsyncStorage } from 'react-native'
 import moment from "moment"
 import 'moment/locale/pt-br'
-import { Promise } from 'core-js'
 
 export const getOficina = () => {
   try {
-    const oficina = AsyncStorage.getItem('oficina')
-    if (oficina !== undefined && oficina._d == undefined) {
-      JSON.parse(oficina)
-    } 
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      if (Oficina !== undefined && Oficina._d == undefined) {
+        return JSON.parse(Oficina)
+      } 
+    })
   }
   catch (e) {
-    console.log('2', e)
+    console.log('Error Oficina', e)
   }
 }
+
 export const getEmail = () => {
-  const email = AsyncStorage.getItem('email')
-  console.log('getEmail', email)
-  return email
+  AsyncStorage.getItem('email').then(Email => {
+    return Email
+  })
 }
 
 // Período do Mês
