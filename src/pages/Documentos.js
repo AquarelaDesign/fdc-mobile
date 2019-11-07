@@ -13,6 +13,7 @@ import {
   LineChart,
   PieChart,
   ProgressChart,
+  BarChart,
 } from 'react-native-chart-kit'
 
 import Axios from 'axios'
@@ -75,8 +76,8 @@ export default function Documentos({ navigation }) {
   const [grLabels, setGrlabels] = useState({})
   const [grCores, setGrcores] = useState({})
   
-  const [dataLin, setDatalin] = useState([])
-  // const [dataLin, setDatalin] = useState([
+  const [dataLin, setDatalin] = useState({})
+  // const [dataLin, setDatalin] = useState(
   //   {
   //     labels: [""],
   //     datasets: [
@@ -85,7 +86,7 @@ export default function Documentos({ navigation }) {
   //       }
   //     ]
   //   }
-  // ])
+  // )
 
   const [dataProg, setDataprog] = useState([])
   // const [dataProg, setDataprog] = useState([{
@@ -110,7 +111,6 @@ export default function Documentos({ navigation }) {
       let data = []
       let cor = []
 
-      let dLin = []
       let dPie = []
       let dPro = []
       
@@ -149,16 +149,8 @@ export default function Documentos({ navigation }) {
         }
       }
 
-      dLin.push({
-        labels: labels,
-        datasets: [
-          {
-            data: data
-          }
-        ]
-      })
-      
       const dadosPro = []
+      
       dadosPro.push({
         labels: labels,
         data: dPro
@@ -166,7 +158,14 @@ export default function Documentos({ navigation }) {
 
       console.log('dadosPro', dadosPro)
 
-      setDatalin(dLin)
+      setDatalin({
+        labels: labels,
+        datasets: [
+          {
+            data: data
+          }
+        ]
+      })
       setDataprog(dPro)
       setDatapie(dPie)
       setGrdata(data)
@@ -372,6 +371,29 @@ export default function Documentos({ navigation }) {
     )
   }
 
+  const geraBar = () => {
+    return (
+      <BarChart
+        data={{
+          labels: ["January","February","March","April","May","June"],
+          datasets: [
+            {
+              data: [20, 45, 28, 80, 99, 43]
+            }
+          ]
+        }}
+        width={Dimensions.get('window').width - 16}
+        height={220}
+        yAxisLabel={'Rs'}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16
+        }}
+      />
+    )
+  }
+
   const geraLin = () => {
     return (
       <LineChart
@@ -396,6 +418,10 @@ export default function Documentos({ navigation }) {
         yAxisLabel={"$"}
         yAxisSuffix={"k"}
         chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
       />
     )
   }
