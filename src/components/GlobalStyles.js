@@ -66,4 +66,46 @@ export default StyleSheet.create({
     borderRadius: 10,
   },
 
+  listaContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#87CEEB',
+    padding: 8,
+    marginTop: 10,
+  },
+
+  lista: {
+    height: 50,
+    margin: 0,
+    marginLeft: 0,
+    justifyContent: 'flex-start',
+  },
+
+  lista1: {
+    width: 90,
+  },
+
+  lista2: {
+    width: 170,
+  },
+
+  lista3: {
+    width: 70,
+    alignItems: 'flex-end',
+  },
+
+  listaLabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 10,
+  }, 
+
+  listaValor: {
+    fontSize: 22,
+    color: '#000080',
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+
 })

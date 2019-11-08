@@ -1,6 +1,5 @@
+import { AsyncStorage } from 'react-native'
 import axios from 'axios'
-import { getToken } from './auth'
-import { getOficina, getEmail } from '../globais'
 
 const api = axios.create({
   baseURL: 'http://168.194.69.79:3003',
@@ -8,27 +7,29 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(async config => {
-  const token = getToken()
-  const email = getEmail()
-  const oficina = getOficina()
-
   const wIP = '192.168.50.138'
 
-  if (token) {
-    // config.headers.Authorization = `Bearer ${token}`;
-    config.headers.Authorization = `${token}`
-  }
+  AsyncStorage.getItem('email').then(Email => {
+    AsyncStorage.getItem('token').then(Token => {
+      if (Token) {
+        // config.headers.Authorization = `Bearer ${Token}`;
+        config.headers.Authorization = Token
+      }
+    })
 
-  let codemp = ''
-  if (oficina !== undefined) {
-    codemp = oficina.codemp !== undefined ? oficina.codemp : ''
-  }
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      let codemp = ''
+      if (Oficina !== undefined) {
+        codemp = Oficina.codemp !== undefined ? Oficina.codemp : ''
+      }
 
-  config.params = {
-    widtrans: `${codemp}|1|1|${email}`,
-    wip: wIP,
-    wseqaba: 0,
-  }
+      config.params = {
+        widtrans: `${codemp}|1|1|${Email}`,
+        wip: wIP,
+        wseqaba: 0,
+      }
+    })
+  })
 
   return config
 })

@@ -3,16 +3,13 @@ import React, { useState, useEffect } from 'react'
 import {
   AsyncStorage,
   SafeAreaView,
-  StyleSheet,
-  ScrollView,
   ImageBackground,
-  Dimensions,
   View,
   Text,
-  processColor
+  FlatList,
 } from 'react-native'
 
-import { LineChart, BarChart, Grid } from 'react-native-svg-charts'
+import { Ionicons  } from '@expo/vector-icons'
 
 import Axios from 'axios'
 
@@ -24,24 +21,7 @@ export default function Documentos({ navigation }) {
   const [email, setEmail] = useState('')
   const [selectedEntry, setSelectedEntry] = useState('')
   
-  const [totais, setTotais] = useState([
-    {
-      canval: 0,
-      cancel: 0,
-      inu: 0,
-      dev: 0,
-      imp: 0,
-      pas: 0,
-      rps: 0,
-      nfse: 0,
-      err: 0,
-      orc: 0,
-      val: 0,
-      geral: 0,
-    }
-  ])
-
-  const [legendas, setLegendas] = useState({
+  const legendas = {
     canval: "Cancelada com DANFE",
     cancel: "Cancelado",
     inu: "Inutilizada",
@@ -54,9 +34,17 @@ export default function Documentos({ navigation }) {
     orc: "Orçamento",
     val: "NFe",
     geral: "Total",
-  })
+  }
 
-  const [cores, setCores] = useState({
+  const [docs, setDocs] = useState([{
+    id: "0", 
+    icone: "",
+    label: "", 
+    valor: 0, 
+    cor: ""
+  }])
+
+  const cores = {
     canval: "#FF6384",
     cancel: "#FF0000",
     inu: "#000000",
@@ -69,32 +57,49 @@ export default function Documentos({ navigation }) {
     orc: "#FF8C00",
     val: "#00FF00",
     geral: "#FFFFFF",
-  })
+  }
   
-  const [grData, setGrdata] = useState([0])
-  const [grLabels, setGrlabels] = useState({})
-  const [grCores, setGrcores] = useState({})
-  
-  const [dataLin, setDatalin] = useState([])
-  
-  const [dataPie, setDatapie] = useState([])
+  const Icones = {
+    canval: "md-close",
+    cancel: "md-close-circle-outline",
+    inu: "md-close-circle",
+    dev: "md-refresh-circle",
+    imp: "md-cloud-download",
+    pas: "md-car",
+    rps: "md-construct",
+    nfse: "md-paper",
+    err: "md-warning",
+    orc: "md-calculator",
+    val: "md-checkmark-circle",
+    geral: "md-flag",
+  }
 
   useEffect(() => {
     let isSubscribed = true
     async function montaGraficoDocs(totais) {
       
+      let icone = []
       let labels = []
       let data = []
       let cor = []
-
-      let dPie = []
-      let dBar = []
       
+      let docs = []
+      let id = "0"
+
       for (let [key, value] of Object.entries(totais)) {
         if (value > 0 && key !== 'geral') {
           
           let l = ''
           let c = ''
+          let i = ''
+          
+          for (let [k, v] of Object.entries(Icones)) {
+            if (k === key) {
+              i = v
+              icone.push(v)
+              break
+            }
+          }
           
           for (let [k, v] of Object.entries(legendas)) {
             if (k === key) {
@@ -112,34 +117,13 @@ export default function Documentos({ navigation }) {
             }
           }
           
-          dPie.push({
-            name: l,
-            population: value,
-            color: c,
-            legendFontColor: '#FFFFFF',
-            legendFontSize: 12,
-          })
-
-          dBar.push({
-            x: l,
-            y: value,
-          })
-
           data.push(value)
+          docs.push({id: id.toString(), icone: i, label: l, valor: value, cor: c})
+          id++
         }
       }
 
-      setDatalin([{
-        seriesName: 'Serie',
-        data: dBar,
-        color: '#297AB1'
-      }])
-
-      setDatapie(dPie)
-      setGrdata(data)
-      setGrlabels(labels)
-      setGrcores(cor)
-
+      setDocs(docs)
       return () => isSubscribed = false
     }
 
@@ -238,19 +222,15 @@ export default function Documentos({ navigation }) {
         })
       } 
 
-      setTotais(totais)
-
       montaGraficoDocs(totais)
     }
 
     if(isSubscribed) {
       AsyncStorage.getItem('email').then(Email => {
         setEmail(Email)
-        // console.log('Email', Email)
 
         const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
         const url = `${uri}?prog=wsimporc&email=${email}&di=${dataInicial}&df=${dataFinal}&t=R`
-        // console.log('email', email, dataInicial, dataFinal, url)
         
         async function buscaNotas() {
           try {
@@ -259,7 +239,6 @@ export default function Documentos({ navigation }) {
             ).then(response => {
               if (response.status === 200) {
                 const { ListaDocs } = response.data.Lista
-                // console.log('ListaDocs', ListaDocs)
                 calculaNotas(ListaDocs)
               } else {
                 buscaNotas()
@@ -281,10 +260,17 @@ export default function Documentos({ navigation }) {
     return () => isSubscribed = false
   }, [email])
 
-  const fill = 'rgb(134, 65, 244)'
-  const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
+  // console.log('Docs', docs)
 
-  console.log('data', data, fill)
+  const mostraIcone = (icone, cor) => {
+    if (icone === "") {
+      return (<Text></Text>)
+    }
+    
+    return (
+      <Ionicons style={{marginRight: 40}} name={icone} size={48} color={cor} />
+    )
+  }
 
   return (
       <SafeAreaView style={GlobalStyles.container}>
@@ -292,22 +278,24 @@ export default function Documentos({ navigation }) {
           style={GlobalStyles.background}
           source={bg}
         >
-          
-
+          <FlatList 
+            data={docs}
+            keyExtractor={docs => docs.id}
+            renderItem={({ item }) => (
+              <View style={GlobalStyles.listaContainer}>
+                <View style={[GlobalStyles.lista, GlobalStyles.lista1]}>
+                  {mostraIcone(item.icone, item.cor)}
+                </View>
+                <View style={[GlobalStyles.lista, GlobalStyles.lista2]}>
+                  <Text style={GlobalStyles.listaLabel}>{item.label}</Text> 
+                </View>
+                <View style={[GlobalStyles.lista, GlobalStyles.lista3]}>
+                  <Text style={GlobalStyles.listaValor}>{item.valor > 0 ? item.valor : ''}</Text>
+                </View>
+              </View>
+            )}
+          />
         </ImageBackground>
       </SafeAreaView>
   )
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-  },
-
-  chart: {
-    flex: 1,
-  },
-
-})
