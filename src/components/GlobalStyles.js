@@ -82,27 +82,27 @@ export default StyleSheet.create({
   },
 
   lista1: {
-    width: 90,
+    width: 80,
   },
 
   lista2: {
-    width: 170,
+    width: 160,
   },
 
   lista3: {
-    width: 70,
+    width: 100,
     alignItems: 'flex-end',
   },
 
   listaLabel: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
     marginTop: 10,
   }, 
 
   listaValor: {
-    fontSize: 22,
+    fontSize: 18,
     color: '#000080',
     fontWeight: 'bold',
     marginTop: 10,

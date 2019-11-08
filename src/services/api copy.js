@@ -14,27 +14,30 @@ api.interceptors.request.use(async (config) => {
       AsyncStorage.getItem('token').then(Token => {
         if (Token) {
           // config.headers.Authorization = `Bearer ${Token}`;
-          config.headers.authorization = Token
-          // console.log('config.headers.authorization', config.headers.authorization)
-        }
-      })
-
-      AsyncStorage.getItem('oficina').then(Oficina => {
-        let codemp = ''
-        if (Oficina !== undefined) {
-          codemp = Oficina.codemp !== undefined ? Oficina.codemp : ''
+          config.headers.Authorization = Token
+          console.log('Authorization-1', config.headers.Authorization)
         }
 
-        config.params = {
-          widtrans: `${codemp}|1|1|${Email}`,
-          wip: wIP,
-          wseqaba: 0,
-        }
+        AsyncStorage.getItem('oficina').then(Oficina => {
+          let codemp = ''
+          if (Oficina !== undefined) {
+            const Ofi = JSON.parse(Oficina)
+            codemp = Ofi.codemp !== undefined ? Ofi.codemp : ''
+          }
+  
+          config.params = {
+            widtrans: `${codemp}|1|1|${Email}`,
+            wip: wIP,
+            wseqaba: 0,
+          }
+        })
+        console.log('config', config)
+        return config
+  
       })
+
     })
-    // console.log('config', config)
   }
-
   return config
 }, (error) => {
   return Promise.reject(error)

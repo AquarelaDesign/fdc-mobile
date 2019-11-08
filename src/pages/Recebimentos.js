@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 
 import { Ionicons  } from '@expo/vector-icons'
+import NumberFormat from 'react-number-format'
 
 // const fetch = require('node-fetch')
 import Api from '../services/api'
@@ -18,7 +19,7 @@ import GlobalStyles from '../components/GlobalStyles'
 import bg from '../assets/fundo-app.png'
 
 export default function Documentos({ navigation }) {
-  // const [token, setToken] = useState('')
+  const [token, setToken] = useState('')
   const [email, setEmail] = useState('')
   // const [oficina, setOficna] = useState({})
   
@@ -52,36 +53,26 @@ export default function Documentos({ navigation }) {
     cor: ""
   }])
 
-  const cores = {
-    canval: "#FF6384",
-    cancel: "#FF0000",
-    inu: "#000000",
-    dev: "#191970",
-    imp: "#4682B4",
-    pas: "#FFCE56",
-    rps: "#00FFFF",
-    nfse: "#008080",
-    err: "#800000",
-    orc: "#FF8C00",
-    val: "#00FF00",
-    geral: "#FFFFFF",
+  const Cores = {
+    CH: "#FFFFFF",
+    CT: "#4682B4",
+    BO: "#FFCE56",
+    OU: "#00FFFF",
+    DI: "#008080",
+    TR: "#FF8C00",
+    DE: "#00FF00",
   }
   
   const Icones = {
-    canval: "md-close",
-    cancel: "md-close-circle-outline",
-    inu: "md-close-circle",
-    dev: "md-refresh-circle",
-    imp: "md-cloud-download",
-    pas: "md-car",
-    rps: "md-construct",
-    nfse: "md-paper",
-    err: "md-warning",
-    orc: "md-calculator",
-    val: "md-checkmark-circle",
-    geral: "md-flag",
+    CH: "md-create",
+    CT: "md-card",
+    BO: "md-barcode",
+    OU: "logo-usd",
+    DI: "md-cash",
+    TR: "md-refresh",
+    DE: "md-walk",
   }
-
+  
   useEffect(() => {
     let isSubscribed = true
     async function montaGraficoDocs(totais) {
@@ -234,13 +225,13 @@ export default function Documentos({ navigation }) {
     }
 
     if(isSubscribed) {
-      /*
+      
       AsyncStorage.getItem('token').then(Token => {
         if (Token) {
           setToken(Token)
         }
       })
-
+      /*
       AsyncStorage.getItem('oficina').then(Oficina => {
         setOficna(Oficina)
       })
@@ -250,6 +241,10 @@ export default function Documentos({ navigation }) {
 
         async function buscaPas() {
           try {
+
+            const headers = {
+              'Authorization': token
+            }
             
             await Api.post('/v01/busca', {
               pservico: 'wfcpas',
@@ -261,57 +256,27 @@ export default function Documentos({ navigation }) {
                 pdatfim: dataFinal,
                 psituac: 'TOD',
               }
+            },{
+              headers: headers
             }).then(response => {
               if (response.status === 200) {
                 const { ttfccpvl, ttpagto, ttpec, ttresumo, ttretorno, ttserv } = response.data.data
 
-                setFccpvl(ttfccpvl)
+                // setFccpvl(ttfccpvl)
                 setPagto(ttpagto)
-                setPecas(ttpec)
-                setResumo(ttresumo)
-                setRetorno(ttretorno)
-                setServicos(ttserv)
-              } 
-            })
-            /*
-            const wIP = '192.168.50.138'
-            const codemp = oficina.codemp !== undefined ? oficina.codemp : ''
+                // setPecas(ttpec)
+                // setResumo(ttresumo)
+                // setRetorno(ttretorno)
+                // setServicos(ttserv)
+              }
 
-            const params = {
-              pdatini: dataInicial,
-              pdatfim: dataFinal,
-              psituac: 'TOD',
-              widtrans: `${codemp}|1|1|${Email}`,
-              wip: wIP,
-              wseqaba: 0,
-            }
-
-            const headers = {
-              'Content-Type': 'application/json',
-              'authorization': token,
-            }
-            console.log('headers', headers)
-
-            await fetch('http://168.194.69.79:3003/v01/busca', {
-              credentials: 'same-origin',  
-              method: 'post',
-              body: JSON.stringify(params),
-              headers: headers,
             })
-            .then(res => {
-              console.log('res', res)
-              // res.json()
-            })
-            .then(json => {
-              console.log('json', json)
-            })            
-            */
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              console.log(response.data.errors[0], {type: 'error'})
+              console.log(response.data.errors[0])
             } else {
-              console.log(error, {type: 'error'})
+              console.log(error)
             }
           }
         }
@@ -319,16 +284,12 @@ export default function Documentos({ navigation }) {
       })
     }
     return () => isSubscribed = false
-  }, [email])
+  }, [email, token])
 
-  console.log('Docs', fccpvl,
-  pagto,
-  pecas,
-  resumo,
-  retorno,
-  servicos)
+  // console.log('pagto', pagto)
 
   const mostraIcone = (icone, cor) => {
+    console.log('icone', icone, cor)
     if (icone === "") {
       return (<Text></Text>)
     }
@@ -345,18 +306,24 @@ export default function Documentos({ navigation }) {
           source={bg}
         >
           <FlatList 
-            data={docs}
-            keyExtractor={docs => docs.id}
+            data={pagto}
+            keyExtractor={pagto => pagto.tippag}
             renderItem={({ item }) => (
               <View style={GlobalStyles.listaContainer}>
                 <View style={[GlobalStyles.lista, GlobalStyles.lista1]}>
-                  {mostraIcone(item.icone, item.cor)}
+                  {mostraIcone(Icones[item.tippag], Cores[item.tippag])}
                 </View>
                 <View style={[GlobalStyles.lista, GlobalStyles.lista2]}>
-                  <Text style={GlobalStyles.listaLabel}>{item.label}</Text> 
+                  <Text style={GlobalStyles.listaLabel}>{item.despag}</Text> 
                 </View>
                 <View style={[GlobalStyles.lista, GlobalStyles.lista3]}>
-                  <Text style={GlobalStyles.listaValor}>{item.valor > 0 ? item.valor : ''}</Text>
+                  <NumberFormat
+                    value={item.valor}
+                    displayType={'text'}
+                    fixedDecimalScale={true}
+                    decimalScale={2}
+                    renderText={value => <Text style={GlobalStyles.listaValor}>{value}</Text>}
+                  />
                 </View>
               </View>
             )}

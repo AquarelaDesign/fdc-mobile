@@ -9,7 +9,7 @@ export const getOficina = () => {
   try {
     AsyncStorage.getItem('oficina').then(Oficina => {
       if (Oficina !== undefined && Oficina._d == undefined) {
-        return JSON.parse(Oficina)
+        JSON.parse(Oficina)
       } 
     })
   }
@@ -20,7 +20,7 @@ export const getOficina = () => {
 
 export const getEmail = () => {
   AsyncStorage.getItem('email').then(Email => {
-    return Email
+    Email
   })
 }
 
