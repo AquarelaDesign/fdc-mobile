@@ -3,13 +3,18 @@ import React, { useState, useEffect } from 'react'
 import {
   AsyncStorage,
   SafeAreaView,
+  StyleSheet,
+  ScrollView,
   ImageBackground,
-  View,
-  Text,
-  FlatList,
+  Dimensions
 } from 'react-native'
 
-import { Ionicons  } from '@expo/vector-icons'
+import {
+  LineChart,
+  PieChart,
+  ProgressChart,
+  BarChart,
+} from 'react-native-chart-kit'
 
 import Axios from 'axios'
 
@@ -20,7 +25,24 @@ import bg from '../assets/fundo-app.png'
 export default function Documentos({ navigation }) {
   const [email, setEmail] = useState('')
   
-  const legendas = {
+  const [totais, setTotais] = useState([
+    {
+      canval: 0,
+      cancel: 0,
+      inu: 0,
+      dev: 0,
+      imp: 0,
+      pas: 0,
+      rps: 0,
+      nfse: 0,
+      err: 0,
+      orc: 0,
+      val: 0,
+      geral: 0,
+    }
+  ])
+
+  const [legendas, setLegendas] = useState({
     canval: "Cancelada com DANFE",
     cancel: "Cancelado",
     inu: "Inutilizada",
@@ -33,17 +55,9 @@ export default function Documentos({ navigation }) {
     orc: "Orçamento",
     val: "NFe",
     geral: "Total",
-  }
+  })
 
-  const [docs, setDocs] = useState([{
-    id: "0", 
-    icone: "",
-    label: "", 
-    valor: 0, 
-    cor: ""
-  }])
-
-  const cores = {
+  const [cores, setCores] = useState({
     canval: "#FF6384",
     cancel: "#FF0000",
     inu: "#000000",
@@ -56,49 +70,55 @@ export default function Documentos({ navigation }) {
     orc: "#FF8C00",
     val: "#00FF00",
     geral: "#FFFFFF",
-  }
+  })
   
-  const Icones = {
-    canval: "md-close",
-    cancel: "md-close-circle-outline",
-    inu: "md-close-circle",
-    dev: "md-refresh-circle",
-    imp: "md-cloud-download",
-    pas: "md-car",
-    rps: "md-construct",
-    nfse: "md-paper",
-    err: "md-warning",
-    orc: "md-calculator",
-    val: "md-checkmark-circle",
-    geral: "md-flag",
-  }
+  const [grData, setGrdata] = useState([0])
+  const [grLabels, setGrlabels] = useState({})
+  const [grCores, setGrcores] = useState({})
+  
+  const [dataLin, setDatalin] = useState({})
+  // const [dataLin, setDatalin] = useState(
+  //   {
+  //     labels: [""],
+  //     datasets: [
+  //       {
+  //         data: [0]
+  //       }
+  //     ]
+  //   }
+  // )
+
+  const [dataProg, setDataprog] = useState([])
+  // const [dataProg, setDataprog] = useState([{
+  //   labels: ["NFe Importada","NFe"],
+  //   data: [0.0, 0.0]
+  // }])
+
+  const [dataPie, setDatapie] = useState([])
+  // const [dataPie, setDatapie] = useState([{
+  //   name: '',
+  //   population: 0,
+  //   color: '#1E90FF',
+  //   legendFontColor: '#1E90FF',
+  //   legendFontSize: 12,
+  // }])
 
   useEffect(() => {
     let isSubscribed = true
     async function montaGraficoDocs(totais) {
       
-      let icone = []
       let labels = []
       let data = []
       let cor = []
-      
-      let docs = []
-      let id = "0"
 
+      let dPie = []
+      let dPro = []
+      
       for (let [key, value] of Object.entries(totais)) {
         if (value > 0 && key !== 'geral') {
           
           let l = ''
           let c = ''
-          let i = ''
-          
-          for (let [k, v] of Object.entries(Icones)) {
-            if (k === key) {
-              i = v
-              icone.push(v)
-              break
-            }
-          }
           
           for (let [k, v] of Object.entries(legendas)) {
             if (k === key) {
@@ -116,13 +136,42 @@ export default function Documentos({ navigation }) {
             }
           }
           
+          dPie.push({
+            name: l,
+            population: value,
+            color: c,
+            legendFontColor: '#FFFFFF',
+            legendFontSize: 12,
+          })
+
+          dPro.push(value / totais.geral)
           data.push(value)
-          docs.push({id: id.toString(), icone: i, label: l, valor: value, cor: c})
-          id++
         }
       }
 
-      setDocs(docs)
+      const dadosPro = []
+      
+      dadosPro.push({
+        labels: labels,
+        data: dPro
+      })
+
+      console.log('dadosPro', dadosPro)
+
+      setDatalin({
+        labels: labels,
+        datasets: [
+          {
+            data: data
+          }
+        ]
+      })
+      setDataprog(dPro)
+      setDatapie(dPie)
+      setGrdata(data)
+      setGrlabels(labels)
+      setGrcores(cor)
+      // return () => someHowCancelFetchBananas
       return () => isSubscribed = false
     }
 
@@ -221,15 +270,19 @@ export default function Documentos({ navigation }) {
         })
       } 
 
+      setTotais(totais)
+
       montaGraficoDocs(totais)
     }
 
     if(isSubscribed) {
       AsyncStorage.getItem('email').then(Email => {
         setEmail(Email)
+        // console.log('Email', Email)
 
         const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
         const url = `${uri}?prog=wsimporc&email=${email}&di=${dataInicial}&df=${dataFinal}&t=R`
+        // console.log('email', email, dataInicial, dataFinal, url)
         
         async function buscaNotas() {
           try {
@@ -238,6 +291,7 @@ export default function Documentos({ navigation }) {
             ).then(response => {
               if (response.status === 200) {
                 const { ListaDocs } = response.data.Lista
+                // console.log('ListaDocs', ListaDocs)
                 calculaNotas(ListaDocs)
               } else {
                 buscaNotas()
@@ -259,15 +313,116 @@ export default function Documentos({ navigation }) {
     return () => isSubscribed = false
   }, [email])
 
-  // console.log('Docs', docs)
+  const width = Dimensions.get('window').width - 30
+  const height = 220
 
-  const mostraIcone = (icone, cor) => {
-    if (icone === "") {
-      return (<Text></Text>)
+  // console.log('grDocs', grData, grLabels, grCores)
+  console.log('data', dataPie, dataProg, dataLin)
+
+  const chartConfig = {
+    backgroundColor: "#00008B",
+    backgroundGradientFrom: "#0000FF",
+    backgroundGradientTo: "#87CEFA",
+    decimalPlaces: 2, // optional, defaults to 2dp
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    style: {
+      borderRadius: 16
+    },
+    propsForDots: {
+      r: "6",
+      strokeWidth: "2",
+      stroke: "#87CEFA"
     }
-    
+  }
+
+  const geraPie = () => {
     return (
-      <Ionicons style={{marginRight: 40}} name={icone} size={48} color={cor} />
+      <PieChart
+        data={dataPie}
+        width={Dimensions.get('window').width - 16}
+        height={220}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+        accessor="population"
+        backgroundColor="#1E90FF"
+        paddingLeft="15"
+        // absolute //for the absolute number remove if you want percentage
+      />
+    )
+  }
+  
+  const geraPro = () => {
+    return (
+      <ProgressChart
+        data={dataProg}
+        labels={legendas}
+        width={Dimensions.get('window').width - 16}
+        height={220}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
+    )
+  }
+
+  const geraBar = () => {
+    return (
+      <BarChart
+        data={{
+          labels: ["January","February","March","April","May","June"],
+          datasets: [
+            {
+              data: [20, 45, 28, 80, 99, 43]
+            }
+          ]
+        }}
+        width={Dimensions.get('window').width - 16}
+        height={220}
+        yAxisLabel={'Rs'}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16
+        }}
+      />
+    )
+  }
+
+  const geraLin = () => {
+    return (
+      <LineChart
+        // data={dataLin}
+        data={{
+          labels: ["January", "February", "March", "April", "May", "June"],
+          datasets: [
+            {
+              data: [
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100,
+                Math.random() * 100
+              ]
+            }
+          ]
+        }}
+        width={width} // from react-native
+        height={height}
+        yAxisLabel={"$"}
+        yAxisSuffix={"k"}
+        chartConfig={chartConfig}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
     )
   }
 
@@ -277,24 +432,30 @@ export default function Documentos({ navigation }) {
           style={GlobalStyles.background}
           source={bg}
         >
-          <FlatList 
-            data={docs}
-            keyExtractor={docs => docs.id}
-            renderItem={({ item }) => (
-              <View style={GlobalStyles.listaContainer}>
-                <View style={[GlobalStyles.lista, GlobalStyles.lista1]}>
-                  {mostraIcone(item.icone, item.cor)}
-                </View>
-                <View style={[GlobalStyles.lista, GlobalStyles.lista2]}>
-                  <Text style={GlobalStyles.listaLabel}>{item.label}</Text> 
-                </View>
-                <View style={[GlobalStyles.lista, GlobalStyles.lista3]}>
-                  <Text style={GlobalStyles.listaValor}>{item.valor > 0 ? item.valor : ''}</Text>
-                </View>
-              </View>
-            )}
-          />
+          <ScrollView>
+            {dataPie !== [] ? geraPie() : ''}
+            {dataProg !== [] ? geraPro() : ''}
+            {dataLin !== [] ? geraLin() : ''}
+          </ScrollView>
         </ImageBackground>
       </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 8,
+    paddingTop: 30,
+    backgroundColor: '#ecf0f1',
+  },
+
+  logo: {
+    height: 100,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginTop: 50,
+  },
+
+})
