@@ -11,13 +11,16 @@ import {
 
 import { Ionicons  } from '@expo/vector-icons'
 
+// const fetch = require('node-fetch')
 import Api from '../services/api'
 import { dataInicial, dataFinal } from '../globais'
 import GlobalStyles from '../components/GlobalStyles'
 import bg from '../assets/fundo-app.png'
 
 export default function Documentos({ navigation }) {
+  // const [token, setToken] = useState('')
   const [email, setEmail] = useState('')
+  // const [oficina, setOficna] = useState({})
   
   const [fccpvl, setFccpvl] = useState([])
   const [pagto, setPagto] = useState([])
@@ -231,11 +234,23 @@ export default function Documentos({ navigation }) {
     }
 
     if(isSubscribed) {
+      /*
+      AsyncStorage.getItem('token').then(Token => {
+        if (Token) {
+          setToken(Token)
+        }
+      })
+
+      AsyncStorage.getItem('oficina').then(Oficina => {
+        setOficna(Oficina)
+      })
+      */
       AsyncStorage.getItem('email').then(Email => {
         setEmail(Email)
 
         async function buscaPas() {
           try {
+            
             await Api.post('/v01/busca', {
               pservico: 'wfcpas',
               pmetodo: 'ListaPassagens',
@@ -258,6 +273,39 @@ export default function Documentos({ navigation }) {
                 setServicos(ttserv)
               } 
             })
+            /*
+            const wIP = '192.168.50.138'
+            const codemp = oficina.codemp !== undefined ? oficina.codemp : ''
+
+            const params = {
+              pdatini: dataInicial,
+              pdatfim: dataFinal,
+              psituac: 'TOD',
+              widtrans: `${codemp}|1|1|${Email}`,
+              wip: wIP,
+              wseqaba: 0,
+            }
+
+            const headers = {
+              'Content-Type': 'application/json',
+              'authorization': token,
+            }
+            console.log('headers', headers)
+
+            await fetch('http://168.194.69.79:3003/v01/busca', {
+              credentials: 'same-origin',  
+              method: 'post',
+              body: JSON.stringify(params),
+              headers: headers,
+            })
+            .then(res => {
+              console.log('res', res)
+              // res.json()
+            })
+            .then(json => {
+              console.log('json', json)
+            })            
+            */
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
