@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
 
         // console.log('response', response.data.valid)
         if (response.data.valid) {
-          navigation.navigate('MainMenu')
+          navigation.navigate('Home')
         }
       }
 
@@ -67,7 +67,7 @@ export default function Login({ navigation }) {
         await AsyncStorage.setItem('oficina', {e_mail: email})
         await AsyncStorage.setItem('token', '')
       }
-      navigation.navigate('MainMenu')
+      navigation.navigate('Home')
     }
     catch (error) {
       const { response } = error

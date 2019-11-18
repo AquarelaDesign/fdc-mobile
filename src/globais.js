@@ -8,19 +8,16 @@ import 'moment/locale/pt-br'
 export const getOficina = () => {
   try {
     AsyncStorage.getItem('oficina').then(Oficina => {
-      if (Oficina !== undefined && Oficina._d == undefined) {
-        JSON.parse(Oficina)
-      } 
+      return JSON.parse(Oficina)
     })
   }
   catch (e) {
-    console.log('Error Oficina', e)
+    console.log('Erro Oficina', e)
   }
 }
-
 export const getEmail = () => {
   AsyncStorage.getItem('email').then(Email => {
-    Email
+    return Email
   })
 }
 

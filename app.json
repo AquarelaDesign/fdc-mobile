@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "fichadocarro",
-    "slug": "ficha-do-carro",
+    "name": "fdc-mobile",
+    "slug": "fdc-mobnew",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [

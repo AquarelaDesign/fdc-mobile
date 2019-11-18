@@ -3,25 +3,25 @@ import React, { useState, useEffect } from 'react'
 import {
   AsyncStorage,
   SafeAreaView,
-  ImageBackground,
   View,
   Text,
-  FlatList,
+  StyleSheet,
+  ScrollView,
 } from 'react-native'
 
-import { Ionicons  } from '@expo/vector-icons'
-
+import { ListItem } from 'react-native-elements'
 import Axios from 'axios'
+import NumberFormat from 'react-number-format'
 
+import { LinearGradient } from '../components/LinearGradient'
 import { dataInicial, dataFinal } from '../globais'
-import GlobalStyles from '../components/GlobalStyles'
-import bg from '../assets/fundo-app.png'
+import GlobalStyles from '../GlobalStyles'
 
-export default function Documentos({ navigation }) {
+const Documentos = () => {
   const [email, setEmail] = useState('')
-  const [selectedEntry, setSelectedEntry] = useState('')
-  
-  const legendas = {
+  const [docs, setDocs] = useState([])
+
+  const Legendas = {
     canval: "Cancelada com DANFE",
     cancel: "Cancelado",
     inu: "Inutilizada",
@@ -36,96 +36,37 @@ export default function Documentos({ navigation }) {
     geral: "Total",
   }
 
-  const [docs, setDocs] = useState([{
-    id: "0", 
-    icone: "",
-    label: "", 
-    valor: 0, 
-    cor: ""
-  }])
-
-  const cores = {
-    canval: "#FF6384",
-    cancel: "#FF0000",
-    inu: "#000000",
-    dev: "#191970",
-    imp: "#4682B4",
-    pas: "#FFCE56",
-    rps: "#00FFFF",
-    nfse: "#008080",
-    err: "#800000",
-    orc: "#FF8C00",
-    val: "#00FF00",
-    geral: "#FFFFFF",
+  const Cores = {
+    canval: ['#6f0000', '#fc6767'],
+    cancel: ['#200122', '#6f0000'],
+    inu: ['#000000', '#434343'],
+    dev: ['#3F51B5', '#2196F3'],
+    imp: ['#134E5E', '#71B280'],
+    pas: ['#FFD600', '#FF9800'],
+    rps: ['#2193b0', '#6dd5ed'],
+    nfse: ['#4CAF50', '#8BC34A'],
+    err: ['#F44336', '#E91E63'],
+    orc: ['#FF9800', '#F44336'],
+    val: ['#061700', '#56ab2f'],
+    geral: ['#FFEFBA', '#FFFFFF'],
   }
   
   const Icones = {
-    canval: "md-close",
-    cancel: "md-close-circle-outline",
-    inu: "md-close-circle",
-    dev: "md-refresh-circle",
-    imp: "md-cloud-download",
-    pas: "md-car",
-    rps: "md-construct",
-    nfse: "md-paper",
-    err: "md-warning",
-    orc: "md-calculator",
-    val: "md-checkmark-circle",
-    geral: "md-flag",
+    canval: "close",
+    cancel: "times-circle-o",
+    inu: "times-circle",
+    dev: "refresh",
+    imp: "cloud-download",
+    pas: "car",
+    rps: "cogs",
+    nfse: "file-o",
+    err: "warning",
+    orc: "calculator",
+    val: "check",
+    geral: "flag",
   }
 
   useEffect(() => {
-    let isSubscribed = true
-    async function montaGraficoDocs(totais) {
-      
-      let icone = []
-      let labels = []
-      let data = []
-      let cor = []
-      
-      let docs = []
-      let id = "0"
-
-      for (let [key, value] of Object.entries(totais)) {
-        if (value > 0 && key !== 'geral') {
-          
-          let l = ''
-          let c = ''
-          let i = ''
-          
-          for (let [k, v] of Object.entries(Icones)) {
-            if (k === key) {
-              i = v
-              icone.push(v)
-              break
-            }
-          }
-          
-          for (let [k, v] of Object.entries(legendas)) {
-            if (k === key) {
-              l = v
-              labels.push(v)
-              break
-            }
-          }
-          
-          for (let [k, v] of Object.entries(cores)) {
-            if (k === key) {
-              c = v
-              cor.push(v)
-              break
-            }
-          }
-          
-          data.push(value)
-          docs.push({id: id.toString(), icone: i, label: l, valor: value, cor: c})
-          id++
-        }
-      }
-
-      setDocs(docs)
-      return () => isSubscribed = false
-    }
 
     async function calculaNotas(ListaDocs) {
       let totais = {}
@@ -222,80 +163,112 @@ export default function Documentos({ navigation }) {
         })
       } 
 
-      montaGraficoDocs(totais)
+      montaLista(totais)
     }
 
-    if(isSubscribed) {
-      AsyncStorage.getItem('email').then(Email => {
-        setEmail(Email)
+    async function montaLista(totais) {
+      let doc = []
 
-        const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
-        const url = `${uri}?prog=wsimporc&email=${email}&di=${dataInicial}&df=${dataFinal}&t=R`
-        
-        async function buscaNotas() {
-          try {
-            await Axios.get(
-              url
-            ).then(response => {
-              if (response.status === 200) {
-                const { ListaDocs } = response.data.Lista
-                calculaNotas(ListaDocs)
-              } else {
-                buscaNotas()
-              }
-            })
-          } catch (error) {
-            const { response } = error
-            if (response !== undefined) {
-              console.log('err1', response.data.errors[0])
-            } else {
-              console.log('err2', error)
-            }
-          }
-          
+      for (let [key, value] of Object.entries(totais)) {
+        if (value !== 0) {
+          doc.push({
+            icon: Icones[key],
+            title: Legendas[key],
+            linearGradientColors: Cores[key],
+            valor: value,
+          })
         }
-        buscaNotas()
-      })
+      }
+      setDocs(doc)
     }
-    return () => isSubscribed = false
+
+    AsyncStorage.getItem('email').then(Email => {
+      setEmail(Email)
+
+      const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
+      const url = `${uri}?prog=wsimporc&email=${Email}&di=${dataInicial}&df=${dataFinal}&t=R`
+      
+      async function buscaNotas() {
+        try {
+          await Axios.get(
+            url
+          ).then(response => {
+            if (response.status === 200) {
+              const { ListaDocs } = response.data.Lista
+              console.log('ListaDocs', ListaDocs)
+              calculaNotas(ListaDocs)
+            } else {
+              buscaNotas()
+            }
+          })
+        } catch (error) {
+          const { response } = error
+          if (response !== undefined) {
+            console.log('err1', response.data.errors[0])
+          } else {
+            console.log('err2', error)
+          }
+        }
+        
+      }
+      buscaNotas()
+    })
   }, [email])
 
-  // console.log('Docs', docs)
+  console.log('docs', docs)
 
-  const mostraIcone = (icone, cor) => {
-    if (icone === "") {
-      return (<Text></Text>)
-    }
-    
+  const formataValor = (valor) => {
     return (
-      <Ionicons style={{marginRight: 40}} name={icone} size={48} color={cor} />
+      <NumberFormat
+        value={valor}
+        displayType={'text'}
+        fixedDecimalScale={true}
+        decimalScale={0}
+        renderText={value => <Text style={GlobalStyles.listaValor}>{value}</Text>}
+      />
     )
   }
 
   return (
-      <SafeAreaView style={GlobalStyles.container}>
-        <ImageBackground
-          style={GlobalStyles.background}
-          source={bg}
-        >
-          <FlatList 
-            data={docs}
-            keyExtractor={docs => docs.id}
-            renderItem={({ item }) => (
-              <View style={GlobalStyles.listaContainer}>
-                <View style={[GlobalStyles.lista, GlobalStyles.lista1]}>
-                  {mostraIcone(item.icone, item.cor)}
-                </View>
-                <View style={[GlobalStyles.lista, GlobalStyles.lista2]}>
-                  <Text style={GlobalStyles.listaLabel}>{item.label}</Text> 
-                </View>
-                <View style={[GlobalStyles.lista, GlobalStyles.lista3]}>
-                  <Text style={GlobalStyles.listaValor}>{item.valor > 0 ? item.valor : ''}</Text>
-                </View>
-              </View>
-            )}
-          />
-        </ImageBackground>
-      </SafeAreaView>
+    <SafeAreaView style={GlobalStyles.container}>
+      <ScrollView>
+        <View style={styles.list}>
+          {docs.map((l, i) => (
+            <ListItem
+              key={i}
+              leftIcon={{
+                name: l.icon,
+                type: 'font-awesome',
+                color: 'blue',
+              }}
+              title={l.title}
+              titleStyle={{ color: '#f7ff00', fontWeight: 'bold' }}
+              rightTitle={formataValor(l.valor)}
+              rightTitleStyle={{ color: 'green', fontWeight: 'bold' }}
+              linearGradientProps={{
+                colors: l.linearGradientColors,
+                start: [1, 0],
+                end: [0.2, 0],
+              }}
+              ViewComponent={LinearGradient}
+              containerStyle={{
+                marginHorizontal: 16,
+                marginVertical: 8,
+                borderRadius: 8,
+              }}
+            />
+          ))}
+        </View> 
+      </ScrollView>
+    </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  list: {
+    marginTop: 20,
+    borderTopWidth: 1,
+  },
+})
+
+export default Documentos

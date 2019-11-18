@@ -1,134 +1,171 @@
 import React, { useState, useEffect } from 'react'
-//import socketio from 'socket.io-client'
-import { Alert, SafeAreaView, StyleSheet, Image, Text, View, AsyncStorage, ImageBackground, Dimensions } from 'react-native'
 
-import GlobalStyles from '../components/GlobalStyles'
-//import SpotList from '../components/SpotList'
+import {
+  Alert,
+  AsyncStorage,
+  FlatList,
+  Image,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+
+import GlobalStyles from '../GlobalStyles'
+import Api from '../services/api'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
-import passagens from '../assets/passagens-icon4.png'
-import etiquetas from '../assets/icon-etiqueta.png'
-import km from '../assets/ICON-KM2.png'
-import promocoes from '../assets/icon-promotion2.png'
-import outros from '../assets/se2gurocarro.png'
 
-let width = Dimensions.get('window').width
+export default function Passagens({ navigation }) {
+  const [token, setToken] = useState('')
+  const [email, setEmail] = useState('')
+  const [oficina, setOficina] = useState({})
+  const [pass, setPass] = useState([])
 
-export default function Passagens() {
-   /*
-   const [techs, setTechs] = useState([])
+  useEffect(() => {
 
-   useEffect(() => {
-      AsyncStorage.getItem('oficina').then(mec_id => {
-         const socket = socketio('http://168.194.69.79:3333', {
-            query: { mec_id }
-         })
+    async function montaLista(placas) {
+      let pas = []
+      placas.map((item, i) => {
+        pas.push({
+          id: i,
+          title: item.placa,
+        })
 
-         socket.on('message_response', message => {
-            Alert.alert(`Promoção da hora! ${message.spot.company} em ${message.date}`)
-         })
-      }) 
-   }, [])
+      })
+      setPass(pas)
+    }
 
-   useEffect(() => {
-      AsyncStorage.getItem('techs').then(storagedTechs => {
-         const techsArray = storagedTechs.split(',').map(tech => tech.trim())
+    AsyncStorage.getItem('token').then(Token => {
+      if (Token) {
+        setToken(Token)
+      }
+    })
 
-         setTechs(techsArray)
-      }) 
-   }, [])
-   */
-   return (
-      <SafeAreaView style={[GlobalStyles.AndroidSafeArea, styles.container]}>
-         <ImageBackground
-            style={styles.background}
-            source={bg}
-         >
-            <Image style={styles.logo} source={logo} />
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      setOficina(Oficina)
+    })
 
-            <View style={styles.boxSpace}>
-            </View>
-            
-            <View style={styles.boxContainer}>
-               <View style={styles.box}>
-                  <Image style={styles.boxIcone} source={passagens} />
-                  <Text style={styles.boxText}>Passagens</Text>
-               </View>
-               <View style={styles.box}>
-                  <Image style={styles.boxIcone} source={etiquetas} />
-                  <Text style={styles.boxText}>Etiquetas</Text>
-               </View>
-               <View style={styles.box}>
-                  <Image style={styles.boxIcone} source={km} />
-                  <Text style={styles.boxText}>KM</Text>
-               </View>
-               <View style={styles.box}>
-                  <Image style={styles.boxIcone} source={promocoes} />
-                  <Text style={styles.boxText}>Promoções</Text>
-               </View>
-               <View style={styles.box}>
-                  <Image style={styles.boxIcone} source={outros} />
-                  <Text style={styles.boxText}>Outros</Text>
-               </View>
-               <View style={styles.box}>
-               </View>
-            </View>
+    AsyncStorage.getItem('email').then(Email => {
+      setEmail(Email)
+      
+      async function buscaPas() {
+        try {
+          const headers = {
+            'Authorization': token
+          }
+          
+          await Api.post('/v01/busca', {
+            pservico: 'wfcvei',
+            pmetodo: 'listaPlacasApp',
+            pcodprg: '',
+            pemail: email,
+            params: {
+              pidapp: oficina.idusu,
+            }
+          },{
+            headers: headers
+          }).then(response => {
+            if (response.status === 200) {
+              // console.log('data', response.data.data)
+              const { ttfccva } = response.data.data
+              montaLista(ttfccva)
+            } 
+          })
+        } catch (error) {
+          const { response } = error
+          if (response !== undefined) {
+            console.log(response.data.errors[0])
+          } else {
+            console.log(error)
+          }
+        }
+      }
+      buscaPas()
+      
+    })
+  }, [email, token, oficina])
+  
+  // console.log('recs', recs)
+  // console.log('oficina', oficina)
 
-         </ImageBackground>
-      </SafeAreaView>
-   )
+  function handleNavigate(placa) {
+    navigation.navigate('Passagem', { placa })
+    // Alert.alert(placa)
+  }
+
+  return (
+    <SafeAreaView style={GlobalStyles.container}>
+      <ImageBackground
+        style={GlobalStyles.background}
+        source={bg}
+      >
+        <Image style={styles.logo} source={logo} />
+
+        <Text style={styles.title}>Selecione a palca para consulta</Text>
+        
+        <FlatList 
+          style={styles.list}
+          data={pass}
+          keyExtractor={pass => pass.title}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+              <View style={styles.listItem}>
+                <TouchableOpacity onPress={() => handleNavigate(item.title)} style={styles.button}>
+                    <Text style={styles.buttonText}>{item.title}</Text>
+                </TouchableOpacity>
+              </View>
+          )}
+         />
+
+
+      </ImageBackground>
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-   },
+  logo: {
+    height: 100,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginTop: 50,
+  },
+  
+  title: {
+    fontSize: 20,
+    color: '#444',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 15,
+  },
 
-   background: {
-      flex: 1,
-      width: '100%', 
-      height: '100%',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-   },
+  list: {
+    paddingHorizontal: 20,
+  },
 
-   logo: {
-      height: 100,
-      resizeMode: "contain",
-      alignSelf: "center",
-      marginTop: 70,
-   },
+  listItem: {
+    marginRight: 15,
+  },
 
-   boxIcone: {
-      height: 80,
-      resizeMode: "contain",
-      alignSelf: "center",
-      marginTop: 0,
-   },
+  button: {
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 2,
+    marginTop: 15,
+  },
 
-   boxText: {
-      fontSize: 14,
-      color: '#FFF',
-      marginTop: 10,
-   },
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 25,
+  },
 
-   boxContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap'
-   },
-
-   boxSpace: {
-      height: 90,
-   },
-
-   box: {
-      marginTop: 20,
-      width: width/3-20,
-      height: 120,
-      margin: 6,
-      marginLeft: 12,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-   },
 })

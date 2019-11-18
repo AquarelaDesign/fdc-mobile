@@ -103,7 +103,8 @@ const Recebimentos = () => {
       buscaPas()
     })
   }, [email, token])
-  // console.log('recs', recs)
+
+  console.log('recs', recs)
 
   const formataValor = (valor) => {
     return (

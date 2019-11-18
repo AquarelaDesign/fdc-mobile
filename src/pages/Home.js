@@ -11,7 +11,7 @@ import {
   TouchableOpacity 
 } from 'react-native'
 
-import GlobalStyles from '../components/GlobalStyles'
+import GlobalStyles from '../GlobalStyles'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
@@ -21,13 +21,12 @@ import km from '../assets/ICON-KM2.png'
 import promocoes from '../assets/icon-promotion2.png'
 import outros from '../assets/se2gurocarro.png'
 
-export default function MainMenu({ navigation }) {
-  // const [msg, setMsg] = useState('')
-  
+export default function Home({ navigation }) {
+
   const onPress = (tipo) => {
     switch (tipo) {
       case 'PAS': 
-        // setMsg('Passagem')
+        navigation.navigate('Passagens')
         break
 
       case 'ETQ': 
@@ -45,8 +44,6 @@ export default function MainMenu({ navigation }) {
     }
     
   }
-  
-  // style={[GlobalStyles.AndroidSafeArea, styles.container]}
   
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -109,5 +106,4 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 50,
   },
-
 })

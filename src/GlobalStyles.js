@@ -13,6 +13,7 @@ export default StyleSheet.create({
 
   container: {
     flex: 1,
+    backgroundColor: '#00BFFF',
   },
 
   background: {
@@ -82,30 +83,29 @@ export default StyleSheet.create({
   },
 
   lista1: {
-    width: 80,
+    width: 90,
   },
 
   lista2: {
-    width: 160,
+    width: 170,
   },
 
   lista3: {
-    width: 100,
+    width: 70,
     alignItems: 'flex-end',
   },
 
   listaLabel: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#333',
     marginTop: 10,
   }, 
 
   listaValor: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#000080',
     fontWeight: 'bold',
-    marginTop: 10,
   },
 
 })
