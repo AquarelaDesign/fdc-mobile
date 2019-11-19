@@ -5,10 +5,12 @@ import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer'
 import { createStackNavigator } from 'react-navigation-stack'
 import { Ionicons } from '@expo/vector-icons'
 import SafeAreaView from 'react-native-safe-area-view'
+import Lottie from 'lottie-react-native'
 
 import AppLoading from './components/AppLoading'
 
 import _routes from './_routes'
+import loading from './assets/json/car.json'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 
@@ -89,6 +91,12 @@ const Menu = createAppContainer(
   ),
 )
 
+const anima = () => {
+  return (
+    <Lottie source={anima} autoPlay loop />
+  )
+}
+
 export default () => {
   const [isReady, setIsReady] = useState(false)
 
@@ -98,6 +106,7 @@ export default () => {
   if (!isReady) {
     return (
       <AppLoading
+        ref={() => anima}
         startAsync={loadAssetsAsync}
         onFinish={() => setIsReady(true)}
         onError={console.warn}
