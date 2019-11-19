@@ -230,7 +230,7 @@ const Documentos = () => {
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
       <ScrollView>
         <View style={styles.list}>
           {docs.map((l, i) => (

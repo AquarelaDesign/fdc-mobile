@@ -1,24 +1,27 @@
 import React, { useState } from 'react'
-import { Dimensions, View, Image, ScrollView } from 'react-native'
+import { Animated, Dimensions, View, Image, ScrollView, TouchableOpacity } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer'
-
+import { createStackNavigator } from 'react-navigation-stack'
+import { Ionicons } from '@expo/vector-icons'
 import SafeAreaView from 'react-native-safe-area-view'
-import Icon from 'react-native-vector-icons/FontAwesome'
 
 import AppLoading from './components/AppLoading'
 
-import Components from './drawer/components'
-import Login from './pages/Login'
-import Home from './pages/Home'
-import Passagens from './pages/Passagens'
-import Passagem from './pages/Passagens/Passagens'
-
-import Indicadores from './pages/Indicadores'
-import Recebimentos from './pages/Recebimentos'
-import Documentos from './pages/Documentos'
+import _routes from './_routes'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
+
+const styles = {
+  position: 'absolute',
+  width: '100%',
+  height: 50,
+  top: Dimensions.get('window').height - 60,
+  // backgroundColor: '#667db6',
+  padding: 20, 
+  // marginTop: 15,
+  backgroundColor: 'transparent',
+}
 
 const CustomDrawerContentComponent = props => (
   <View style={{ flex: 1, backgroundColor: '#43484d' }}>
@@ -32,82 +35,42 @@ const CustomDrawerContentComponent = props => (
       />
     </View>
     <ScrollView>
-    <SafeAreaView 
-      style={{ flex: 1, marginLeft: 10 }}
-      forceInset={{ top: 'always', horizontal: 'never' }}
-      >
-      <DrawerItems {...props} />
-    </SafeAreaView>
+      <SafeAreaView 
+        style={{ flex: 1, marginLeft: 10 }}
+        forceInset={{ top: 'always', horizontal: 'never' }}
+        >
+        <DrawerItems {...props} />
+      </SafeAreaView>
     </ScrollView>
   </View>
 )
 
 const Routes = createAppContainer(
-  createDrawerNavigator(
+  createStackNavigator(
+    _routes,
     {
-      Login: {
-        path: '/login',
-        screen: Login,
-        navigationOptions: ({navigation}) => ({
-          drawerLabel: () => null,
-          drawerLockMode: 'locked-closed',
-          // drawerIcon: <Icon name="lock" size={20} color="#7159c1" />,
-        }),
-      },
-      Home: {
-        path: '/home',
-        screen: Home,
-        navigationOptions: ({navigation}) => ({
-          drawerLockMode: 'unlocked',
-          drawerIcon: <Icon name="home" size={20} color="#7159c1" />,
-        }),
-      },
-      Passagens: {
-        path: '/passagens',
-        screen: Passagens,
-        navigationOptions: ({navigation}) => ({
-          drawerLockMode: 'unlocked',
-          drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
-        }),
-      },
-      Passagem: {
-        path: '/passagem',
-        screen: Passagem,
-        navigationOptions: ({navigation}) => ({
-          drawerLabel: () => null,
-          drawerLockMode: 'unlocked',
-          // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
-        }),
-      },
-      Indicadores: {
-        path: '/indicadores',
-        screen: Indicadores,
-        navigationOptions: ({navigation}) => ({
-          drawerLockMode: 'unlocked',
-          drawerIcon: <Icon name="bar-chart" size={20} color="#7159c1" />,
-        }),
-      },
-      Recebimentos: {
-        path: '/recebimentos',
-        screen: Recebimentos,
-        navigationOptions: ({navigation}) => ({
-          drawerLockMode: 'unlocked',
-          drawerIcon: <Icon name="calculator" size={20} color="#7159c1" />,
-        }),
-      },
-      Documentos: {
-        path: '/documentos',
-        screen: Documentos,
-        navigationOptions: ({navigation}) => ({
-          drawerLockMode: 'unlocked',
-          drawerIcon: <Icon name="file" size={20} color="#7159c1" />,
-        }),
-      },
-      Components: {
-        path: '/components',
-        screen: Components,
-      },
+      headerMode: 'screen',
+      headerTransparent: true,
+      defaultNavigationOptions: ({ navigation }) => ({
+        header:
+          <TouchableOpacity style={styles} onPress={() => navigation.goBack()}>
+            <Ionicons style={{color: '#ffffff', width: 50, height: 50}} name={'ios-arrow-dropleft'} size={50} />
+          </TouchableOpacity>
+      }),
     },
+    /*
+    {
+      navigationOptions: {
+        headerTransparent: true,
+      }
+    }
+    */
+  ),
+)
+
+const Menu = createAppContainer(
+  createDrawerNavigator(
+    _routes,
     {
       initialRouteName: 'Login',
       contentOptions: {
@@ -123,7 +86,7 @@ const Routes = createAppContainer(
       drawerWidth: Math.min(WINDOW_WIDTH * 0.8, 300),
       contentComponent: CustomDrawerContentComponent,
     }
-  )
+  ),
 )
 
 export default () => {

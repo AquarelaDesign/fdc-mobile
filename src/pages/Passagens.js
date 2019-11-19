@@ -79,9 +79,9 @@ export default function Passagens({ navigation }) {
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
-            console.log(response.data.errors[0])
+            // console.log(response.data.errors[0])
           } else {
-            console.log(error)
+            // console.log(error)
           }
         }
       }
@@ -106,7 +106,7 @@ export default function Passagens({ navigation }) {
       >
         <Image style={styles.logo} source={logo} />
 
-        <Text style={styles.title}>Selecione a palca para consulta</Text>
+        <Text style={styles.title}>Selecione a placa para consulta</Text>
         
         <FlatList 
           style={styles.list}
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   
   title: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#444',
     paddingHorizontal: 20,
     justifyContent: 'center',

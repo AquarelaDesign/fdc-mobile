@@ -59,18 +59,18 @@ const Components = createBottomTabNavigator(
     initialRouteName: 'LoginTab',
     animationEnabled: false,
     swipeEnabled: true,
-    // Android's default option displays tabBars on top, but iOS is bottom
+    // A opção padrão do Android exibe tabBars na parte superior, mas o iOS é inferior
     tabBarPosition: 'bottom',
     tabBarOptions: {
       activeTintColor: '#e91e63',
-      // Android's default showing of icons is false whereas iOS is true
+      // A exibição padrão de ícones do Android é falsa, enquanto o iOS é verdadeiro
       showIcon: true,
     },
   }
-);
+)
 
-// Workaround to avoid crashing when you come back on Components screen
-// and you were not on the Buttons tab
+// Solução alternativa para evitar falhas ao voltar 
+// à tela Componentes e você não estava na guia Botões
 export default createStackNavigator(
   {
     ComponentsTabs: { screen: Components },
@@ -93,4 +93,4 @@ export default createStackNavigator(
       ),
     }
   }
-);
+)

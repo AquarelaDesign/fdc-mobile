@@ -94,9 +94,9 @@ export default function Passagens({ navigation }) {
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
-            console.log(response.data.errors[0])
+            // console.log('1=>', response.data.errors[0])
           } else {
-            console.log(error)
+            // console.log('2=>', error)
           }
         }
       }
@@ -124,7 +124,9 @@ export default function Passagens({ navigation }) {
   );
 
   const sInfo = (dados) => {
+    // navigation.navigate('Infopass',{ dados: dados })
     console.log('sInfo_item', sVisible, dados)
+    
     return (
       <Modal
         isVisible={sVisible}
@@ -140,6 +142,7 @@ export default function Passagens({ navigation }) {
         {_renderModalContent()}
       </Modal>
     )
+    
   }
 
   const bServ = (placa) => {
@@ -166,9 +169,9 @@ export default function Passagens({ navigation }) {
       } catch (error) {
         const { response } = error
         if (response !== undefined) {
-          console.log(response.data.errors[0])
+          // console.log(response.data.errors[0])
         } else {
-          console.log(error)
+          // console.log(error)
         }
       }
     }
@@ -176,7 +179,10 @@ export default function Passagens({ navigation }) {
   }
 
   const pressPas = (item) => {
-    console.log('Pas_item', item)
+    // console.log('Pas_item', item)
+    // setSvisible(true)
+    // sInfo(item)
+    navigation.navigate('Infopass',{ dados: item })
   }
 
   const pressSer = (item) => {
@@ -191,11 +197,11 @@ export default function Passagens({ navigation }) {
         source={bg}
       > 
         <View style={[styles.listItem, { backgroundColor: '#4169E1' }]}>
-          <Text style={[styles.listText, { width: '35%' }]}>Data</Text> 
-          <Text style={[styles.listText, { width: '20%' }]}>KM</Text> 
-          <Text style={[styles.listText, { width: '15%' }]}>R</Text> 
-          <Text style={[styles.listText, { width: '15%' }]}>S</Text> 
-          <Text style={[styles.listText, { width: '15%' }]}>P</Text> 
+          <Text style={[styles.listText, { width: '35%', textAlign: 'left' }]}>Data</Text> 
+          <Text style={[styles.listText, { width: '20%', textAlign: 'right' }]}>KM</Text> 
+          <Text style={[styles.listText, { width: '15%', textAlign: 'right' }]}>R</Text> 
+          <Text style={[styles.listText, { width: '15%', textAlign: 'right' }]}>S</Text> 
+          <Text style={[styles.listText, { width: '15%', textAlign: 'right' }]}>P</Text> 
         </View>
         
         <FlatList 
@@ -249,8 +255,29 @@ export default function Passagens({ navigation }) {
   )
 
   const Pecas = () => (
-    <View style={[styles.scene, { backgroundColor: '#8BC34A' }]}>
-      <Text>Peças</Text>
+    <View style={styles.scene}>
+      <ImageBackground
+        style={GlobalStyles.background}
+        source={bg}
+      > 
+{/*         
+        <FlatList 
+          style={styles.list}
+          data={serv}
+          keyExtractor={serv => `${serv.idgpas}${serv.descri}`}
+
+          renderItem={({ item, index }) => (
+            <TouchableHighlight
+              onPress={() => pressSer(item)}>
+              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={[styles.listText, { width: '35%' }]}>{item.dtpsgfor}</Text> 
+                <Text style={[styles.listText, { width: '65%' }]}>{item.descri}</Text> 
+              </View>
+            </TouchableHighlight>
+          )}
+        /> 
+*/}
+      </ImageBackground>
     </View>
   )
 
@@ -286,7 +313,7 @@ const styles = StyleSheet.create({
   
   tabContainer: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 40,
   },
   
   list: {
@@ -296,18 +323,14 @@ const styles = StyleSheet.create({
   listItem: {
     width: Dimensions.get('window').width - 10,
     flexDirection: "row",
-    // justifyContent: 'flex-end',
-    // alignItems: 'flex-end',
-    // marginHorizontal: 10,
+    paddingRight: 10,
   },
   
   listText: {
-    // flexDirection: "column",
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 18,
     color: '#FFFFFF',
-    // justifyContent: 'flex-end',
-    // alignItems: 'flex-end',
+    textAlign: 'right',
   },
 
   container: {

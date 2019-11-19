@@ -94,7 +94,7 @@ const Recebimentos = () => {
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
-            console.log(response.data.errors[0])
+            // console.log(response.data.errors[0])
           } else {
             console.log(error)
           }
@@ -118,7 +118,7 @@ const Recebimentos = () => {
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
       <ScrollView>
         <View style={styles.list}>
           {recs.map((l, i) => (
