@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-
 import {
   Dimensions,
   Image,
@@ -10,22 +9,85 @@ import {
   Text,
   View,
 } from 'react-native'
+import MapView, { Marker } from 'react-native-maps'
+const { width, height } = Dimensions.get('window')
 
 import GlobalStyles from '../../GlobalStyles'
-import Api from '../../services/api'
 
 import bg from '../../assets/fundo-app.png'
 
-const largura = Dimensions.get('window').width
-
 export default function Info({ navigation }) {
   const [dados, setDados] = useState('')
+  
+  const [mker, setMarker] = useState({
+    coordinate: {
+      latitude: -25.455425, 
+      longitude: -49.260244,
+    },
+    title: "Procyon Assessoria e Sistemas",
+    description: "Ficha do Carro",
+  })
 
+  const [region, setRegion] = useState({
+    latitude: -25.455425,
+    longitude: -49.260244,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.048244186046511636,
+  })
+ 
   useEffect(() => {
     setDados(navigation.getParam('dados'))
+
+    let div = 0
+
+    let latitude = dados.latit
+    if (latitude !== undefined) {
+      
+      const lat = latitude.toString()
+      if (lat.indexOf(".") === -1) {
+        if (lat.indexOf("-") === -1) {
+          div = (lat.length - 1) * 1000000
+        } else {
+          div = (lat.length) * 1000000
+        }
+        latitude /= div
+      }
+    }
+
+    let longitude = dados.longit
+    if (longitude !== undefined) {
+      
+      const lon = longitude.toString()
+      if (lon.indexOf(".") === -1) {
+        if (lon.indexOf("-") === -1) {
+          div = (lon.length - 1) * 1000000
+        } else {
+          div = (lon.length) * 1000000
+        }
+        longitude /= div
+      }
+    }
+    
+    setRegion({
+      latitude: latitude === undefined ? -25.455425 : latitude,
+      longitude: longitude === undefined ? -49.260244 : longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0922 * (width / height),
+    })
+
+    setMarker({
+      coordinate: {
+        latitude: latitude === undefined ? -25.455425 : latitude,
+        longitude: longitude === undefined ? -49.260244 : longitude,
+      },
+      title: dados.nome === undefined ? "Procyon Assessoria e Sistemas" : dados.nome,
+      description: "Ficha do Carro",
+    })
+  
   }, [dados])
   
   console.log('dados', dados)
+  console.log('region', region)
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -81,6 +143,18 @@ export default function Info({ navigation }) {
             </View>
           </View>
 
+          <MapView
+            style={styles.map}
+            initialRegion={region}
+            region={region}
+          >
+            <Marker
+              coordinate={mker.coordinate}
+              title={mker.title}
+              description={mker.description}
+            />
+          </MapView>
+
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -92,7 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 30,
     paddingHorizontal: 20,
-    width: largura,
+    width: width,
   },
   
   row: {
@@ -102,7 +176,7 @@ const styles = StyleSheet.create({
 
   vlegend: {
     marginTop: 10,
-    width: largura,
+    width: width,
   },
 
   legend: {
@@ -114,7 +188,7 @@ const styles = StyleSheet.create({
 
   vtext: {
     marginTop: 5,
-    width: largura,
+    width: width,
   },
 
   text: {
@@ -124,6 +198,12 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     // width: '100%',
     // height: 20,
+  },
+
+  map: {
+    marginTop: 10,
+    height: 300,
+    marginVertical: 50,
   },
 
 })

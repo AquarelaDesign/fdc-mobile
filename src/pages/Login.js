@@ -82,7 +82,7 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView behavior="padding" style={[styles.container, {paddingTop: 15,}]}>
       <ImageBackground
         style={styles.background}
         source={bg}

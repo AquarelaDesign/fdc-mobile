@@ -324,6 +324,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 10,
     flexDirection: "row",
     paddingRight: 10,
+    height: 32,
   },
   
   listText: {

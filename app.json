@@ -28,7 +28,12 @@
       "bundleIdentifier": "com.procyon.fdc"
     },
     "android": {
-      "package": "com.procyon.fdc"
+      "package": "com.procyon.fdc",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBqitr0K9UhX_Se7tKwdcaZoPXE-eViE4Q"
+        }
+      }
     }    
   }
 }
