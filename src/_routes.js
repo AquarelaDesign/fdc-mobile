@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import Passagens from './pages/Passagens'
 import Passagem from './pages/Passagens/Passagens'
+import Passagem1 from './pages/Passagens/Passagem'
 import Infopass from './pages/Passagens/Info'
 
 import Indicadores from './pages/Indicadores'
@@ -47,6 +48,16 @@ const routes = {
   Passagem: {
     path: '/passagem',
     screen: Passagem,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Passagem1: {
+    path: '/passagem1',
+    screen: Passagem1,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',

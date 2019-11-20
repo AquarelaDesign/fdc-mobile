@@ -103,8 +103,8 @@ export default StyleSheet.create({
   }, 
 
   listaValor: {
-    fontSize: 16,
-    color: '#000080',
+    fontSize: 14,
+    color: '#FFFFF0',
     fontWeight: 'bold',
   },
 
