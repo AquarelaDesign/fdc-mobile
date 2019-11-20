@@ -1,32 +1,35 @@
 import React, { useState, useEffect } from 'react'
 
 import {
-  Alert,
   AsyncStorage,
   FlatList,
   Image,
   ImageBackground,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
+import Lottie from 'lottie-react-native'
 
 import GlobalStyles from '../GlobalStyles'
-import Api from '../services/api'
+import Api from '../services/oapi'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
+import loading from '../assets/json/car.json'
+
+const querystring = require('querystring')
 
 export default function Passagens({ navigation }) {
-  const [token, setToken] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [oficina, setOficina] = useState({})
   const [pass, setPass] = useState([])
 
   useEffect(() => {
+    setIsLoading(true)
 
     async function montaLista(placas) {
       let pas = []
@@ -38,13 +41,8 @@ export default function Passagens({ navigation }) {
 
       })
       setPass(pas)
+      setIsLoading(false)
     }
-
-    AsyncStorage.getItem('token').then(Token => {
-      if (Token) {
-        setToken(Token)
-      }
-    })
 
     AsyncStorage.getItem('oficina').then(Oficina => {
       setOficina(Oficina)
@@ -55,43 +53,45 @@ export default function Passagens({ navigation }) {
       
       async function buscaPas() {
         try {
-          const headers = {
-            'Authorization': token
-          }
           
-          await Api.post('/v01/busca', {
+          await Api.post('', querystring.stringify({
             pservico: 'wfcvei',
             pmetodo: 'listaPlacasApp',
             pcodprg: '',
             pemail: email,
-            params: {
-              pidapp: oficina.idusu,
-            }
-          },{
-            headers: headers
-          }).then(response => {
+            pidapp: oficina.idusu,
+          })).then(response => {
             if (response.status === 200) {
-              // console.log('data', response.data.data)
-              const { ttfccva } = response.data.data
-              montaLista(ttfccva)
+              if (response.data.ProDataSet !== undefined) {
+                const { ttfccva } = response.data.ProDataSet
+                montaLista(ttfccva)
+              }
             } 
           })
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
             // console.log(response.data.errors[0])
+            setIsLoading(false)
           } else {
             // console.log(error)
+            setIsLoading(false)
           }
         }
       }
       buscaPas()
       
     })
-  }, [email, token, oficina])
+  }, [email, oficina])
   
   // console.log('recs', recs)
   // console.log('oficina', oficina)
+  
+  function Loading() {
+    return (
+      <Lottie source={loading} autoPlay loop />
+    )
+  }
 
   function handleNavigate(placa) {
     navigation.navigate('Passagem', { placa })
@@ -105,9 +105,7 @@ export default function Passagens({ navigation }) {
         source={bg}
       >
         <Image style={styles.logo} source={logo} />
-
         <Text style={styles.title}>Selecione a placa para consulta</Text>
-        
         <FlatList 
           style={styles.list}
           data={pass}
@@ -120,9 +118,8 @@ export default function Passagens({ navigation }) {
                 </TouchableOpacity>
               </View>
           )}
-         />
-
-
+        />
+        {isLoading ? Loading() : <></>}
       </ImageBackground>
     </SafeAreaView>
   )

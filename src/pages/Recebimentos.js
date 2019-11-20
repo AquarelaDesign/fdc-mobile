@@ -13,23 +13,24 @@ import { ListItem } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
 
 import { LinearGradient } from '../components/LinearGradient'
-import Api from '../services/api'
+import Api from '../services/oapi'
 import { dataInicial, dataFinal } from '../globais'
 import GlobalStyles from '../GlobalStyles'
 
+const querystring = require('querystring')
+
 const Recebimentos = () => {
-  const [token, setToken] = useState('')
   const [email, setEmail] = useState('')
   const [recs, setRecs] = useState([])
 
   const Cores = {
-    CH: ['#FFEFBA', '#FFFFFF'],
-    CT: ['#3F51B5', '#2196F3'],
+    CH: ['#4B0082', '#8B008B'],
+    CT: ['#0000FF', '#2196F3'],
     BO: ['#FFD600', '#FF9800'],
     OU: ['#F44336', '#E91E63'],
     DI: ['#4CAF50', '#8BC34A'],
     TR: ['#FF9800', '#F44336'],
-    DE: ['#000000', '#0f9b0f'],
+    DE: ['#4682B4', '#0f9b0f'],
   }
   
   const Icones = {
@@ -58,37 +59,25 @@ const Recebimentos = () => {
       setRecs(rec)
     }
 
-    AsyncStorage.getItem('token').then(Token => {
-      if (Token) {
-        setToken(Token)
-      }
-    })
-
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
 
       async function buscaPas() {
         try {
-          const headers = {
-            'Authorization': token
-          }
-          
-          await Api.post('/v01/busca', {
+          await Api.post('', querystring.stringify({
             pservico: 'wfcpas',
             pmetodo: 'ListaPassagens',
             pcodprg: 'TFCMON',
             pemail: email,
-            params: {
-              pdatini: dataInicial,
-              pdatfim: dataFinal,
-              psituac: 'TOD',
-            }
-          },{
-            headers: headers
-          }).then(response => {
+            pdatini: dataInicial,
+            pdatfim: dataFinal,
+            psituac: 'TOD',
+          })).then(response => {
             if (response.status === 200) {
-              const { ttpagto } = response.data.data
-              montaLista(ttpagto)
+              if (response.data.ProDataSet !== undefined) {
+                const { ttpagto } = response.data.ProDataSet
+                montaLista(ttpagto)
+              }
             } 
           })
         } catch (error) {
@@ -102,8 +91,7 @@ const Recebimentos = () => {
       }
       buscaPas()
     })
-  }, [email, token])
-  // console.log('recs', recs)
+  }, [email])
 
   const formataValor = (valor) => {
     return (
@@ -130,9 +118,8 @@ const Recebimentos = () => {
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: 'white', fontWeight: 'bold' }}
+              titleStyle={{ color: '#FFFFF0', fontWeight: 'bold', fontSize: 14 }}
               rightTitle={formataValor(l.valor)}
-              rightTitleStyle={{ color: 'green', fontWeight: 'bold' }}
               linearGradientProps={{
                 colors: l.linearGradientColors,
                 start: [1, 0],

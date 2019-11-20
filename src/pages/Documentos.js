@@ -43,12 +43,12 @@ const Documentos = () => {
     dev: ['#3F51B5', '#2196F3'],
     imp: ['#134E5E', '#71B280'],
     pas: ['#FFD600', '#FF9800'],
-    rps: ['#2193b0', '#6dd5ed'],
+    rps: ['#2193b0', '#134E5E'],
     nfse: ['#4CAF50', '#8BC34A'],
     err: ['#F44336', '#E91E63'],
     orc: ['#FF9800', '#F44336'],
     val: ['#061700', '#56ab2f'],
-    geral: ['#FFEFBA', '#FFFFFF'],
+    geral: ['#4B0082', '#8B008B'],
   }
   
   const Icones = {
@@ -195,7 +195,6 @@ const Documentos = () => {
           ).then(response => {
             if (response.status === 200) {
               const { ListaDocs } = response.data.Lista
-              console.log('ListaDocs', ListaDocs)
               calculaNotas(ListaDocs)
             } else {
               buscaNotas()
@@ -215,7 +214,7 @@ const Documentos = () => {
     })
   }, [email])
 
-  console.log('docs', docs)
+  // console.log('docs', docs)
 
   const formataValor = (valor) => {
     return (

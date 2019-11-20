@@ -86,8 +86,8 @@ export default function Info({ navigation }) {
   
   }, [dados])
   
-  console.log('dados', dados)
-  console.log('region', region)
+  // console.log('dados', dados)
+  // console.log('region', region)
 
   return (
     <SafeAreaView style={GlobalStyles.container}>

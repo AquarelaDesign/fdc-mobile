@@ -18,6 +18,7 @@ import Lottie from 'lottie-react-native'
 import GlobalStyles from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
+import Infopass from './Info'
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car.json'
 
@@ -25,27 +26,30 @@ const querystring = require('querystring')
 
 const colors = ['#00BFFF', '#1E90FF'];
 
-export default function Passagens({ navigation }) {
+export default function Passagem({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
-  const [placa, setPlaca] = useState('')
+  const [idgpas, setIdgpas] = useState(0)
   const [oficina, setOficina] = useState({})
-  const [pass, setPass] = useState([])
+  const [rela, setRela] = useState([])
   const [serv, setServ] = useState([])
   const [peca, setPeca] = useState([])
+  const [info, setInfo] = useState([])
 
   const [state, setState] = useState({
     index: 0,
     routes: [
-      { key: 'passagem', title: 'Passagens' },
+      { key: 'relatos', title: 'Relatos' },
       { key: 'servicos', title: 'Serviços' },
       { key: 'pecas', title: 'Peças' },
+      { key: 'info', title: 'Info' },
     ],
   })
 
   useEffect(() => {
     setIsLoading(true)
-    setPlaca(navigation.getParam('placa'))
+    setIdgpas(navigation.getParam('idgpas'))
+    setInfo(navigation.getParam('info'))
 
     AsyncStorage.getItem('oficina').then(Oficina => {
       setOficina(Oficina)
@@ -53,23 +57,19 @@ export default function Passagens({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaPas() {
+      async function buscaRela() {
         try {
           await Api.post('', querystring.stringify({
             pservico: 'wfcpas',
-            pmetodo: 'listaPassagens',
+            pmetodo: 'ListaRelatos',
             pcodprg: '',
             pemail: email,
-            pplaca: placa,
+            pidgpas: idgpas,
           })).then(response => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
-                const { ttfccpvl } = response.data.ProDataSet
-                setPass(ttfccpvl)
-                if (ttfccpvl !== undefined) {
-                  bServ(ttfccpvl[0].placa)
-                  bPeca(ttfccpvl[0].placa)
-                }
+                const { ttfcrpv } = response.data.ProDataSet
+                setRela(ttfcrpv)
               }
             } 
             setIsLoading(false)
@@ -85,7 +85,8 @@ export default function Passagens({ navigation }) {
           }
         }
       }
-      buscaPas()
+      buscaRela()
+      // bServ(idgpas)
     })
   }, [email, oficina])
   
@@ -93,7 +94,7 @@ export default function Passagens({ navigation }) {
   // console.log('oficina', oficina)
   // console.log('serv', serv)
   
-  const bServ = (placa) => {
+  const bServ = (idgpas) => {
     setIsLoading(true)
     async function buscaServ() {
       try {
@@ -102,13 +103,12 @@ export default function Passagens({ navigation }) {
           pmetodo: 'ListaServicos',
           pcodprg: '',
           pemail: email,
-          pplaca: placa,
-          ptodos: 'S'
+          pidgpas: idgpas,
         })).then(response => {
           if (response.status === 200) {
             if (response.data.ProDataSet !== undefined) {
-              const { ttfccpvl } = response.data.ProDataSet
-              setServ(ttfccpvl)
+              const { ttfcspv } = response.data.ProDataSet
+              setServ(ttfcspv)
             }
           } 
           setIsLoading(false)
@@ -127,7 +127,7 @@ export default function Passagens({ navigation }) {
     buscaServ()
   }
 
-  const bPeca = (placa) => {
+  const bPeca = (idgpas) => {
     setIsLoading(true)
     async function buscaPeca() {
       try {
@@ -136,13 +136,12 @@ export default function Passagens({ navigation }) {
           pmetodo: 'ListaPecas',
           pcodprg: '',
           pemail: email,
-          pplaca: placa,
-          ptodos: 'S'
+          pidgpas: idgpas,
         })).then(response => {
           if (response.status === 200) {
             if (response.data.ProDataSet !== undefined) {
-              const { ttfccpvl } = response.data.ProDataSet
-              setPeca(ttfccpvl)
+              const { ttfcppv } = response.data.ProDataSet
+              setPeca(ttfcppv)
             }
           } 
           setIsLoading(false)
@@ -161,51 +160,26 @@ export default function Passagens({ navigation }) {
     buscaPeca()
   }
 
-  const pressPas = (item) => {
-    navigation.navigate('Passagem1', {
-      idgpas: item.idgpas,
-      info: item,
-    })
-  }
 
-  const pressSer = (item) => {
-    navigation.navigate('Infopass',{ dados: item })
-  }
-
-  const Passagem = () => (
+  const Relatos = () => (
     <View style={styles.scene}>
       <ImageBackground
         style={GlobalStyles.background}
         source={bg}
       > 
-        <View style={[styles.listItem, { backgroundColor: '#4169E1' }]}>
-          <Text style={[styles.listText, { width: '35%', textAlign: 'left' }]}>Data</Text> 
-          <Text style={[styles.listText, { width: '20%', textAlign: 'right' }]}>KM</Text> 
-          <Text style={[styles.listText, { width: '15%', textAlign: 'right' }]}>R</Text> 
-          <Text style={[styles.listText, { width: '15%', textAlign: 'right' }]}>S</Text> 
-          <Text style={[styles.listText, { width: '15%', textAlign: 'right' }]}>P</Text> 
-        </View>
-        
         <FlatList 
           style={styles.list}
-          data={pass}
-          keyExtractor={pass => pass.idgpas.toString()}
-          
-          // numColumns={5}
+          data={rela}
+          keyExtractor={rela => `${rela.idgpas}${rela.descri}`}
+
           renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressPas(item)}>
+            <TouchableHighlight>
               <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '20%' }]}>{item.kilome}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totrel}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totser}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totpec}</Text> 
+                <Text style={[styles.listText, { width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
         />
-
       </ImageBackground>
     </View>
   )
@@ -222,11 +196,9 @@ export default function Passagens({ navigation }) {
           keyExtractor={serv => `${serv.idgpas}${serv.descri}`}
 
           renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressSer(item)}>
+            <TouchableHighlight>
               <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
+                <Text style={[styles.listText, { width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -247,11 +219,10 @@ export default function Passagens({ navigation }) {
           keyExtractor={peca => `${peca.idgpas}${peca.descri}`}
 
           renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressSer(item)}>
+            <TouchableHighlight>
               <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
+                <Text style={[styles.listText, { width: '70%', textAlign: 'left', }]}>{item.descri}</Text> 
+                <Text style={[styles.listText, { width: '30%', textAlign: 'left', }]}>{item.quant}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -259,6 +230,12 @@ export default function Passagens({ navigation }) {
       </ImageBackground>
     </View>
   )
+
+  const Info = () => {
+    return (
+      <Infopass info={info} />
+    )
+  }
 
   function Loading() {
     return (
@@ -272,9 +249,10 @@ export default function Passagens({ navigation }) {
         style={styles.tabContainer}
         navigationState={state}
         renderScene={SceneMap({
-          passagem: Passagem,
+          relatos: Relatos,
           servicos: Servicos,
           pecas: Pecas,
+          info: Info,
         })}
         onIndexChange={index => setState({index: index, routes: state.routes})}
         initialLayout={{ width: Dimensions.get('window').width }}
