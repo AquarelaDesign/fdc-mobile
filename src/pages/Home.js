@@ -30,7 +30,7 @@ export default function Home({ navigation }) {
         break
 
       case 'ETQ': 
-        // navigation.navigate('MainMenu')
+        navigation.navigate('Etiquetas')
         break
         
       case 'IND': 

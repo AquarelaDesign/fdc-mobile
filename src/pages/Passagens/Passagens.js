@@ -15,7 +15,7 @@ import {
 import { TabView, SceneMap } from 'react-native-tab-view'
 import Lottie from 'lottie-react-native'
 
-import GlobalStyles from '../../GlobalStyles'
+import GlobalStyles, { colors } from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
 import bg from '../../assets/fundo-app.png'
@@ -23,7 +23,8 @@ import loading from '../../assets/json/car-scan.json'
 
 const querystring = require('querystring')
 
-const colors = ['#00BFFF', '#1E90FF'];
+// const colors = ['rgba(135,206,250,0.5)', 'rgba(173,216,230,0.5)']
+// const colors = ['rgba(0,191,255,0.5)', 'rgba(30,144,255,0.5)']
 
 export default function Passagens({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -333,6 +334,8 @@ const styles = StyleSheet.create({
 
   list: {
     paddingHorizontal: 5,
+    flexGrow: 0,
+    marginBottom: 90,
   },
 
   listItem: {

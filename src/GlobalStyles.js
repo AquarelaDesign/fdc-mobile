@@ -107,5 +107,7 @@ export default StyleSheet.create({
     color: '#FFFFF0',
     fontWeight: 'bold',
   },
-
+  
 })
+
+export const colors = ['rgba(135,206,250,0.5)', 'rgba(173,216,230,0.5)']

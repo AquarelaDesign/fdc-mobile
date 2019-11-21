@@ -165,7 +165,6 @@ export default function Passagem({ navigation }) {
 
   const getTabBarIcon = (props) => {
     const { route } = props
-    console.log('route.key', route.key)
       
     switch (route.key) {
       case 'relatos':
@@ -364,7 +363,6 @@ export default function Passagem({ navigation }) {
 
   const Info = () => (
     <View style={styles.scene}>
-      {console.log('dados', dados)}
       <ImageBackground
         style={GlobalStyles.background}
         source={bg}

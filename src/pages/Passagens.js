@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
+  Dimensions,
   FlatList,
   Image,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  TouchableHighlight,
   View,
 } from 'react-native'
 import Lottie from 'lottie-react-native'
 
-import GlobalStyles from '../GlobalStyles'
+import GlobalStyles, { colors } from '../GlobalStyles'
 import Api from '../services/oapi'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
@@ -21,6 +22,8 @@ import bg from '../assets/fundo-app.png'
 import loading from '../assets/json/car-scan.json'
 
 const querystring = require('querystring')
+
+// const colors = ['rgba(135,206,250,0.5)', 'rgba(173,216,230,0.5)']
 
 export default function Passagens({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -111,12 +114,13 @@ export default function Passagens({ navigation }) {
           data={pass}
           keyExtractor={pass => pass.title}
           showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-              <View style={styles.listItem}>
-                <TouchableOpacity onPress={() => handleNavigate(item.title)} style={styles.button}>
-                    <Text style={styles.buttonText}>{item.title}</Text>
-                </TouchableOpacity>
+          renderItem={({ item, index }) => (
+            <TouchableHighlight
+              onPress={() => handleNavigate(item.title)}>
+              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={styles.listText}>{item.title}</Text>
               </View>
+            </TouchableHighlight>
           )}
         />
         {isLoading ? Loading() : <></>}
@@ -144,25 +148,28 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
+    flexGrow: 0,
+    marginBottom: 90,
   },
 
   listItem: {
-    marginRight: 15,
-  },
-
-  button: {
-    height: 32,
+    display: "flex",
+    width: Dimensions.get('window').width - 10,
+    flexDirection: "row",
+    flexWrap: 'wrap',
+    paddingRight: 10,
+    height: 50,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 2,
-    marginTop: 15,
   },
-
-  buttonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 25,
+  
+  listText: {
+    // fontWeight: 'bold',
+    fontSize: 22,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    flexDirection: 'row',
+    alignSelf: "center",
   },
 
 })
