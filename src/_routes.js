@@ -9,6 +9,9 @@ import Passagem from './pages/Passagens/Passagens'
 import Passagem1 from './pages/Passagens/Passagem'
 import Infopass from './pages/Passagens/Info'
 
+import Etiquetas from './pages/Etiquetas'
+import Etiqueta from './pages/Etiquetas/Etiquetas'
+
 import Indicadores from './pages/Indicadores'
 import Recebimentos from './pages/Recebimentos'
 import Documentos from './pages/Documentos'
@@ -68,6 +71,25 @@ const routes = {
   Infopass: {
     path: '/infopass',
     screen: Infopass,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Etiquetas: {
+    path: '/etiquetas',
+    screen: Etiquetas,
+    navigationOptions: ({ navigation }) => ({
+      drawerLockMode: 'unlocked',
+      drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Etiqueta: {
+    path: '/etiqueta',
+    screen: Etiqueta,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
