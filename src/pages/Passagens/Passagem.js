@@ -21,7 +21,7 @@ import GlobalStyles from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
 import bg from '../../assets/fundo-app.png'
-import loading from '../../assets/json/car.json'
+import loading from '../../assets/json/car-scan.json'
 
 const querystring = require('querystring')
 const { width, height } = Dimensions.get('window')
@@ -252,6 +252,15 @@ export default function Passagem({ navigation }) {
     buscaPeca()
   }
 
+  const FlatList_header_relser = () => {
+    var Sticky_header_View = (
+      <View style={[styles.listItem, styles.header_style]}>
+        <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Descrição</Text> 
+      </View>
+    )
+    return Sticky_header_View
+  }
+  
   const Relatos = () => (
     <View style={styles.scene}>
       <ImageBackground
@@ -266,10 +275,13 @@ export default function Passagem({ navigation }) {
           renderItem={({ item, index }) => (
             <TouchableHighlight>
               <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+                <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
+
+          ListHeaderComponent={FlatList_header_relser}
+          stickyHeaderIndices={[0]}
         />
       </ImageBackground>
     </View>
@@ -289,10 +301,13 @@ export default function Passagem({ navigation }) {
           renderItem={({ item, index }) => (
             <TouchableHighlight>
               <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+                <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
+
+          ListHeaderComponent={FlatList_header_relser}
+          stickyHeaderIndices={[0]}
         />
       </ImageBackground>
     </View>
@@ -313,7 +328,7 @@ export default function Passagem({ navigation }) {
   const FlatList_header_pecas = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { width: '80%', textAlign: 'left', }]}>Descrição</Text> 
+        <Text style={[styles.listText, { paddingLeft: 10, width: '80%', textAlign: 'left', }]}>Descrição</Text> 
         <Text style={[styles.listText, { width: '20%' }]}>Qtd</Text> 
       </View>
     )
@@ -334,7 +349,7 @@ export default function Passagem({ navigation }) {
           renderItem={({ item, index }) => (
             <TouchableHighlight>
               <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { width: '80%', textAlign: 'left', }]}>{item.descri}</Text> 
+                <Text style={[styles.listText, { paddingLeft: 10, width: '80%', textAlign: 'left', }]}>{item.descri}</Text> 
                 <Text style={[styles.listText, { width: '20%', }]}>{item.quant}</Text> 
               </View>
             </TouchableHighlight>
@@ -531,8 +546,8 @@ const styles = StyleSheet.create({
 
   text: {
     fontWeight: 'bold',
-    fontSize: 18,
-    color: '#F0E68C',
+    fontSize: 16,
+    color: '#FFFFE0',
     textAlign: 'left',
     // width: '100%',
     // height: 20,

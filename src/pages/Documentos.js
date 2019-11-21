@@ -12,12 +12,15 @@ import {
 import { ListItem } from 'react-native-elements'
 import Axios from 'axios'
 import NumberFormat from 'react-number-format'
+import Lottie from 'lottie-react-native'
 
 import { LinearGradient } from '../components/LinearGradient'
 import { dataInicial, dataFinal } from '../globais'
 import GlobalStyles from '../GlobalStyles'
+import loading from '../assets/json/car-scan.json'
 
 const Documentos = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [docs, setDocs] = useState([])
 
@@ -67,8 +70,10 @@ const Documentos = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true)
 
     async function calculaNotas(ListaDocs) {
+      setIsLoading(true)
       let totais = {}
           totais.canval = 0
           totais.cancel = 0
@@ -180,6 +185,7 @@ const Documentos = () => {
         }
       }
       setDocs(doc)
+      setIsLoading(false)
     }
 
     AsyncStorage.getItem('email').then(Email => {
@@ -199,13 +205,17 @@ const Documentos = () => {
             } else {
               buscaNotas()
             }
+            setIsLoading(false)
           })
         } catch (error) {
+          
           const { response } = error
           if (response !== undefined) {
-            console.log('err1', response.data.errors[0])
+            // console.log('err1', response.data.errors[0])
+            setIsLoading(false)
           } else {
-            console.log('err2', error)
+            // console.log('err2', error)
+            setIsLoading(false)
           }
         }
         
@@ -225,6 +235,12 @@ const Documentos = () => {
         decimalScale={0}
         renderText={value => <Text style={GlobalStyles.listaValor}>{value}</Text>}
       />
+    )
+  }
+
+  function Loading() {
+    return (
+      <Lottie source={loading} autoPlay loop />
     )
   }
 
@@ -259,6 +275,7 @@ const Documentos = () => {
           ))}
         </View> 
       </ScrollView>
+      {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
 }

@@ -11,15 +11,18 @@ import {
 
 import { ListItem } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
+import Lottie from 'lottie-react-native'
 
 import { LinearGradient } from '../components/LinearGradient'
 import Api from '../services/oapi'
 import { dataInicial, dataFinal } from '../globais'
 import GlobalStyles from '../GlobalStyles'
+import loading from '../assets/json/car-scan.json'
 
 const querystring = require('querystring')
 
 const Recebimentos = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [recs, setRecs] = useState([])
 
@@ -44,6 +47,7 @@ const Recebimentos = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true)
 
     async function montaLista(pagto) {
       let rec = []
@@ -79,13 +83,16 @@ const Recebimentos = () => {
                 montaLista(ttpagto)
               }
             } 
+            setIsLoading(false)
           })
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
             // console.log(response.data.errors[0])
+            setIsLoading(false)
           } else {
-            console.log(error)
+            // console.log(error)
+            setIsLoading(false)
           }
         }
       }
@@ -102,6 +109,12 @@ const Recebimentos = () => {
         decimalScale={2}
         renderText={value => <Text style={GlobalStyles.listaValor}>{value}</Text>}
       />
+    )
+  }
+
+  function Loading() {
+    return (
+      <Lottie source={loading} autoPlay loop />
     )
   }
 
@@ -135,6 +148,7 @@ const Recebimentos = () => {
           ))}
         </View>
       </ScrollView>
+      {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
 }

@@ -18,7 +18,7 @@ import Api from '../services/oapi'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
-import loading from '../assets/json/car.json'
+import loading from '../assets/json/car-scan.json'
 
 const querystring = require('querystring')
 
