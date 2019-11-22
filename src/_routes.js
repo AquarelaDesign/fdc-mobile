@@ -11,6 +11,7 @@ import Infopass from './pages/Passagens/Info'
 
 import Etiquetas from './pages/Etiquetas'
 import Etiqueta from './pages/Etiquetas/Etiquetas'
+import Infoetq from './pages/Etiquetas/Info'
 
 import Indicadores from './pages/Indicadores'
 import Recebimentos from './pages/Recebimentos'
@@ -90,6 +91,16 @@ const routes = {
   Etiqueta: {
     path: '/etiqueta',
     screen: Etiqueta,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Infoetq: {
+    path: '/infoetq',
+    screen: Infoetq,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',

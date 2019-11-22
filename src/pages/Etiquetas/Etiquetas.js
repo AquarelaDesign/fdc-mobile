@@ -12,37 +12,26 @@ import {
   View,
 } from 'react-native'
 
-import { TabView, SceneMap } from 'react-native-tab-view'
 import Lottie from 'lottie-react-native'
 
-import GlobalStyles, { colors } from '../../GlobalStyles'
+import GlobalStyles from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
 
 const querystring = require('querystring')
+const { width, height } = Dimensions.get('window')
 
-// const colors = ['#00BFFF', '#1E90FF'];
+const colors = ['#00BFFF', '#1E90FF'];
 
 export default function Etiquetas({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState('')
   const [placa, setPlaca] = useState('')
+  const [email, setEmail] = useState('')
   const [oficina, setOficina] = useState({})
-  const [pass, setPass] = useState([])
-  const [serv, setServ] = useState([])
-  const [peca, setPeca] = useState([])
-
-  const [state, setState] = useState({
-    index: 0,
-    routes: [
-      { key: 'passagem', title: 'Passagens' },
-      { key: 'servicos', title: 'Serviços' },
-      { key: 'pecas', title: 'Peças' },
-    ],
-  })
-
+  const [etq, setEtq] = useState([])
+  
   useEffect(() => {
     setIsLoading(true)
     setPlaca(navigation.getParam('placa'))
@@ -53,23 +42,21 @@ export default function Etiquetas({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaPas() {
+      async function buscaEtq() {
         try {
           await Api.post('', querystring.stringify({
             pservico: 'wfcpas',
-            pmetodo: 'listaPassagens',
+            pmetodo: 'BuscaEtiquetas',
             pcodprg: '',
             pemail: email,
             pplaca: placa,
+            pqtdias: 0,
+            pkm: 0,
           })).then(response => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
-                const { ttfccpvl } = response.data.ProDataSet
-                setPass(ttfccpvl)
-                if (ttfccpvl !== undefined) {
-                  bServ(ttfccpvl[0].placa)
-                  bPeca(ttfccpvl[0].placa)
-                }
+                const { ttfcetq } = response.data.ProDataSet
+                setEtq(ttfcetq)
               }
             } 
             setIsLoading(false)
@@ -85,205 +72,26 @@ export default function Etiquetas({ navigation }) {
           }
         }
       }
-      buscaPas()
+      buscaEtq()
     })
-  }, [email, oficina])
+  }, [email, oficina, placa])
   
-  // console.log('placa', placa)
-  // console.log('oficina', oficina)
-  // console.log('serv', serv)
-  
-  const bServ = (placa) => {
-    setIsLoading(true)
-    async function buscaServ() {
-      try {
-        await Api.post('', querystring.stringify({
-          pservico: 'wfcpas',
-          pmetodo: 'ListaServicos',
-          pcodprg: '',
-          pemail: email,
-          pplaca: placa,
-          ptodos: 'S'
-        })).then(response => {
-          if (response.status === 200) {
-            if (response.data.ProDataSet !== undefined) {
-              const { ttfccpvl } = response.data.ProDataSet
-              setServ(ttfccpvl)
-            }
-          } 
-          setIsLoading(false)
-        })
-      } catch (error) {
-        const { response } = error
-        if (response !== undefined) {
-          // console.log(response.data.errors[0])
-          setIsLoading(false)
-        } else {
-          // console.log(error)
-          setIsLoading(false)
-        }
-      }
-    }
-    buscaServ()
-  }
+  // console.log(etq', placa, etq)
 
-  const bPeca = (placa) => {
-    setIsLoading(true)
-    async function buscaPeca() {
-      try {
-        await Api.post('', querystring.stringify({
-          pservico: 'wfcpas',
-          pmetodo: 'ListaPecas',
-          pcodprg: '',
-          pemail: email,
-          pplaca: placa,
-          ptodos: 'S'
-        })).then(response => {
-          if (response.status === 200) {
-            if (response.data.ProDataSet !== undefined) {
-              const { ttfccpvl } = response.data.ProDataSet
-              setPeca(ttfccpvl)
-            }
-          } 
-          setIsLoading(false)
-        })
-      } catch (error) {
-        const { response } = error
-        if (response !== undefined) {
-          // console.log(response.data.errors[0])
-          setIsLoading(false)
-        } else {
-          // console.log(error)
-          setIsLoading(false)
-        }
-      }
-    }
-    buscaPeca()
-  }
-
-  const pressPas = (item) => {
-    navigation.navigate('Passagem1', {
-      idgpas: item.idgpas,
-      info: item,
-    })
-  }
-
-  const pressSer = (item) => {
-    navigation.navigate('Infopass',{ dados: item })
-  }
-
-  const FlatList_header_pass = () => {
+  const FlatList_header_etq = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left' }]}>Data</Text> 
-        <Text style={[styles.listText, { width: '20%' }]}>KM</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>R</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>S</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>P</Text> 
+        <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Etiquetas</Text> 
       </View>
     )
     return Sticky_header_View
   }
-  
-  const Passagem = () => (
-    <View style={styles.scene}>
-      <ImageBackground
-        style={GlobalStyles.background}
-        source={bg}
-      > 
-        <FlatList 
-          style={styles.list}
-          data={pass}
-          keyExtractor={pass => pass.idgpas.toString()}
-          
-          // numColumns={5}
-          renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressPas(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '20%' }]}>{item.kilome}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totrel}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totser}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totpec}</Text> 
-              </View>
-            </TouchableHighlight>
-          )}
 
-          ListHeaderComponent={FlatList_header_pass}
-          stickyHeaderIndices={[0]}
-        />
-
-      </ImageBackground>
-    </View>
-  )
-
-  const FlatList_header_pecser = () => {
-    var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Data</Text> 
-        <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>Descrição</Text> 
-      </View>
-    )
-    return Sticky_header_View
+  const pressLista = (item) => {
+    console.log('Infoetq-item', item)
+    navigation.navigate('Infoetq',{ dados: item })
   }
   
-  const Servicos = () => (
-    <View style={styles.scene}>
-      <ImageBackground
-        style={GlobalStyles.background}
-        source={bg}
-      > 
-        <FlatList 
-          style={styles.list}
-          data={serv}
-          keyExtractor={serv => `${serv.idgpas}${serv.descri}`}
-
-          renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressSer(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
-              </View>
-            </TouchableHighlight>
-          )}
-
-          ListHeaderComponent={FlatList_header_pecser}
-          stickyHeaderIndices={[0]}
-        />
-      </ImageBackground>
-    </View>
-  )
-
-  const Pecas = () => (
-    <View style={styles.scene}>
-      <ImageBackground
-        style={GlobalStyles.background}
-        source={bg}
-      > 
-        <FlatList 
-          style={styles.list}
-          data={peca}
-          keyExtractor={peca => `${peca.idgpas}${peca.descri}`}
-
-          renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressSer(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
-              </View>
-            </TouchableHighlight>
-          )}
-
-          ListHeaderComponent={FlatList_header_pecser}
-          stickyHeaderIndices={[0]}
-        />
-      </ImageBackground>
-    </View>
-  )
-
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -292,40 +100,41 @@ export default function Etiquetas({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <TabView
-        style={styles.tabContainer}
-        navigationState={state}
-        renderScene={SceneMap({
-          passagem: Passagem,
-          servicos: Servicos,
-          pecas: Pecas,
-        })}
-        onIndexChange={index => setState({index: index, routes: state.routes})}
-        initialLayout={{ width: Dimensions.get('window').width }}
-      />
+      <ImageBackground
+        style={GlobalStyles.background}
+        source={bg}
+      > 
+        <FlatList 
+          style={styles.list}
+          data={etq}
+          keyExtractor={etq => `${etq.idgpas}${etq.descri}`}
+
+          renderItem={({ item, index }) => (
+            <TouchableHighlight
+              onPress={() => pressLista(item)}>
+              <View style={{ backgroundColor: colors[index % colors.length], }}>
+                <View style={styles.listItem}>
+                  <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+                </View>
+                <View style={styles.listItem}>
+                  <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtproxfor}</Text> 
+                  <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}>{ `${item.kmprox} KM` }</Text> 
+                  <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}></Text> 
+                </View>
+              </View>
+            </TouchableHighlight>
+          )}
+
+          ListHeaderComponent={FlatList_header_etq}
+          stickyHeaderIndices={[0]}
+        />
+      </ImageBackground>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  logo: {
-    height: 100,
-    resizeMode: "contain",
-    alignSelf: "center",
-    marginTop: 50,
-  },
-
-  scene: {
-    flex: 1,
-    marginTop: 10,
-  },
-  
-  tabContainer: {
-    flex: 1,
-    marginTop: 38,
-  },
-  
   header_style: {
     fontWeight: 'bold',
     backgroundColor: '#4169E1', 
@@ -333,19 +142,20 @@ const styles = StyleSheet.create({
 
   list: {
     paddingHorizontal: 5,
+    flex: 1,
+    marginTop: 38,
   },
-
+  
   listItem: {
     display: "flex",
-    width: Dimensions.get('window').width - 10,
+    width: width - 10,
     flexDirection: "row",
     flexWrap: 'wrap',
     paddingRight: 10,
-    height: 50,
+    height: 40,
   },
   
   listText: {
-    // fontWeight: 'bold',
     fontSize: 14,
     color: '#FFFFFF',
     textAlign: 'right',
@@ -353,10 +163,4 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  
 })

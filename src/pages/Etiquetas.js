@@ -95,7 +95,7 @@ export default function Etiquetas({ navigation }) {
   }
 
   function handleNavigate(placa) {
-    navigation.navigate('Passagem', { placa })
+    navigation.navigate('Etiqueta', { placa })
     // Alert.alert(placa)
   }
 
