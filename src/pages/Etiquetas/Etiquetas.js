@@ -88,7 +88,6 @@ export default function Etiquetas({ navigation }) {
   }
 
   const pressLista = (item) => {
-    console.log('Infoetq-item', item)
     navigation.navigate('Infoetq',{ dados: item })
   }
   
@@ -104,30 +103,39 @@ export default function Etiquetas({ navigation }) {
         style={GlobalStyles.background}
         source={bg}
       > 
-        <FlatList 
-          style={styles.list}
-          data={etq}
-          keyExtractor={etq => `${etq.idgpas}${etq.descri}`}
+        {
+          etq === undefined ? 
+          <Text style={styles.msgText}>
+            Nenhuma etiqueta encontrada para esta placa, 
+            entre em contato com a sua oficina e solicite o 
+            cadastro da Etiqueta no Ficha do Carro.
+          </Text>
+          :
+          <FlatList 
+            style={styles.list}
+            data={etq}
+            keyExtractor={etq => `${etq.idgpas}${etq.descri}`}
 
-          renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressLista(item)}>
-              <View style={{ backgroundColor: colors[index % colors.length], }}>
-                <View style={styles.listItem}>
-                  <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+            renderItem={({ item, index }) => (
+              <TouchableHighlight
+                onPress={() => pressLista(item)}>
+                <View style={{ backgroundColor: colors[index % colors.length], }}>
+                  <View style={styles.listItem}>
+                    <Text style={[styles.listText, { paddingLeft: 10, width: '100%', width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+                  </View>
+                  <View style={styles.listItem}>
+                    <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtproxfor}</Text> 
+                    <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}>{ `${item.kmprox} KM` }</Text> 
+                    <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}></Text> 
+                  </View>
                 </View>
-                <View style={styles.listItem}>
-                  <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtproxfor}</Text> 
-                  <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}>{ `${item.kmprox} KM` }</Text> 
-                  <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}></Text> 
-                </View>
-              </View>
-            </TouchableHighlight>
-          )}
+              </TouchableHighlight>
+            )}
 
-          ListHeaderComponent={FlatList_header_etq}
-          stickyHeaderIndices={[0]}
-        />
+            ListHeaderComponent={FlatList_header_etq}
+            stickyHeaderIndices={[0]}
+          />
+        }
       </ImageBackground>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
@@ -161,6 +169,17 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     flexDirection: 'row',
     alignSelf: "center",
+  },
+
+  msgText: {
+    fontSize: 13,
+    color: '#FFFFFF',
+    flexDirection: 'row',
+    alignSelf: "center",
+    textAlign: 'center', 
+    marginTop: height - (height / 2) - 40, 
+    paddingRight: 10,
+    width: width - 20, 
   },
 
 })
