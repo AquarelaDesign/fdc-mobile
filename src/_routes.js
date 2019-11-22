@@ -2,8 +2,11 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Components from './drawer/components'
+
 import Login from './pages/Login'
 import Home from './pages/Home'
+import Browser from './pages/Browser'
+
 import Passagens from './pages/Passagens'
 import Passagem from './pages/Passagens/Passagens'
 import Passagem1 from './pages/Passagens/Passagem'
@@ -138,6 +141,10 @@ const routes = {
   Components: {
     path: '/components',
     screen: Components,
+  },
+  Browser: {
+    path: '/browser',
+    screen: Browser,
   },
 }
 

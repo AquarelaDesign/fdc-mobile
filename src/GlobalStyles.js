@@ -111,3 +111,5 @@ export default StyleSheet.create({
 })
 
 export const colors = ['rgba(135,206,250,0.5)', 'rgba(173,216,230,0.5)']
+
+export const _url = 'https://www.fichadocarro.com.br'
