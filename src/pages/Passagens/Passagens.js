@@ -15,16 +15,14 @@ import {
 import { TabView, SceneMap } from 'react-native-tab-view'
 import Lottie from 'lottie-react-native'
 
-import GlobalStyles, { colors } from '../../GlobalStyles'
+import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
 
+const { width, height } = Dimensions.get('window')
 const querystring = require('querystring')
-
-// const colors = ['rgba(135,206,250,0.5)', 'rgba(173,216,230,0.5)']
-// const colors = ['rgba(0,191,255,0.5)', 'rgba(30,144,255,0.5)']
 
 export default function Passagens({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -89,10 +87,6 @@ export default function Passagens({ navigation }) {
       buscaPas()
     })
   }, [email, oficina])
-  
-  // console.log('placa', placa)
-  // console.log('oficina', oficina)
-  // console.log('serv', serv)
   
   const bServ = (placa) => {
     setIsLoading(true)
@@ -285,6 +279,10 @@ export default function Passagens({ navigation }) {
     </View>
   )
 
+  const pressLink = () => {
+    navigation.navigate('Browser',{ uri: _url })
+  }
+
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -293,17 +291,30 @@ export default function Passagens({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <TabView
-        style={styles.tabContainer}
-        navigationState={state}
-        renderScene={SceneMap({
-          passagem: Passagem,
-          servicos: Servicos,
-          pecas: Pecas,
-        })}
-        onIndexChange={index => setState({index: index, routes: state.routes})}
-        initialLayout={{ width: Dimensions.get('window').width }}
-      />
+      {
+        pass === undefined ? 
+          <Text style={styles.msgText}
+            onPress={() => pressLink()}>
+            Ainda não existe nenhum registro de passagem 
+            em oficina para este veículo, entre em contato
+            coma sua oficina e solicite o registro no 
+            Ficha do Carro, é rápido, simples e sem custo,
+            basta acessar o site <Text style={{color: '#FFFACD', fontWeight: 'bold',}}>{` ${_url} `}</Text>
+            e seguir as instruções.
+          </Text>
+        :
+        <TabView
+          style={styles.tabContainer}
+          navigationState={state}
+          renderScene={SceneMap({
+            passagem: Passagem,
+            servicos: Servicos,
+            pecas: Pecas,
+          })}
+          onIndexChange={index => setState({index: index, routes: state.routes})}
+          initialLayout={{ width: Dimensions.get('window').width }}
+        />
+      }
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
@@ -312,8 +323,8 @@ export default function Passagens({ navigation }) {
 const styles = StyleSheet.create({
   logo: {
     height: 100,
-    resizeMode: "contain",
-    alignSelf: "center",
+    resizeMode: 'contain',
+    alignSelf: 'center',
     marginTop: 50,
   },
 
@@ -339,9 +350,9 @@ const styles = StyleSheet.create({
   },
 
   listItem: {
-    display: "flex",
+    display: 'flex',
     width: Dimensions.get('window').width - 10,
-    flexDirection: "row",
+    flexDirection: 'row',
     flexWrap: 'wrap',
     paddingRight: 10,
     height: 50,
@@ -353,13 +364,24 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'right',
     flexDirection: 'row',
-    alignSelf: "center",
+    alignSelf: 'center',
   },
 
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  msgText: {
+    fontSize: 18,
+    color: '#FFFFFF',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    textAlign: 'justify',
+    marginTop: height - (height / 2) - 40, 
+    paddingRight: 10,
+    width: width - 20, 
   },
   
 })
