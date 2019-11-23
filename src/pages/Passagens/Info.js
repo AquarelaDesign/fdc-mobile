@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
   Dimensions,
-  Image,
   ImageBackground,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -43,6 +41,10 @@ export default function Info({ navigation }) {
     let latitude = dados.latit
     if (latitude !== undefined) {
       
+      if (latitude === 0) {
+        return
+      }
+        
       const lat = latitude.toString()
       if (lat.indexOf(".") === -1) {
         if (lat.indexOf("-") === -1) {
@@ -52,11 +54,17 @@ export default function Info({ navigation }) {
         }
         latitude /= div
       }
+    } else {
+      return
     }
 
     let longitude = dados.longit
     if (longitude !== undefined) {
       
+      if (longitude === 0) {
+        return
+      }
+        
       const lon = longitude.toString()
       if (lon.indexOf(".") === -1) {
         if (lon.indexOf("-") === -1) {
@@ -66,8 +74,10 @@ export default function Info({ navigation }) {
         }
         longitude /= div
       }
+    } else {
+      return
     }
-    
+  
     setRegion({
       latitude: latitude === undefined ? -25.455425 : latitude,
       longitude: longitude === undefined ? -49.260244 : longitude,

@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
-  Alert,
+  AsyncStorage,
   SafeAreaView,
   StyleSheet,
   Image,
@@ -22,25 +22,26 @@ import promocoes from '../assets/icon-promotion2.png'
 import outros from '../assets/se2gurocarro.png'
 
 export default function Home({ navigation }) {
+  const [isOficina, setIsOficina] = useState(false)
+  const [oficina, setOficina] = useState({})
+
+  useEffect(() => {
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      setOficina(Oficina)
+      setIsOficina(Oficina.codsia !== '' && Oficina.codsia !== undefined ? true : false)
+      console.log('Oficina', Oficina)
+    })
+
+
+  }, [oficina])
 
   const onPress = (tipo) => {
     switch (tipo) {
-      case 'PAS': 
-        navigation.navigate('Passagens')
-        break
-
-      case 'ETQ': 
-        navigation.navigate('Etiquetas')
-        break
-        
-      case 'IND': 
-        navigation.navigate('Indicadores')
-        break
-        
-      default:
-        // setMsg(tipo)
-        Alert.alert(`Clicado em ${tipo}`)
-        break;
+      // case 'PAS': navigation.navigate('Passagens')
+      // case 'ETQ': navigation.navigate('Etiquetas')
+      case 'IND': navigation.navigate('Indicadores'); break
+      default: navigation.navigate('ListaPlacas', { tipo: tipo }); break
+      //Alert.alert(`Clicado em ${tipo}`)
     }
     
   }
@@ -89,8 +90,15 @@ export default function Home({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('IND')}>
             <View style={GlobalStyles.box}>
-              <Image style={GlobalStyles.boxIcone} source={passagens} />
-              <Text style={GlobalStyles.boxText}>Indicadores</Text>
+              {console.log('isOficina', isOficina)}
+              {
+                isOficina ? 
+                <>
+                  <Image style={GlobalStyles.boxIcone} source={passagens} />
+                  <Text style={GlobalStyles.boxText}>Indicadores</Text>
+                </>
+                : <Text></Text>
+              }
             </View>
           </TouchableOpacity>
         </View>

@@ -13,15 +13,15 @@ import { ListItem } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
 import Lottie from 'lottie-react-native'
 
-import { LinearGradient } from '../components/LinearGradient'
-import Api from '../services/oapi'
-import { dataInicial, dataFinal } from '../globais'
-import GlobalStyles from '../GlobalStyles'
-import loading from '../assets/json/car-scan.json'
+import { LinearGradient } from '../../components/LinearGradient'
+import Api from '../../services/oapi'
+import { dataInicial, dataFinal } from '../../globais'
+import GlobalStyles from '../../GlobalStyles'
+import loading from '../../assets/json/car-scan.json'
 
 const querystring = require('querystring')
 
-const Recebimentos = () => {
+export default Recebimentos = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [recs, setRecs] = useState([])
@@ -159,5 +159,3 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
 })
-
-export default Recebimentos

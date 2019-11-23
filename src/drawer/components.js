@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { Icon } from 'react-native-elements'
 
 import HomeTab from '../pages/Home'
-import IndicadoresTab from '../pages/Indicadores'
+import IndicadoresTab from '../pages/Indicadores/Indicadores'
 import LoginTab from '../pages/Login'
 
 const Components = createBottomTabNavigator(

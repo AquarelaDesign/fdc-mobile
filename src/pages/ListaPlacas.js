@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import {
+  Alert,
   AsyncStorage,
   Dimensions,
   FlatList,
@@ -23,14 +24,16 @@ import loading from '../assets/json/car-scan.json'
 
 const querystring = require('querystring')
 
-export default function Etiquetas({ navigation }) {
+export default function ListaPlacas({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
+  const [tipo, setTipo] = useState('')
   const [email, setEmail] = useState('')
   const [oficina, setOficina] = useState({})
   const [pass, setPass] = useState([])
 
   useEffect(() => {
     setIsLoading(true)
+    setTipo(navigation.getParam('tipo'))
 
     async function montaLista(placas) {
       let pas = []
@@ -83,7 +86,7 @@ export default function Etiquetas({ navigation }) {
       buscaPas()
       
     })
-  }, [email, oficina])
+  }, [email, oficina, tipo])
   
   // console.log('recs', recs)
   // console.log('oficina', oficina)
@@ -95,8 +98,14 @@ export default function Etiquetas({ navigation }) {
   }
 
   function handleNavigate(placa) {
-    navigation.navigate('Etiqueta', { placa })
-    // Alert.alert(placa)
+    switch (tipo) {
+      case 'PAS': navigation.navigate('Passagem', { placa }); break
+      case 'ETQ': navigation.navigate('Etiqueta', { placa }); break
+      case 'KMS': navigation.navigate('Km', { placa }); break
+      default: Alert.alert(`A opção ${tipo} ainda não foi implementada!`); break
+    }
+
+    // navigation.navigate('Km', { placa })
   }
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import {
   Alert,
@@ -13,42 +13,21 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-import GlobalStyles from '../GlobalStyles'
+import GlobalStyles from '../../GlobalStyles'
 
-import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
-import bg from '../assets/fundo-app.png'
+import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
+import bg from '../../assets/fundo-app.png'
 
 export default function Indicadores({ navigation }) {
-  // const [msg, setMsg] = useState('')
-  
   const onPress = (tipo) => {
     switch (tipo) {
-      case 'PAS': 
-        // setMsg('Passagem')
-        break
-
-      case 'ETQ': 
-        // navigation.navigate('MainMenu')
-        break
-        
-      case 'REC': 
-        navigation.navigate('Recebimentos')
-        break
-        
-      case 'DOC': 
-        navigation.navigate('Documentos')
-        break
-        
-      default:
-        // setMsg(tipo)
-        Alert.alert(`Clicado em ${tipo}`)
-        break;
+      case 'REC':  navigation.navigate('Recebimentos'); break
+      case 'DOC': navigation.navigate('Documentos'); break
+      default: Alert.alert(`Clicado em ${tipo}`); break
     }
-    
   }
   
   // style={[GlobalStyles.AndroidSafeArea, styles.container]}
-  
   return (
     <SafeAreaView style={GlobalStyles.container}>
       <ImageBackground

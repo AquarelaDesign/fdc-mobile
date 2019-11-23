@@ -14,10 +14,10 @@ import Axios from 'axios'
 import NumberFormat from 'react-number-format'
 import Lottie from 'lottie-react-native'
 
-import { LinearGradient } from '../components/LinearGradient'
-import { dataInicial, dataFinal } from '../globais'
-import GlobalStyles from '../GlobalStyles'
-import loading from '../assets/json/car-scan.json'
+import { LinearGradient } from '../../components/LinearGradient'
+import { dataInicial, dataFinal } from '../../globais'
+import GlobalStyles from '../../GlobalStyles'
+import loading from '../../assets/json/car-scan.json'
 
 const Documentos = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -201,6 +201,8 @@ const Documentos = () => {
           ).then(response => {
             if (response.status === 200) {
               const { ListaDocs } = response.data.Lista
+              // console.log('response', response)
+              // console.log('ListaDocs', ListaDocs)
               calculaNotas(ListaDocs)
             } else {
               buscaNotas()

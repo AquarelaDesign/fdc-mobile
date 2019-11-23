@@ -6,19 +6,20 @@ import Components from './drawer/components'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import Browser from './pages/Browser'
+import ListaPlacas from './pages/ListaPlacas'
 
-import Passagens from './pages/Passagens'
 import Passagem from './pages/Passagens/Passagens'
 import Passagem1 from './pages/Passagens/Passagem'
 import Infopass from './pages/Passagens/Info'
 
-import Etiquetas from './pages/Etiquetas'
 import Etiqueta from './pages/Etiquetas/Etiquetas'
 import Infoetq from './pages/Etiquetas/Info'
 
-import Indicadores from './pages/Indicadores'
-import Recebimentos from './pages/Recebimentos'
-import Documentos from './pages/Documentos'
+import Km from './pages/Km/Km'
+
+import Indicadores from './pages/Indicadores/Indicadores'
+import Recebimentos from './pages/Indicadores/Recebimentos'
+import Documentos from './pages/Indicadores/Documentos'
 
 
 const routes = {
@@ -43,9 +44,9 @@ const routes = {
       headerShown: false,
     }),
   },
-  Passagens: {
-    path: '/passagens',
-    screen: Passagens,
+  ListaPlacas: {
+    path: '/listaPlacas',
+    screen: ListaPlacas,
     navigationOptions: ({ navigation }) => ({
       drawerLockMode: 'unlocked',
       drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
@@ -82,15 +83,6 @@ const routes = {
       headerTransparent: true,
     }),
   },
-  Etiquetas: {
-    path: '/etiquetas',
-    screen: Etiquetas,
-    navigationOptions: ({ navigation }) => ({
-      drawerLockMode: 'unlocked',
-      drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
-      headerTransparent: true,
-    }),
-  },
   Etiqueta: {
     path: '/etiqueta',
     screen: Etiqueta,
@@ -104,6 +96,16 @@ const routes = {
   Infoetq: {
     path: '/infoetq',
     screen: Infoetq,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Km: {
+    path: '/km',
+    screen: Km,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',

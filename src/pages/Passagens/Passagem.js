@@ -70,11 +70,16 @@ export default function Passagem({ navigation }) {
     setDados(navigation.getParam('info'))
 
     async function coordenadas(dados) {
+      
       let div = 0
 
       let latitude = dados.latit
       if (latitude !== undefined) {
-        
+
+        if (latitude === 0) {
+          return
+        }
+          
         const lat = latitude.toString()
         if (lat.indexOf(".") === -1) {
           if (lat.indexOf("-") === -1) {
@@ -84,11 +89,17 @@ export default function Passagem({ navigation }) {
           }
           latitude /= div
         }
+      } else {
+        return
       }
   
       let longitude = dados.longit
       if (longitude !== undefined) {
         
+        if (longitude === 0) {
+          return
+        }
+          
         const lon = longitude.toString()
         if (lon.indexOf(".") === -1) {
           if (lon.indexOf("-") === -1) {
@@ -98,6 +109,8 @@ export default function Passagem({ navigation }) {
           }
           longitude /= div
         }
+      } else {
+        return
       }
       
       setRegion({
