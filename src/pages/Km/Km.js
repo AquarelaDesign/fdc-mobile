@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native'
 
-import { TabView, SceneMap } from 'react-native-tab-view'
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
@@ -29,16 +29,15 @@ export default function Km({ navigation }) {
   const [email, setEmail] = useState('')
   const [placa, setPlaca] = useState('')
   const [oficina, setOficina] = useState({})
-  const [pass, setPass] = useState([])
-  const [serv, setServ] = useState([])
-  const [peca, setPeca] = useState([])
+  const [historico, setHistorico] = useState([])
+  const [resu, setResumo] = useState([])
 
   const [state, setState] = useState({
     index: 0,
     routes: [
-      { key: 'passagem', title: 'Passagens' },
-      { key: 'servicos', title: 'Serviços' },
-      { key: 'pecas', title: 'Peças' },
+      { key: 'atualizacao', title: 'Atualizar' },
+      { key: 'historico', title: 'Histórico' },
+      { key: 'resumo', title: 'Resumo' },
     ],
   })
 
@@ -52,22 +51,22 @@ export default function Km({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaPas() {
+      async function buscaHistorico() {
         try {
           await Api.post('', querystring.stringify({
-            pservico: 'wfcpas',
-            pmetodo: 'listaPassagens',
+            pservico: 'wfcvei',
+            pmetodo: 'AtualizaKM',
             pcodprg: '',
             pemail: email,
             pplaca: placa,
           })).then(response => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
-                const { ttfccpvl } = response.data.ProDataSet
-                setPass(ttfccpvl)
-                if (ttfccpvl !== undefined) {
-                  bServ(ttfccpvl[0].placa)
-                  bPeca(ttfccpvl[0].placa)
+                const { ttfckmv } = response.data.ProDataSet
+                // console.log('ttfckmv-h', ttfckmv)
+                setHistorico(ttfckmv)
+                if (ttfckmv !== undefined) {
+                  buscaResumo()
                 }
               }
             } 
@@ -84,26 +83,28 @@ export default function Km({ navigation }) {
           }
         }
       }
-      buscaPas()
+      buscaHistorico()
     })
-  }, [email, oficina])
+  }, [email, oficina, placa])
   
-  const bServ = (placa) => {
+  const buscaResumo = () => {
     setIsLoading(true)
-    async function buscaServ() {
+    async function bResumo() {
       try {
         await Api.post('', querystring.stringify({
-          pservico: 'wfcpas',
-          pmetodo: 'ListaServicos',
+          pservico: 'wfcvei',
+          pmetodo: 'ResumoKM',
           pcodprg: '',
           pemail: email,
           pplaca: placa,
-          ptodos: 'S'
-        })).then(response => {
+      })).then(response => {
           if (response.status === 200) {
             if (response.data.ProDataSet !== undefined) {
-              const { ttfccpvl } = response.data.ProDataSet
-              setServ(ttfccpvl)
+              const { ttreskm } = response.data.ProDataSet
+              // console.log('ttreskm', placa, ttreskm)
+              if (ttreskm[0] !== undefined) {
+                setResumo(ttreskm[0])
+              }
             }
           } 
           setIsLoading(false)
@@ -119,68 +120,53 @@ export default function Km({ navigation }) {
         }
       }
     }
-    buscaServ()
+    bResumo()
   }
 
-  const bPeca = (placa) => {
-    setIsLoading(true)
-    async function buscaPeca() {
-      try {
-        await Api.post('', querystring.stringify({
-          pservico: 'wfcpas',
-          pmetodo: 'ListaPecas',
-          pcodprg: '',
-          pemail: email,
-          pplaca: placa,
-          ptodos: 'S'
-        })).then(response => {
-          if (response.status === 200) {
-            if (response.data.ProDataSet !== undefined) {
-              const { ttfccpvl } = response.data.ProDataSet
-              setPeca(ttfccpvl)
-            }
-          } 
-          setIsLoading(false)
-        })
-      } catch (error) {
-        const { response } = error
-        if (response !== undefined) {
-          // console.log(response.data.errors[0])
-          setIsLoading(false)
-        } else {
-          // console.log(error)
-          setIsLoading(false)
-        }
-      }
-    }
-    buscaPeca()
-  }
+  const Atualizacao = () => (
+    <View style={styles.scene}>
+      <ImageBackground
+        style={GlobalStyles.background}
+        source={bg}
+      > 
+        
+        <Text style={style.placa}>{placa}</Text> 
+        
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '50%',}]}>
+            <Text style={styles.legend}>Quilometragem</Text>
+          </View>
+          <View style={[styles.vlegend, {width: '50%',}]}>
+            <Text style={styles.text}>Encheu o tanque?</Text>
+          </View>
+        </View>
 
-  const pressPas = (item) => {
-    navigation.navigate('Passagem1', {
-      idgpas: item.idgpas,
-      info: item,
-    })
-  }
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '50%',}]}>
+            <Text style={styles.legend}>Quilometragem</Text>
+          </View>
+          <View style={[styles.vlegend, {width: '50%',}]}>
+            <Text style={styles.text}>Encheu o tanque?</Text>
+          </View>
+        </View>
 
-  const pressSer = (item) => {
-    navigation.navigate('Infopass',{ dados: item })
-  }
+      </ImageBackground>
+    </View>
+  )
 
-  const FlatList_header_pass = () => {
+  const FlatList_header_hist = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left' }]}>Data</Text> 
+        <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left' }]}>Data</Text> 
         <Text style={[styles.listText, { width: '20%' }]}>KM</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>R</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>S</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>P</Text> 
+        <Text style={[styles.listText, { width: '20%' }]}>Qtde</Text> 
+        <Text style={[styles.listText, { width: '20%' }]}>R$</Text> 
       </View>
     )
     return Sticky_header_View
   }
   
-  const Passagem = () => (
+  const Historico = () => (
     <View style={styles.scene}>
       <ImageBackground
         style={GlobalStyles.background}
@@ -188,24 +174,23 @@ export default function Km({ navigation }) {
       > 
         <FlatList 
           style={styles.list}
-          data={pass}
-          keyExtractor={pass => pass.idgpas.toString()}
+          data={historico}
+          keyExtractor={historico => `${historico.idgpas}${historico.hortra}`}
           
           // numColumns={5}
           renderItem={({ item, index }) => (
             <TouchableHighlight
-              onPress={() => pressPas(item)}>
+              onPress={() => pressHist(item)}>
               <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
+                <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
                 <Text style={[styles.listText, { width: '20%' }]}>{item.kilome}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totrel}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totser}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totpec}</Text> 
+                <Text style={[styles.listText, { width: '20%' }]}>{item.quant}</Text> 
+                <Text style={[styles.listText, { width: '20%' }]}>{item.valor}</Text> 
               </View>
             </TouchableHighlight>
           )}
 
-          ListHeaderComponent={FlatList_header_pass}
+          ListHeaderComponent={FlatList_header_hist}
           stickyHeaderIndices={[0]}
         />
 
@@ -213,75 +198,59 @@ export default function Km({ navigation }) {
     </View>
   )
 
-  const FlatList_header_pecser = () => {
-    var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Data</Text> 
-        <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>Descrição</Text> 
-      </View>
-    )
-    return Sticky_header_View
+  const pressHist = (item) => {
+    console.log('item',item)
+    // navigation.navigate('Passagem1', {
+    //   idgpas: item.idgpas,
+    //   info: item,
+    // })
   }
-  
-  const Servicos = () => (
+
+  const Resumo = () => (
     <View style={styles.scene}>
       <ImageBackground
         style={GlobalStyles.background}
         source={bg}
-      > 
-        <FlatList 
-          style={styles.list}
-          data={serv}
-          keyExtractor={serv => `${serv.idgpas}${serv.descri}`}
-
-          renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressSer(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
-              </View>
-            </TouchableHighlight>
-          )}
-
-          ListHeaderComponent={FlatList_header_pecser}
-          stickyHeaderIndices={[0]}
-        />
+      >
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '75%',}]}>
+            <Text style={styles.legend}>Qtd Atualizações</Text>
+          </View>
+          <View style={[styles.vlegend, {width: '25%',}]}>
+            <Text style={styles.text}>{resu.qtatu}</Text>
+          </View>
+        </View>
+        
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '75%',}]}>
+            <Text style={styles.legend}>Tanque cheio</Text>
+          </View>
+          <View style={[styles.vlegend, {width: '25%',}]}>
+            <Text style={styles.text}>{resu.qttqch}</Text>
+          </View>
+        </View>
+        
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '75%',}]}>
+            <Text style={styles.legend}>Valor R$</Text>
+          </View>
+          <View style={[styles.vlegend, {width: '25%',}]}>
+            <Text style={styles.text}>{resu.totval}</Text>
+          </View>
+        </View>
+        
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '75%',}]}>
+            <Text style={styles.legend}>Média de KM rodados por dia</Text>
+          </View>
+          <View style={[styles.vlegend, {width: '25%',}]}>
+            <Text style={styles.text}>{resu.autono}</Text>
+          </View>
+        </View>
+        
       </ImageBackground>
     </View>
   )
-
-  const Pecas = () => (
-    <View style={styles.scene}>
-      <ImageBackground
-        style={GlobalStyles.background}
-        source={bg}
-      > 
-        <FlatList 
-          style={styles.list}
-          data={peca}
-          keyExtractor={peca => `${peca.idgpas}${peca.descri}`}
-
-          renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressSer(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
-              </View>
-            </TouchableHighlight>
-          )}
-
-          ListHeaderComponent={FlatList_header_pecser}
-          stickyHeaderIndices={[0]}
-        />
-      </ImageBackground>
-    </View>
-  )
-
-  const pressLink = () => {
-    navigation.navigate('Browser',{ uri: _url })
-  }
 
   function Loading() {
     return (
@@ -291,30 +260,17 @@ export default function Km({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      {
-        pass === undefined ? 
-          <Text style={styles.msgText}
-            onPress={() => pressLink()}>
-            Ainda não existe nenhum registro de passagem 
-            em oficina para este veículo, entre em contato
-            coma sua oficina e solicite o registro no 
-            Ficha do Carro, é rápido, simples e sem custo,
-            basta acessar o site <Text style={{color: '#FFFACD', fontWeight: 'bold',}}>{` ${_url} `}</Text>
-            e seguir as instruções.
-          </Text>
-        :
-        <TabView
-          style={styles.tabContainer}
-          navigationState={state}
-          renderScene={SceneMap({
-            passagem: Passagem,
-            servicos: Servicos,
-            pecas: Pecas,
-          })}
-          onIndexChange={index => setState({index: index, routes: state.routes})}
-          initialLayout={{ width: Dimensions.get('window').width }}
-        />
-      }
+      <TabView
+        style={styles.tabContainer}
+        navigationState={state}
+        renderScene={SceneMap({
+          atualizacao: Atualizacao,
+          historico: Historico,
+          resumo: Resumo,
+        })}
+        onIndexChange={index => setState({index: index, routes: state.routes})}
+        initialLayout={{ width: Dimensions.get('window').width }}
+      />
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
@@ -337,8 +293,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 38,
   },
-  
+
   header_style: {
+    fontSize: 8,
     fontWeight: 'bold',
     backgroundColor: '#4169E1', 
   },
@@ -383,5 +340,43 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     width: width - 20, 
   },
+  
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+
+  vlegend: {
+    marginTop: 20,
+    width: width,
+  },
+
+  legend: {
+    fontSize: 16,
+    color: '#00FFFF',
+    textAlign: 'left',
+    paddingLeft: 10,
+  },
+
+  vtext: {
+    // marginTop: 5,
+    width: width,
+  },
+
+  text: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#F0E68C',
+    textAlign: 'right',
+    paddingRight: 10,
+  },
+
+  placa: {
+    textAlign: 'center',
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginTop: 30,
+    color: '#FFF',
+  }
   
 })
