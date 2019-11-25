@@ -4,7 +4,7 @@ export const isAuthenticated = () => AsyncStorage.getItem(TOKEN_KEY) !== null
 
 export const getToken = () => {
   AsyncStorage.getItem('token').then(Token => {
-    console.log('AuthToken', Token)
+    // console.log('AuthToken', Token)
     return Token
   })
 }

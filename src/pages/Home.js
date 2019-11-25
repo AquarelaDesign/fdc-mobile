@@ -29,7 +29,7 @@ export default function Home({ navigation }) {
     AsyncStorage.getItem('oficina').then(Oficina => {
       setOficina(Oficina)
       setIsOficina(Oficina.codsia !== '' && Oficina.codsia !== undefined ? true : false)
-      console.log('Oficina', Oficina)
+      // console.log('Oficina', Oficina)
     })
 
 
@@ -90,7 +90,6 @@ export default function Home({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('IND')}>
             <View style={GlobalStyles.box}>
-              {console.log('isOficina', isOficina)}
               {
                 isOficina ? 
                 <>
