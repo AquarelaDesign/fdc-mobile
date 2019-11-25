@@ -19,6 +19,7 @@ import Lottie from 'lottie-react-native'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import Api from '../../services/oapi'
+import validade from '../../helpers/FormValidationRules'
 
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
@@ -50,13 +51,18 @@ export default function Km({ navigation }) {
   })
 
   useEffect(() => {
-    setIsLoading(true)
     setPlaca(navigation.getParam('placa'))
+  }, [placa])
 
+  useEffect(() => {
     AsyncStorage.getItem('oficina').then(Oficina => {
       setOficina(Oficina)
     })
+  }, [oficina])
 
+  useEffect(() => {
+    setIsLoading(true)
+  
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
       async function buscaHistorico() {
@@ -93,7 +99,7 @@ export default function Km({ navigation }) {
       }
       buscaHistorico()
     })
-  }, [email, oficina, placa])
+  }, [email])
   
   const buscaResumo = () => {
     setIsLoading(true)
@@ -133,6 +139,8 @@ export default function Km({ navigation }) {
 
   const Atualizacao = () => (
     <View style={styles.scene}>
+      
+      
       <ImageBackground
         style={GlobalStyles.background}
         source={bg}
@@ -151,14 +159,16 @@ export default function Km({ navigation }) {
         <View style={styles.row}>
           <View style={[styles.vlegend, {width: '50%'}]}>
             <TextInput
+              name='km'
               style={styles.input}
-              keyboardType="numbers-and-punctuation"
-              autoCapitalize="none"
+              keyboardType="numeric"
               autoCorrect={false}
-              value={pkm}
+              defaultValue={pkm}
               onChangeText={setPkm}
+              required
             />
           </View>
+
           <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
             <SwitchToggle
               containerStyle={{
@@ -182,6 +192,7 @@ export default function Km({ navigation }) {
               duration={500}
             />
           </View>
+
         </View>
 
         <View style={styles.row}>
@@ -196,21 +207,21 @@ export default function Km({ navigation }) {
         <View style={styles.row}>
           <View style={[styles.vlegend, {width: '50%'}]}>
             <TextInput
+              name='quant'
               style={styles.input}
-              keyboardType="numbers-and-punctuation"
-              autoCapitalize="none"
+              keyboardType="numeric"
               autoCorrect={false}
-              value={pquant}
+              defaultValue={pquant}
               onChangeText={setPquant}
             />
           </View>
           <View style={[styles.vlegend, {width: '50%'}]}>
             <TextInput
+              name='valor'
               style={styles.input}
-              keyboardType="numbers-and-punctuation"
-              autoCapitalize="none"
+              keyboardType="numeric"
               autoCorrect={false}
-              value={pvalor}
+              defaultValue={pvalor}
               onChangeText={setPvalor}
             />
           </View>
@@ -225,6 +236,7 @@ export default function Km({ navigation }) {
   )
 
   async function handleSubmit() {
+    console.log('Data', pkm, pencheu, pquant, pvalor)
   }
 
   const FlatList_header_hist = () => {
@@ -457,7 +469,7 @@ const styles = StyleSheet.create({
 
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#444',
     paddingHorizontal: 20,
     fontSize: 16,
     color: '#444',
@@ -466,10 +478,12 @@ const styles = StyleSheet.create({
     marginLeft: 15, 
     marginRight: 15,
     borderRadius: 2,
+    backgroundColor: '#FFF',
   },
 
   button: {
     height: 42,
+    width: 160,
     backgroundColor: '#007189',
     justifyContent: 'center',
     alignItems: 'center',
