@@ -7,12 +7,14 @@ import {
   ImageBackground,
   SafeAreaView,
   StyleSheet,
+  TextInput, 
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
 
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { TabView, SceneMap } from 'react-native-tab-view'
+import { SwitchToggle } from '@dooboo-ui/native';
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
@@ -31,6 +33,12 @@ export default function Km({ navigation }) {
   const [oficina, setOficina] = useState({})
   const [historico, setHistorico] = useState([])
   const [resu, setResumo] = useState([])
+
+  const [pkm, setPkm] = useState('')
+  const [pencheu, setPencheu] = useState(false)
+  const [pquant, setPquant] = useState('')
+  const [pvalor, setPvalor] = useState('')
+
 
   const [state, setState] = useState({
     index: 0,
@@ -129,30 +137,95 @@ export default function Km({ navigation }) {
         style={GlobalStyles.background}
         source={bg}
       > 
-        
-        <Text style={style.placa}>{placa}</Text> 
+        <Text style={styles.placa}>{placa}</Text> 
         
         <View style={styles.row}>
           <View style={[styles.vlegend, {width: '50%',}]}>
             <Text style={styles.legend}>Quilometragem</Text>
           </View>
           <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.text}>Encheu o tanque?</Text>
+            <Text style={styles.legend}>Encheu o tanque?</Text>
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '50%'}]}>
+            <TextInput
+              style={styles.input}
+              keyboardType="numbers-and-punctuation"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={pkm}
+              onChangeText={setPkm}
+            />
+          </View>
+          <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
+            <SwitchToggle
+              containerStyle={{
+                width: 100,
+                height: 30,
+                borderRadius: 15,
+                padding: 5,
+              }}
+              backgroundColorOn="#a0e1e5"
+              backgroundColorOff="#e5e1e0"
+              circleStyle={{
+                width: 20,
+                height: 20,
+                borderRadius: 10,
+                backgroundColor: 'blue',
+              }}
+              switchOn={pencheu}
+              onPress={() => setPencheu(!pencheu)}
+              circleColorOff='red'
+              circleColorOn='green'
+              duration={500}
+            />
           </View>
         </View>
 
         <View style={styles.row}>
           <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Quilometragem</Text>
+            <Text style={styles.legend}>Quant. Abastecida</Text>
           </View>
           <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.text}>Encheu o tanque?</Text>
+            <Text style={styles.legend}>Valor total</Text>
           </View>
         </View>
+
+        <View style={styles.row}>
+          <View style={[styles.vlegend, {width: '50%'}]}>
+            <TextInput
+              style={styles.input}
+              keyboardType="numbers-and-punctuation"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={pquant}
+              onChangeText={setPquant}
+            />
+          </View>
+          <View style={[styles.vlegend, {width: '50%'}]}>
+            <TextInput
+              style={styles.input}
+              keyboardType="numbers-and-punctuation"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={pvalor}
+              onChangeText={setPvalor}
+            />
+          </View>
+        </View>
+
+        <TouchableHighlight onPress={handleSubmit} style={styles.button}>
+          <Text style={styles.buttonText}>Gravar</Text>
+        </TouchableHighlight>
 
       </ImageBackground>
     </View>
   )
+
+  async function handleSubmit() {
+  }
 
   const FlatList_header_hist = () => {
     var Sticky_header_View = (
@@ -377,6 +450,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 30,
     color: '#FFF',
-  }
+  },
+
+  switch: {
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#444',
+    height: 44,
+    marginBottom: 20,
+    marginLeft: 15, 
+    marginRight: 15,
+    borderRadius: 2,
+  },
+
+  button: {
+    height: 42,
+    backgroundColor: '#007189',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 2,
+  },
+
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   
 })
