@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
   Dimensions,
-  Form,
   ImageBackground,
   StyleSheet,
   TextInput,
@@ -12,27 +11,32 @@ import {
   View,
 } from 'react-native'
 
-import { Input } from 'react-native-elements'
+import { Formik } from 'formik'
 import { SwitchToggle } from '@dooboo-ui/native'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
+import FormInput from '../../components/FormInput'
+import FormButton from '../../components/FormButton'
 
 import bg from '../../assets/fundo-app.png'
 
 const { width, height } = Dimensions.get('window')
 
 export default function AtualizaKM({ placa, navigation }) {
-  const [pkm, setPkm] = useState('')
-  const [pencheu, setPencheu] = useState(false)
-  const [pquant, setPquant] = useState('')
-  const [pvalor, setPvalor] = useState('')
+  const [km, setKm] = useState('')
+  const [encheu, setEncheu] = useState(false)
+  const [quant, setQuant] = useState('')
+  const [valor, setValor] = useState('')
 
-  const { register, handleSubmit, errors } = useForm()
-  
   const onSubmit = (data) => { console.log(data) }
 
-  async function handleSubmit() {
-    console.log('Data', pkm, pencheu, pquant, pvalor)
+  const handleSubmit = (values) => {
+    if (values.km.length > 0 && 
+        values.quant.length > 0 &&
+        values.valor.length > 0
+        ) {
+      console.log('values', values)
+    }
   }
 
   return (
@@ -43,191 +47,119 @@ export default function AtualizaKM({ placa, navigation }) {
       > 
         <Text style={styles.placa}>{placa}</Text> 
                 
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Quilometragem</Text>
-          </View>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Encheu o tanque?</Text>
-          </View>
-        </View>
+        <Formik
+          initialValues={{ 
+            km: '', 
+            encheu: false,
+            quant: '',
+            valor: '',
+          }}
+          onSubmit={values => { handleSubmit(values) }}
+        >
+          {({ 
+            handleChange, 
+            values, 
+            handleSubmit 
+          }) => (
+            <Fragment>
 
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='km'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              value={pkm || ''}
-              onChangeText={setPkm}
-              required
-            />
-          </View>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '50%',}]}>
+                  <Text style={styles.legend}>Quilometragem</Text>
+                </View>
+                <View style={[styles.vlegend, {width: '50%',}]}>
+                  <Text style={styles.legend}>Encheu o tanque?</Text>
+                </View>
+              </View>
 
-          <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
-            <SwitchToggle
-              containerStyle={{
-                width: 100,
-                height: 30,
-                borderRadius: 15,
-                padding: 5,
-              }}
-              backgroundColorOn="#a0e1e5"
-              backgroundColorOff="#e5e1e0"
-              circleStyle={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                backgroundColor: 'blue',
-              }}
-              switchOn={pencheu}
-              onPress={() => setPencheu(!pencheu)}
-              circleColorOff='red'
-              circleColorOn='green'
-              duration={500}
-            />
-          </View>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '50%'}]}>
+                  <FormInput
+                    name='km'
+                    value={values.km}
+                    style={styles.input}
+                    keyboardType="numeric"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={handleChange('km')}
+                  />
+                </View>
 
-        </View>
+                <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
+                  <SwitchToggle
+                    containerStyle={{
+                      width: 100,
+                      height: 30,
+                      borderRadius: 15,
+                      padding: 5,
+                    }}
+                    backgroundColorOn="#a0e1e5"
+                    backgroundColorOff="#e5e1e0"
+                    circleStyle={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 10,
+                      backgroundColor: 'blue',
+                    }}
+                    switchOn={values.encheu}
+                    onPress={handleChange('encheu')}
+                    circleColorOff='red'
+                    circleColorOn='green'
+                    duration={500}
+                  />
+                </View>
 
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Quant. Abastecida</Text>
-          </View>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Valor total</Text>
-          </View>
-        </View>
+              </View>
 
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='quant'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              value={pquant || ''}
-              onChangeText={setPquant}
-            />
-          </View>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='valor'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              value={pvalor || ''}
-              onChangeText={setPvalor}
-            />
-          </View>
-        </View>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '50%',}]}>
+                  <Text style={styles.legend}>Quant. Abastecida</Text>
+                </View>
+                <View style={[styles.vlegend, {width: '50%',}]}>
+                  <Text style={styles.legend}>Valor total</Text>
+                </View>
+              </View>
 
-        <TouchableHighlight onPress={handleSubmit} style={styles.button}>
-          <Text style={styles.buttonText}>Gravar</Text>
-        </TouchableHighlight>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '50%'}]}>
+                  <FormInput
+                    name='quant'
+                    value={values.quant}
+                    style={styles.input}
+                    keyboardType="numeric"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={handleChange('quant')}
+                  />
+                </View>
+                <View style={[styles.vlegend, {width: '50%'}]}>
+                  <FormInput
+                    name='valor'
+                    value={values.valor}
+                    style={styles.input}
+                    keyboardType="numeric"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={handleChange('valor')}
+                  />
+                </View>
+              </View> 
 
-      </ImageBackground>
-    </View>
-  )
+              <FormButton
+                style={styles.button}
+                buttonType="outline"
+                onPress={handleSubmit}
+                title="Gravar"
+                buttonColor="#007189"
+              />
 
-  /* 
-  return (
-    <View style={styles.scene}>
-      <ImageBackground
-        style={GlobalStyles.background}
-        source={bg}
-      > 
-        <Text style={styles.placa}>{placa}</Text> 
-                
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Quilometragem</Text>
-          </View>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Encheu o tanque?</Text>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='km'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              value={pkm || ''}
-              onChangeText={setPkm}
-              required
-            />
-          </View>
-
-          <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
-            <SwitchToggle
-              containerStyle={{
-                width: 100,
-                height: 30,
-                borderRadius: 15,
-                padding: 5,
-              }}
-              backgroundColorOn="#a0e1e5"
-              backgroundColorOff="#e5e1e0"
-              circleStyle={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                backgroundColor: 'blue',
-              }}
-              switchOn={pencheu}
-              onPress={() => setPencheu(!pencheu)}
-              circleColorOff='red'
-              circleColorOn='green'
-              duration={500}
-            />
-          </View>
-
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Quant. Abastecida</Text>
-          </View>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Valor total</Text>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='quant'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              value={pquant || ''}
-              onChangeText={setPquant}
-            />
-          </View>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='valor'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              value={pvalor || ''}
-              onChangeText={setPvalor}
-            />
-          </View>
-        </View>
-
-        <TouchableHighlight onPress={handleSubmit} style={styles.button}>
-          <Text style={styles.buttonText}>Gravar</Text>
-        </TouchableHighlight>
+            </Fragment>
+          )}
+        </Formik>
 
       </ImageBackground>
     </View>
   )
-   */
 }
 
 const styles = StyleSheet.create({
