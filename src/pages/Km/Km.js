@@ -14,12 +14,11 @@ import {
 } from 'react-native'
 
 import { TabView, SceneMap } from 'react-native-tab-view'
-import { SwitchToggle } from '@dooboo-ui/native';
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import Api from '../../services/oapi'
-import validade from '../../helpers/FormValidationRules'
+import AtualizaKM from './AtualizaKM'
 
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
@@ -34,13 +33,6 @@ export default function Km({ navigation }) {
   const [oficina, setOficina] = useState({})
   const [historico, setHistorico] = useState([])
   const [resu, setResumo] = useState([])
-
-  const [pkm, setPkm] = useState('')
-  const [pencheu, setPencheu] = useState(false)
-  const [pquant, setPquant] = useState('')
-  const [pvalor, setPvalor] = useState('')
-
-
   const [state, setState] = useState({
     index: 0,
     routes: [
@@ -52,13 +44,13 @@ export default function Km({ navigation }) {
 
   useEffect(() => {
     setPlaca(navigation.getParam('placa'))
-  }, [placa])
+  }, [])
 
   useEffect(() => {
     AsyncStorage.getItem('oficina').then(Oficina => {
       setOficina(Oficina)
     })
-  }, [oficina])
+  }, [])
 
   useEffect(() => {
     setIsLoading(true)
@@ -99,7 +91,7 @@ export default function Km({ navigation }) {
       }
       buscaHistorico()
     })
-  }, [email])
+  }, [])
   
   const buscaResumo = () => {
     setIsLoading(true)
@@ -139,105 +131,9 @@ export default function Km({ navigation }) {
 
   const Atualizacao = () => (
     <View style={styles.scene}>
-      
-      
-      <ImageBackground
-        style={GlobalStyles.background}
-        source={bg}
-      > 
-        <Text style={styles.placa}>{placa}</Text> 
-        
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Quilometragem</Text>
-          </View>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Encheu o tanque?</Text>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='km'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              defaultValue={pkm}
-              onChangeText={setPkm}
-              required
-            />
-          </View>
-
-          <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
-            <SwitchToggle
-              containerStyle={{
-                width: 100,
-                height: 30,
-                borderRadius: 15,
-                padding: 5,
-              }}
-              backgroundColorOn="#a0e1e5"
-              backgroundColorOff="#e5e1e0"
-              circleStyle={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                backgroundColor: 'blue',
-              }}
-              switchOn={pencheu}
-              onPress={() => setPencheu(!pencheu)}
-              circleColorOff='red'
-              circleColorOn='green'
-              duration={500}
-            />
-          </View>
-
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Quant. Abastecida</Text>
-          </View>
-          <View style={[styles.vlegend, {width: '50%',}]}>
-            <Text style={styles.legend}>Valor total</Text>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='quant'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              defaultValue={pquant}
-              onChangeText={setPquant}
-            />
-          </View>
-          <View style={[styles.vlegend, {width: '50%'}]}>
-            <TextInput
-              name='valor'
-              style={styles.input}
-              keyboardType="numeric"
-              autoCorrect={false}
-              defaultValue={pvalor}
-              onChangeText={setPvalor}
-            />
-          </View>
-        </View>
-
-        <TouchableHighlight onPress={handleSubmit} style={styles.button}>
-          <Text style={styles.buttonText}>Gravar</Text>
-        </TouchableHighlight>
-
-      </ImageBackground>
+      <AtualizaKM placa={placa} />
     </View>
   )
-
-  async function handleSubmit() {
-    console.log('Data', pkm, pencheu, pquant, pvalor)
-  }
 
   const FlatList_header_hist = () => {
     var Sticky_header_View = (
@@ -362,13 +258,6 @@ export default function Km({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  logo: {
-    height: 100,
-    resizeMode: 'contain',
-    alignSelf: 'center',
-    marginTop: 50,
-  },
-
   scene: {
     flex: 1,
     marginTop: 10,
@@ -409,23 +298,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  msgText: {
-    fontSize: 18,
-    color: '#FFFFFF',
-    flexDirection: 'row',
-    alignSelf: 'center',
-    textAlign: 'justify',
-    marginTop: height - (height / 2) - 40, 
-    paddingRight: 10,
-    width: width - 20, 
-  },
-  
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -443,11 +315,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 
-  vtext: {
-    // marginTop: 5,
-    width: width,
-  },
-
   text: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -456,44 +323,5 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
 
-  placa: {
-    textAlign: 'center',
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginTop: 30,
-    color: '#FFF',
-  },
 
-  switch: {
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: '#444',
-    paddingHorizontal: 20,
-    fontSize: 16,
-    color: '#444',
-    height: 44,
-    marginBottom: 20,
-    marginLeft: 15, 
-    marginRight: 15,
-    borderRadius: 2,
-    backgroundColor: '#FFF',
-  },
-
-  button: {
-    height: 42,
-    width: 160,
-    backgroundColor: '#007189',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 2,
-  },
-
-  buttonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  
 })
