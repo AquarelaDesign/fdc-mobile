@@ -11,12 +11,14 @@ import {
   View,
 } from 'react-native'
 
-import { Formik } from 'formik'
-import { SwitchToggle } from '@dooboo-ui/native'
+import { Formik, Field } from 'formik'
+// import { SwitchToggle } from '@dooboo-ui/native'
+import Switch from '@material-ui/core/Switch'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import FormInput from '../../components/FormInput'
 import FormButton from '../../components/FormButton'
+import FormCheckBox from '../../components/FormCheckBox'
 
 import bg from '../../assets/fundo-app.png'
 
@@ -86,6 +88,13 @@ export default function AtualizaKM({ placa, navigation }) {
                 </View>
 
                 <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
+                  <FormCheckBox
+                    checked={values.encheu}
+                    onChange={handleChange('encheu')}
+                    value={values.encheu}
+                  />
+                    
+{/*
                   <SwitchToggle
                     containerStyle={{
                       width: 100,
@@ -102,11 +111,12 @@ export default function AtualizaKM({ placa, navigation }) {
                       backgroundColor: 'blue',
                     }}
                     switchOn={values.encheu}
-                    onPress={handleChange('encheu')}
+                    onPress={() => !handleChange('encheu')}
                     circleColorOff='red'
                     circleColorOn='green'
                     duration={500}
                   />
+*/}
                 </View>
 
               </View>
