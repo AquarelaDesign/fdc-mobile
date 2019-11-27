@@ -19,6 +19,7 @@ import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import FormInput from '../../components/FormInput'
 import FormButton from '../../components/FormButton'
 import FormCheckBox from '../../components/FormCheckBox'
+import FormSwitch from '../../components/FormSwitch'
 
 import bg from '../../assets/fundo-app.png'
 
@@ -33,11 +34,12 @@ export default function AtualizaKM({ placa, navigation }) {
   const onSubmit = (data) => { console.log(data) }
 
   const handleSubmit = (values) => {
+    console.log('values', values)
     if (values.km.length > 0 && 
         values.quant.length > 0 &&
         values.valor.length > 0
         ) {
-      console.log('values', values)
+      console.log('values-ok', values)
     }
   }
 
@@ -61,7 +63,7 @@ export default function AtualizaKM({ placa, navigation }) {
           {({ 
             handleChange, 
             values, 
-            handleSubmit 
+            handleSubmit,
           }) => (
             <Fragment>
 
@@ -88,12 +90,22 @@ export default function AtualizaKM({ placa, navigation }) {
                 </View>
 
                 <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
-                  <FormCheckBox
-                    checked={values.encheu}
+                  
+                    
+                  <FormSwitch
+                    name='encheu'
                     onChange={handleChange('encheu')}
                     value={values.encheu}
                   />
-                    
+                  
+                  
+                  {/*}
+                  <FormCheckBox
+                    checked={values.encheu}
+                    onChange={handleChange('encheu',!values.encheu)}
+                    value={values.encheu}
+                  />
+                  */}  
 {/*
                   <SwitchToggle
                     containerStyle={{

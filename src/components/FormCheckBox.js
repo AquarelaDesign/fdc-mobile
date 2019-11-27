@@ -21,12 +21,13 @@ const FormCheckBox = ({
 const styles = StyleSheet.create({
   
   inputContainer: {
-    margin: 15
+    marginTop: -10,
+    alignItems: "center",
   },
   
   icone: {
-    height: 100,
-    width: 50,
+    height: 50,
+    width: 100,
   },
 
 })
