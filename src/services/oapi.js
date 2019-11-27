@@ -4,7 +4,7 @@ import axios from 'axios'
 const querystring = require('querystring')
 
 const oapi = axios.create({
-  baseURL: 'http://siare08.procyon.com.br:3125/cgi-bin/siarewebtt.pl/wficha',
+  baseURL: 'http://siare31.procyon.com.br:3125/cgi-bin/siarewebfdc.pl/wficha',
   timeout: 5000,
 })
 
