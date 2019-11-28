@@ -30,24 +30,18 @@ oapi.interceptors.request.use(async config => {
   if (config.CancelToken === undefined) {
     config.CancelToken = axios.CancelToken
   }
-  
-  console.log('oApi-config', config, axios.CancelToken)
   return config
 })
 
 oapi.interceptors.response.use((response) => {
-  console.log('oApi-response', response)
   return response
 },(error) => {
-  
-  console.log('oApi-error', error)
   if (error.response !== undefined) {
     if (error.response.status === 401) {
       const requestConfig = error.config
       return axios(requestConfig)
     }
   }
-    
   return Promise.reject(error)
 })
 

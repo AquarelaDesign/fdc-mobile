@@ -60,7 +60,6 @@ export default function ListaPlacas({ navigation }) {
       
       async function buscaPas() {
         try {
-          console.log('Email-2', Email, email, oficina)
           if (email && oficina.idusu) {
             await Api.post('', querystring.stringify({
               pservico: 'wfcvei',
@@ -69,7 +68,6 @@ export default function ListaPlacas({ navigation }) {
               pemail: email,
               pidapp: oficina.idusu,
             })).then(response => {
-              console.log('response', response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttfccva } = response.data.ProDataSet
@@ -79,7 +77,6 @@ export default function ListaPlacas({ navigation }) {
             })
           }
         } catch (error) {
-          console.log(error)
           const { response } = error
           if (response !== undefined) {
             // console.log(response.data.errors[0])
@@ -94,9 +91,6 @@ export default function ListaPlacas({ navigation }) {
       
     })
   }, [email, tipo])
-  
-  // console.log('pass', pass)
-  // console.log('oficina', oficina)
   
   function Loading() {
     return (

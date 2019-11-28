@@ -1,38 +1,76 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
 
 import {
+  Animated,
   AsyncStorage,
   Dimensions,
+  Easing,
+  Image,
   ImageBackground,
   StyleSheet,
-  TextInput,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
 
-import { Formik, Field } from 'formik'
-// import { SwitchToggle } from '@dooboo-ui/native'
-import Switch from '@material-ui/core/Switch'
+import { Formik } from 'formik'
+// import * as Yup from 'yup'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
-import FormInput from '../../components/FormInput'
+import FormTextInput from '../../components/FormTextInput'
 import FormButton from '../../components/FormButton'
-import FormCheckBox from '../../components/FormCheckBox'
 import FormSwitch from '../../components/FormSwitch'
 
 import bg from '../../assets/fundo-app.png'
+import cheio from '../../assets/tanque_cheio.png'
+import parcial from '../../assets/tanque_parcial.png'
 
 const { width, height } = Dimensions.get('window')
+/*
+const validationSchema = Yup.object().shape({
+  km: Yup.string()
+    .matches(!/^1000([.][0]{1,3})?$|^\d{1,3}$|^\d{1,3}([.]\d{1,3})$|^([.]\d{1,3})$/, {
+      message: 'Km possui um formato inválido',
+      excludeEmptyString: true,
+    }),
+  quant: Yup.string()
+    .matches(!/^1000([.][0]{1,2})?$|^\d{1,2}$|^\d{1,2}([.]\d{1,2})$|^([.]\d{1,2})$/, {
+      message: 'Quantidade possui um formato inválido',
+      excludeEmptyString: true,
+    }),
+  valor: Yup.string()
+    .matches(!/^1000([.][0]{1,2})?$|^\d{1,2}$|^\d{1,2}([.]\d{1,2})$|^([.]\d{1,2})$/, {
+      message: 'valor possui um formato inválido',
+      excludeEmptyString: true,
+    }),
+})
+*/
 
 export default function AtualizaKM({ placa, navigation }) {
   const [km, setKm] = useState('')
   const [encheu, setEncheu] = useState(false)
   const [quant, setQuant] = useState('')
   const [valor, setValor] = useState('')
+  const [imgSwitch, setimgSwitch] = useState(parcial)
+  const [RotateValueHolder, setRotateValueHolder] = useState(0)
 
-  const onSubmit = (data) => { console.log(data) }
+/*   
+  const sRotateData = useRef(new Animated.Value(0)).current
 
+  const RotateData = sRotateData.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  })  
+
+  useEffect(() => {
+    Animated.timing(RotateData, {
+      toValue: 1,
+      duration: 3000,
+      easing: Easing.linear,
+    }).start()
+  }, [])
+ */
+  
   const handleSubmit = (values) => {
     console.log('values', values)
     if (values.km.length > 0 && 
@@ -58,14 +96,19 @@ export default function AtualizaKM({ placa, navigation }) {
             quant: '',
             valor: '',
           }}
-          onSubmit={values => { handleSubmit(values) }}
+          onSubmit={values => {
+            handleSubmit(values)
+          }}
+          // validationSchema={validationSchema}
         >
           {({ 
             handleChange, 
             values, 
             handleSubmit,
+            // errors,
           }) => (
             <Fragment>
+              {setimgSwitch(values.encheu ? cheio : parcial)}
 
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '50%',}]}>
@@ -78,7 +121,7 @@ export default function AtualizaKM({ placa, navigation }) {
 
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '50%'}]}>
-                  <FormInput
+                  <FormTextInput
                     name='km'
                     value={values.km}
                     style={styles.input}
@@ -89,48 +132,31 @@ export default function AtualizaKM({ placa, navigation }) {
                   />
                 </View>
 
-                <View style={[styles.vlegend, {width: '50%', justifyContent: 'center', alignItems: 'center',}]}>
-                  
-                    
-                  <FormSwitch
-                    name='encheu'
-                    onChange={handleChange('encheu')}
-                    value={values.encheu}
-                  />
-                  
-                  
-                  {/*}
-                  <FormCheckBox
-                    checked={values.encheu}
-                    onChange={handleChange('encheu',!values.encheu)}
-                    value={values.encheu}
-                  />
-                  */}  
-{/*
-                  <SwitchToggle
-                    containerStyle={{
-                      width: 100,
-                      height: 30,
-                      borderRadius: 15,
-                      padding: 5,
-                    }}
-                    backgroundColorOn="#a0e1e5"
-                    backgroundColorOff="#e5e1e0"
-                    circleStyle={{
-                      width: 20,
-                      height: 20,
-                      borderRadius: 10,
-                      backgroundColor: 'blue',
-                    }}
-                    switchOn={values.encheu}
-                    onPress={() => !handleChange('encheu')}
-                    circleColorOff='red'
-                    circleColorOn='green'
-                    duration={500}
-                  />
-*/}
+                <View style={[styles.vlegend, {
+                  width: '50%', justifyContent: 'flex-start', alignItems: 'flex-start',
+                }]}>
+                  <View style={styles.row}>
+                    <View style={{width: '30%', marginRight: 5, }}>
+                      <FormSwitch
+                        name='encheu'
+                        onChange={handleChange('encheu')}
+                        value={values.encheu}
+                      />
+                    </View>
+                    <View style={{width: '70%', marginRight: 10, }}>
+                      <Animated.Image
+                        source={imgSwitch}
+                        style={{
+                          width: 100,
+                          height: 50,
+                          // transform: [{ rotate: RotateData }],
+                        }}
+                        resizeMode="contain"
+                      />
+                    </View>
+                  </View>
                 </View>
-
+                {/* <Text style={{ color: 'red' }}>{errors.km}</Text> */}
               </View>
 
               <View style={styles.row}>
@@ -144,7 +170,7 @@ export default function AtualizaKM({ placa, navigation }) {
 
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '50%'}]}>
-                  <FormInput
+                  <FormTextInput
                     name='quant'
                     value={values.quant}
                     style={styles.input}
@@ -155,7 +181,7 @@ export default function AtualizaKM({ placa, navigation }) {
                   />
                 </View>
                 <View style={[styles.vlegend, {width: '50%'}]}>
-                  <FormInput
+                  <FormTextInput
                     name='valor'
                     value={values.valor}
                     style={styles.input}
