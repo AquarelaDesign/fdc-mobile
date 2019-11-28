@@ -5,6 +5,7 @@ const querystring = require('querystring')
 
 const oapi = axios.create({
   baseURL: 'http://siare31.procyon.com.br:3125/cgi-bin/siarewebfdc.pl/wficha',
+  // baseURL: 'http://siare08.procyon.com.br:3125/cgi-bin/siarewebtt.pl/wficha',
   timeout: 5000,
 })
 
@@ -26,17 +27,27 @@ oapi.interceptors.request.use(async config => {
     })
   })
 
+  if (config.CancelToken === undefined) {
+    config.CancelToken = axios.CancelToken
+  }
+  
+  console.log('oApi-config', config, axios.CancelToken)
   return config
 })
 
 oapi.interceptors.response.use((response) => {
-  // console.log('oApi', response)
+  console.log('oApi-response', response)
   return response
 },(error) => {
-  if (error.response.status === 401)  {     
-    const requestConfig = error.config
-    return axios(requestConfig)
+  
+  console.log('oApi-error', error)
+  if (error.response !== undefined) {
+    if (error.response.status === 401) {
+      const requestConfig = error.config
+      return axios(requestConfig)
+    }
   }
+    
   return Promise.reject(error)
 })
 
