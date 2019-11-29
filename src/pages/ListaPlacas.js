@@ -31,13 +31,6 @@ export default function ListaPlacas({ navigation }) {
   const [oficina, setOficina] = useState({})
   const [pass, setPass] = useState([])
 
-  useEffect(() => { 
-    AsyncStorage.getItem('oficina').then(Oficina => {
-      const ofi = JSON.parse(Oficina) 
-      setOficina(ofi)
-    })
-  }, [oficina])
-  
   useEffect(() => {
     setIsLoading(true)
     setTipo(navigation.getParam('tipo'))
@@ -55,27 +48,30 @@ export default function ListaPlacas({ navigation }) {
       setIsLoading(false)
     }
 
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      setOficina(Oficina)
+    })
+
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
       
       async function buscaPas() {
         try {
-          if (email && oficina.idusu) {
-            await Api.post('', querystring.stringify({
-              pservico: 'wfcvei',
-              pmetodo: 'listaPlacasApp',
-              pcodprg: '',
-              pemail: email,
-              pidapp: oficina.idusu,
-            })).then(response => {
-              if (response.status === 200) {
-                if (response.data.ProDataSet !== undefined) {
-                  const { ttfccva } = response.data.ProDataSet
-                  montaLista(ttfccva)
-                }
+          
+          await Api.post('', querystring.stringify({
+            pservico: 'wfcvei',
+            pmetodo: 'listaPlacasApp',
+            pcodprg: '',
+            pemail: email,
+            pidapp: oficina.idusu,
+          })).then(response => {
+            if (response.status === 200) {
+              if (response.data.ProDataSet !== undefined) {
+                const { ttfccva } = response.data.ProDataSet
+                montaLista(ttfccva)
               }
-            })
-          }
+            } 
+          })
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
@@ -90,7 +86,10 @@ export default function ListaPlacas({ navigation }) {
       buscaPas()
       
     })
-  }, [email, tipo])
+  }, [email, oficina, tipo])
+  
+  // console.log('recs', recs)
+  // console.log('oficina', oficina)
   
   function Loading() {
     return (
