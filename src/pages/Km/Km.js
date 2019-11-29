@@ -30,7 +30,6 @@ export default function Km({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [placa, setPlaca] = useState('')
-  const [oficina, setOficina] = useState({})
   const [historico, setHistorico] = useState([])
   const [resu, setResumo] = useState([])
   const [state, setState] = useState({
@@ -44,12 +43,6 @@ export default function Km({ navigation }) {
 
   useEffect(() => {
     setPlaca(navigation.getParam('placa'))
-  }, [])
-
-  useEffect(() => {
-    AsyncStorage.getItem('oficina').then(Oficina => {
-      setOficina(Oficina)
-    })
   }, [])
 
   useEffect(() => {
@@ -91,7 +84,7 @@ export default function Km({ navigation }) {
       }
       buscaHistorico()
     })
-  }, [])
+  }, [email])
   
   const buscaResumo = () => {
     setIsLoading(true)

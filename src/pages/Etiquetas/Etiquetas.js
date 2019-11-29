@@ -29,16 +29,11 @@ export default function Etiquetas({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [placa, setPlaca] = useState('')
   const [email, setEmail] = useState('')
-  const [oficina, setOficina] = useState({})
   const [etq, setEtq] = useState([])
   
   useEffect(() => {
     setIsLoading(true)
     setPlaca(navigation.getParam('placa'))
-
-    AsyncStorage.getItem('oficina').then(Oficina => {
-      setOficina(Oficina)
-    })
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
@@ -74,7 +69,7 @@ export default function Etiquetas({ navigation }) {
       }
       buscaEtq()
     })
-  }, [email, oficina, placa])
+  }, [email, placa])
   
   // console.log(etq', placa, etq)
 

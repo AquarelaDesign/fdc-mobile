@@ -11,31 +11,45 @@ import {
   TouchableOpacity 
 } from 'react-native'
 
+import Lottie from 'lottie-react-native'
+
 import GlobalStyles from '../GlobalStyles'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
+import loading from '../assets/json/car-scan.json'
+
 import passagens from '../assets/passagens-icon4.png'
 import etiquetas from '../assets/icon-etiqueta.png'
 import km from '../assets/ICON-KM2.png'
 import promocoes from '../assets/icon-promotion2.png'
 import outros from '../assets/se2gurocarro.png'
 
-export default function Home({ navigation }) {
+export default function Home({ navigation }) {  
+  const [isLoading, setIsLoading] = useState(false)
   const [isOficina, setIsOficina] = useState(false)
-  const [oficina, setOficina] = useState({})
 
   useEffect(() => {
-    AsyncStorage.getItem('oficina').then(Oficina => {
-      setOficina(Oficina)
-      setIsOficina(Oficina.codsia !== '' && Oficina.codsia !== undefined ? true : false)
-      // console.log('Oficina', Oficina)
-    })
+    async function init() {
+      setIsLoading(true)
+      const Oficina = await AsyncStorage.getItem('oficina')
 
-
-  }, [oficina])
+      if (Oficina) {
+        const ofi = JSON.parse(Oficina)
+        if (ofi.tipusu !== undefined) {
+          setIsOficina(ofi.tipusu === 'OFI' ? true : false)
+        }
+        setIsLoading(false)
+      }
+    }
+    init()
+  }, [])
 
   const onPress = (tipo) => {
+    if (!isOficina && tipo === 'IND') {
+      return
+    }
+
     switch (tipo) {
       // case 'PAS': navigation.navigate('Passagens')
       // case 'ETQ': navigation.navigate('Etiquetas')
@@ -46,6 +60,12 @@ export default function Home({ navigation }) {
     
   }
   
+  function Loading() {
+    return (
+      <Lottie source={loading} autoPlay loop />
+    )
+  }
+
   return (
     <SafeAreaView style={GlobalStyles.container}>
       <ImageBackground
@@ -101,6 +121,7 @@ export default function Home({ navigation }) {
             </View>
           </TouchableOpacity>
         </View>
+        {isLoading ? Loading() : <></>}
       </ImageBackground>
     </SafeAreaView>
   )
