@@ -7,26 +7,31 @@ import {
   Easing,
   Image,
   ImageBackground,
+  Keyboard,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
 
+import Lottie from 'lottie-react-native'
 import { Formik } from 'formik'
-// import * as Yup from 'yup'
+import * as Yup from 'yup'
 
+import Api from '../../services/oapi'
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import FormTextInput from '../../components/FormTextInput'
 import FormButton from '../../components/FormButton'
 import FormSwitch from '../../components/FormSwitch'
 
 import bg from '../../assets/fundo-app.png'
+import loading from '../../assets/json/car-scan.json'
 import cheio from '../../assets/tanque_cheio.png'
 import parcial from '../../assets/tanque_parcial.png'
 
+const querystring = require('querystring')
 const { width, height } = Dimensions.get('window')
-/*
+
 const validationSchema = Yup.object().shape({
   km: Yup.string()
     .matches(!/^1000([.][0]{1,3})?$|^\d{1,3}$|^\d{1,3}([.]\d{1,3})$|^([.]\d{1,3})$/, {
@@ -44,15 +49,25 @@ const validationSchema = Yup.object().shape({
       excludeEmptyString: true,
     }),
 })
-*/
 
 export default function AtualizaKM({ placa, navigation }) {
-  const [km, setKm] = useState('')
-  const [encheu, setEncheu] = useState(false)
-  const [quant, setQuant] = useState('')
-  const [valor, setValor] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  // const [placa, setPlaca] = useState('')
   const [imgSwitch, setimgSwitch] = useState(parcial)
-  const [RotateValueHolder, setRotateValueHolder] = useState(0)
+  
+  // const [km, setKm] = useState('')
+  // const [encheu, setEncheu] = useState(false)
+  // const [quant, setQuant] = useState('')
+  // const [valor, setValor] = useState('')
+  // const [RotateValueHolder, setRotateValueHolder] = useState(0)
+
+  const initialValues = { 
+    km: '', 
+    encheu: false,
+    quant: '',
+    valor: '',
+  }
 
 /*   
   const sRotateData = useRef(new Animated.Value(0)).current
@@ -71,14 +86,69 @@ export default function AtualizaKM({ placa, navigation }) {
   }, [])
  */
   
-  const handleSubmit = (values) => {
-    console.log('values', values)
+  function handleSubmit (values, props) {
+    // console.log('values', values)
     if (values.km.length > 0 && 
         values.quant.length > 0 &&
         values.valor.length > 0
         ) {
-      console.log('values-ok', values)
+      setIsLoading(true)
+      console.log('values-ok', placa, values)
+      Keyboard.dismiss()
+      
+      // props.buscaHistorico()
+      console.log('props', props)
+
+      AsyncStorage.getItem('email').then(Email => {
+        setEmail(Email)
+  
+        async function gravaKm() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcvei',
+              pmetodo: 'AtualizaKM',
+              pcodprg: '',
+              pemail: email,
+              pplaca: placa,
+              pquant: values.quant,
+              pkm: values.km.replace('.',''),
+              ptanqch: values.encheu ? 'S' : 'N',
+              pvalor: values.valor.replace('R$ ',''),
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  // const { ttfccva } = response.data.ProDataSet
+                  props.buscaHistorico()
+                  setIsLoading(false)
+                } else {
+                  setIsLoading(false)
+                }
+              } else {
+                setIsLoading(false)
+              }
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              // console.log(response.data.errors[0])
+              setIsLoading(false)
+            } else {
+              // console.log(error)
+              setIsLoading(false)
+            }
+          }
+        }
+        // gravaKm()
+      })
+      setIsLoading(false)
+
     }
+  }
+
+  function Loading() {
+    return (
+      <Lottie source={loading} autoPlay loop />
+    )
   }
 
   return (
@@ -90,14 +160,10 @@ export default function AtualizaKM({ placa, navigation }) {
         <Text style={styles.placa}>{placa}</Text> 
                 
         <Formik
-          initialValues={{ 
-            km: '', 
-            encheu: false,
-            quant: '',
-            valor: '',
-          }}
-          onSubmit={values => {
+          initialValues={initialValues}
+          onSubmit={(values, {resetForm}) => {
             handleSubmit(values)
+            resetForm()
           }}
           // validationSchema={validationSchema}
         >
@@ -105,6 +171,7 @@ export default function AtualizaKM({ placa, navigation }) {
             handleChange, 
             values, 
             handleSubmit,
+            resetForm,
             // errors,
           }) => (
             <Fragment>
@@ -122,12 +189,24 @@ export default function AtualizaKM({ placa, navigation }) {
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '50%'}]}>
                   <FormTextInput
+                    // type={'custom'}
+                    // options={{mask: '999.999'}}
+                    type={'money'}
+                    options={{
+                      precision: 0,
+                      separator: '.',
+                      delimiter: '',
+                      unit: '',
+                      suffixUnit: '',
+                      zeroCents: false
+                    }}
                     name='km'
                     value={values.km}
                     style={styles.input}
                     keyboardType="numeric"
                     autoCorrect={false}
                     autoCapitalize="none"
+                    // includeRawValueInChangeText={true}
                     onChangeText={handleChange('km')}
                   />
                 </View>
@@ -171,6 +250,16 @@ export default function AtualizaKM({ placa, navigation }) {
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '50%'}]}>
                   <FormTextInput
+                    // type={'custom'}
+                    // options={{mask: '9999.99'}}
+                    type={'money'}
+                    options={{
+                      precision: 2,
+                      separator: ',',
+                      delimiter: '.',
+                      unit: '',
+                      suffixUnit: ''
+                    }}
                     name='quant'
                     value={values.quant}
                     style={styles.input}
@@ -182,6 +271,14 @@ export default function AtualizaKM({ placa, navigation }) {
                 </View>
                 <View style={[styles.vlegend, {width: '50%'}]}>
                   <FormTextInput
+                    type={'money'}
+                    options={{
+                      precision: 2,
+                      separator: '.',
+                      delimiter: '',
+                      unit: 'R$ ',
+                      suffixUnit: ''
+                    }}
                     name='valor'
                     value={values.valor}
                     style={styles.input}
@@ -195,16 +292,18 @@ export default function AtualizaKM({ placa, navigation }) {
 
               <FormButton
                 style={styles.button}
-                buttonType="outline"
+                type="solid"
                 onPress={handleSubmit}
                 title="Gravar"
-                buttonColor="#007189"
+                buttonStyle={styles.button}
+                textStyle={styles.buttonText}
               />
 
             </Fragment>
           )}
         </Formik>
 
+        {isLoading ? Loading() : <></>}
       </ImageBackground>
     </View>
   )
@@ -267,7 +366,7 @@ const styles = StyleSheet.create({
   button: {
     height: 42,
     width: 160,
-    backgroundColor: '#007189',
+    backgroundColor: '#87CEEB',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 2,

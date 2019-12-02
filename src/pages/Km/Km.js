@@ -47,45 +47,51 @@ export default function Km({ navigation }) {
 
   useEffect(() => {
     setIsLoading(true)
-  
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaHistorico() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcvei',
-            pmetodo: 'AtualizaKM',
-            pcodprg: '',
-            pemail: email,
-            pplaca: placa,
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttfckmv } = response.data.ProDataSet
-                // console.log('ttfckmv-h', ttfckmv)
-                setHistorico(ttfckmv)
-                if (ttfckmv !== undefined) {
-                  buscaResumo()
-                }
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            // console.log('1=>', response.data.errors[0])
-            setIsLoading(false)
-          } else {
-            // console.log('2=>', error)
-            setIsLoading(false)
-          }
-        }
-      }
       buscaHistorico()
     })
   }, [email])
   
+  const buscaHistorico = () => {
+    setIsLoading(true)
+    console.log('buscaHistorico')
+    
+    async function bHistorico() {
+      try {
+        await Api.post('', querystring.stringify({
+          pservico: 'wfcvei',
+          pmetodo: 'AtualizaKM',
+          pcodprg: '',
+          pemail: email,
+          pplaca: placa,
+        })).then(response => {
+          if (response.status === 200) {
+            if (response.data.ProDataSet !== undefined) {
+              const { ttfckmv } = response.data.ProDataSet
+              // console.log('ttfckmv-h', ttfckmv)
+              setHistorico(ttfckmv)
+              if (ttfckmv !== undefined) {
+                buscaResumo()
+              }
+            }
+          } 
+          setIsLoading(false)
+        })
+      } catch (error) {
+        const { response } = error
+        if (response !== undefined) {
+          // console.log('1=>', response.data.errors[0])
+          setIsLoading(false)
+        } else {
+          // console.log('2=>', error)
+          setIsLoading(false)
+        }
+      }
+    }
+    bHistorico()
+  }
+
   const buscaResumo = () => {
     setIsLoading(true)
     async function bResumo() {
@@ -124,7 +130,7 @@ export default function Km({ navigation }) {
 
   const Atualizacao = () => (
     <View style={styles.scene}>
-      <AtualizaKM placa={placa} />
+      <AtualizaKM placa={placa} callback={buscaHistorico} />
     </View>
   )
 

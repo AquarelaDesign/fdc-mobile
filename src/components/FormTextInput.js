@@ -1,7 +1,10 @@
 import React from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
+import { TextInputMask } from 'react-native-masked-text'
 
 const FormTextInput = ({
+  type,
+  options,
   name,
   value,
   placeholder,
@@ -9,8 +12,10 @@ const FormTextInput = ({
   ...rest
 }) => (
   <View style={styles.inputContainer}>
-    <TextInput
+    <TextInputMask
       {...rest}
+      type={type}
+      options={options}
       name={name}
       value={value}
       placeholder={placeholder}
