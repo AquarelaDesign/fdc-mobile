@@ -17,6 +17,9 @@ import Infoetq from './pages/Etiquetas/Info'
 
 import Km from './pages/Km/Km'
 
+import Promocoes from './pages/Promocoes/Promocoes'
+import InfoPromo from './pages/Promocoes/Info'
+
 import Indicadores from './pages/Indicadores/Indicadores'
 import Recebimentos from './pages/Indicadores/Recebimentos'
 import Documentos from './pages/Indicadores/Documentos'
@@ -106,6 +109,26 @@ const routes = {
   Km: {
     path: '/km',
     screen: Km,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Promocoes: {
+    path: '/promocoes',
+    screen: Promocoes,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  InfoPromo: {
+    path: '/infopromo',
+    screen: InfoPromo,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',

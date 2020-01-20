@@ -42,7 +42,7 @@ export default Recebimentos = ({ navigation }) => {
     BO: "barcode",
     OU: "dollar",
     DI: "money",
-    TR: "sync",
+    TR: "refresh",
     DE: "handshake-o",
   }
 

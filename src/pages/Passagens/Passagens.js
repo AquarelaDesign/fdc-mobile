@@ -179,6 +179,13 @@ export default function Passagens({ navigation }) {
     )
     return Sticky_header_View
   }
+
+  const getRandom = () => {
+    const min = 1
+    const max = 100
+    const rand = min + Math.random() * (max - min)
+    return rand.toString()
+  }
   
   const Passagem = () => (
     <View style={styles.scene}>
@@ -189,7 +196,7 @@ export default function Passagens({ navigation }) {
         <FlatList 
           style={styles.list}
           data={pass}
-          keyExtractor={pass => pass.idgpas.toString()}
+          keyExtractor={pass => pass.idgpas.toString() + getRandom()}
           
           // numColumns={5}
           renderItem={({ item, index }) => (
@@ -232,7 +239,7 @@ export default function Passagens({ navigation }) {
         <FlatList 
           style={styles.list}
           data={serv}
-          keyExtractor={serv => `${serv.idgpas}${serv.descri}`}
+          keyExtractor={serv => `${serv.idgpas}${serv.descri}${getRandom()}`}
 
           renderItem={({ item, index }) => (
             <TouchableHighlight
@@ -260,7 +267,7 @@ export default function Passagens({ navigation }) {
         <FlatList 
           style={styles.list}
           data={peca}
-          keyExtractor={peca => `${peca.idgpas}${peca.descri}`}
+          keyExtractor={peca => `${peca.idgpas}${peca.descri}${getRandom()}`}
 
           renderItem={({ item, index }) => (
             <TouchableHighlight

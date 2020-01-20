@@ -53,6 +53,7 @@ export default function Home({ navigation }) {
     switch (tipo) {
       // case 'PAS': navigation.navigate('Passagens')
       // case 'ETQ': navigation.navigate('Etiquetas')
+      case 'PRO': navigation.navigate('Promocoes'); break
       case 'IND': navigation.navigate('Indicadores'); break
       default: navigation.navigate('ListaPlacas', { tipo: tipo }); break
       //Alert.alert(`Clicado em ${tipo}`)

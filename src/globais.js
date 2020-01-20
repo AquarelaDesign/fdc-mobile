@@ -21,11 +21,18 @@ export const getEmail = () => {
   })
 }
 
+export const getRandom = () => {
+  const min = 1
+  const max = 100
+  const rand = min + Math.random() * (max - min)
+  return rand.toString()
+}
+
 // Período do Mês
 moment.locale('pt-BR')
 export const dataInicial = moment().startOf('month').format('L');
 export const dataFinal = moment().endOf('month').format('L');
 
 // Últimos 30 dias
-// export const dataInicial = moment().subtract(30, 'days').format('L');
-// export const dataFinal   = moment().format('L');
+export const dataInicial30 = moment().subtract(30, 'days').format('L');
+export const dataFinal30   = moment().format('L');
