@@ -304,7 +304,7 @@ export default function Passagens({ navigation }) {
             onPress={() => pressLink()}>
             Ainda não existe nenhum registro de passagem 
             em oficina para este veículo, entre em contato
-            coma sua oficina e solicite o registro no 
+            com a sua oficina e solicite o registro no 
             Ficha do Carro, é rápido, simples e sem custo,
             basta acessar o site <Text style={{color: '#FFFACD', fontWeight: 'bold',}}>{` ${_url} `}</Text>
             e seguir as instruções.
