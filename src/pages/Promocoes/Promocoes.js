@@ -14,6 +14,8 @@ import {
 
 import Lottie from 'lottie-react-native'
 
+import { SearchBar } from 'react-native-elements'
+
 import Globais, { getRandom } from '../../globais'
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import Api from '../../services/oapi'
@@ -24,12 +26,30 @@ import loading from '../../assets/json/car-scan.json'
 const { width, height } = Dimensions.get('window')
 const querystring = require('querystring')
 
-export default function Promocoes({ navigation }) {
+const useDebounce = (value, delay) => {
+  const [debounceValue, setDebounceValue] = useState(value)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounceValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [value, delay])
+
+  return debounceValue
+}
+
+const Promocoes = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
-  // const [placa, setPlaca] = useState('')
   const [oficina, setOficina] = useState({})
   const [promo, setPromo] = useState([])
+  const [promoFilter, setPromoFilter] = useState([])
+  const [query, setQuery] = useState('')
+  const debounceQuery = useDebounce(query, 300)
 
   useEffect(() => {
     setIsLoading(true)
@@ -54,14 +74,16 @@ export default function Promocoes({ navigation }) {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttpromo } = response.data.ProDataSet
-                setPromo(ttpromo)
-                // console.log('2=>', promo)
-                /*
-                if (ttpromo !== undefined) {
-                  bServ(ttpromo[0].placa)
-                  bPeca(ttpromo[0].placa)
-                }
-                */
+                
+                const promOrd = Object.values(ttpromo)
+                  .map((ttpromo) => ({
+                    ...ttpromo,
+                    upperCasePlaca: ttpromo.placa.toUpperCase(),
+                  }))
+                  .sort((a, b) => a.placa > b.placa)
+
+                setPromo(promOrd)
+                setPromoFilter(promOrd)
               }
             }
             setIsLoading(false)
@@ -80,6 +102,26 @@ export default function Promocoes({ navigation }) {
       buscaPro()
     })
   }, [email, oficina])
+
+  useEffect(() => {
+    const lowerCaseQuery = debounceQuery.toLowerCase()
+    
+    console.log('lowerCaseQuery =>', lowerCaseQuery)
+    
+    const newPromos = promo
+      // .filter((ttpromo) => {
+      //   console.log('filter =>', ttpromo.placa, promoFilter)
+      //   ttpromo.placa.includes(lowerCaseQuery)
+      // }) 
+      .map((ttpromo) => ({
+        ...ttpromo,
+        order: ttpromo.placa !== undefined ? ttpromo.placa.indexOf(lowerCaseQuery) : '',
+      }))
+      .sort((a, b) => a.order - b.order)
+
+      console.log('newPromos =>', newPromos)
+      setPromo(newPromos)
+  }, [debounceQuery])
 
   const pressPro = (item) => {
     navigation.navigate('InfoPromo', {
@@ -115,8 +157,17 @@ export default function Promocoes({ navigation }) {
               <Text style={styles.msgText}>
                 Não foi encontrada nenhuma promoção vigente para este veículo.
                 Continue atualizando as informações de quilometragem para receber promoções exclusivas.
-          </Text>
+              </Text>
               :
+              <View>
+              {/* 
+              <SearchBar
+                style={styles.searchBar}
+                placeholder="Filtrar Placas..."
+                onChangeText={setQuery}
+                value={query}
+              />
+              */}
               <FlatList
                 style={styles.list}
                 data={promo}
@@ -135,6 +186,7 @@ export default function Promocoes({ navigation }) {
                 ListHeaderComponent={FlatList_header_pro}
                 stickyHeaderIndices={[0]}
               />
+              </View>
           }
         </ImageBackground>
       </View>
@@ -173,6 +225,10 @@ const styles = StyleSheet.create({
     marginBottom: 90,
   },
 
+  searchBar: {
+    width: Dimensions.get('window').width - 10,
+  },
+
   listItem: {
     display: 'flex',
     width: Dimensions.get('window').width - 10,
@@ -209,3 +265,5 @@ const styles = StyleSheet.create({
   },
 
 })
+
+export default Promocoes
