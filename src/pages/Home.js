@@ -19,11 +19,11 @@ import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
 import loading from '../assets/json/car-scan.json'
 
-import passagens from '../assets/passagens-icon4.png'
-import etiquetas from '../assets/icon-etiqueta.png'
-import km from '../assets/ICON-KM2.png'
-import promocoes from '../assets/icon-promotion2.png'
-import outros from '../assets/se2gurocarro.png'
+import passagens from '../assets/Passagens.png'
+import etiquetas from '../assets/Etiquetas.png'
+import km from '../assets/KM.png'
+import promocoes from '../assets/Promocoes.png'
+import outros from '../assets/Outros.png'
 
 export default function Home({ navigation }) {  
   const [isLoading, setIsLoading] = useState(false)
@@ -54,6 +54,7 @@ export default function Home({ navigation }) {
       // case 'PAS': navigation.navigate('Passagens')
       // case 'ETQ': navigation.navigate('Etiquetas')
       case 'PRO': navigation.navigate('Promocoes'); break
+      case 'OUT': navigation.navigate('Outros'); break
       case 'IND': navigation.navigate('Indicadores'); break
       default: navigation.navigate('ListaPlacas', { tipo: tipo }); break
       //Alert.alert(`Clicado em ${tipo}`)
