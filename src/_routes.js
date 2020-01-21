@@ -20,6 +20,9 @@ import Km from './pages/Km/Km'
 import Promocoes from './pages/Promocoes/Promocoes'
 import InfoPromo from './pages/Promocoes/Info'
 
+import Outros from './pages/Outros/Outros'
+import Informacao from './pages/Outros/Informacao'
+
 import Indicadores from './pages/Indicadores/Indicadores'
 import Recebimentos from './pages/Indicadores/Recebimentos'
 import Documentos from './pages/Indicadores/Documentos'
@@ -129,6 +132,26 @@ const routes = {
   InfoPromo: {
     path: '/infopromo',
     screen: InfoPromo,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Outros: {
+    path: '/outros',
+    screen: Outros,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Informacao: {
+    path: '/informacao',
+    screen: Informacao,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
