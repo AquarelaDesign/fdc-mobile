@@ -21,6 +21,7 @@ import Promocoes from './pages/Promocoes/Promocoes'
 import InfoPromo from './pages/Promocoes/Info'
 
 import Outros from './pages/Outros/Outros'
+import FAQ from './pages/Outros/FAQ'
 import Informacao from './pages/Outros/Informacao'
 
 import Indicadores from './pages/Indicadores/Indicadores'
@@ -142,6 +143,16 @@ const routes = {
   Outros: {
     path: '/outros',
     screen: Outros,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  FAQ: {
+    path: '/faq',
+    screen: FAQ,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',

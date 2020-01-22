@@ -11,8 +11,6 @@ import {
   TouchableOpacity 
 } from 'react-native'
 
-import Icon from 'react-native-vector-icons/FontAwesome'
-
 import GlobalStyles from '../../GlobalStyles'
 
 import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
@@ -29,6 +27,7 @@ export default function Outros({ navigation }) {
   const onPress = (tipo) => {
     switch (tipo) {
       // case 'REC':  navigation.navigate('Recebimentos'); break
+      case 'FAQ': navigation.navigate('FAQ'); break
       case 'INF': navigation.navigate('Informacao'); break
       default: Alert.alert(`Clicado em ${tipo}`); break
     }
