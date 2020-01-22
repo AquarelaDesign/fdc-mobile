@@ -27,6 +27,7 @@ export default function Outros({ navigation }) {
   const onPress = (tipo) => {
     switch (tipo) {
       // case 'REC':  navigation.navigate('Recebimentos'); break
+      case 'CON': navigation.navigate('ConsultaPJ'); break
       case 'FAQ': navigation.navigate('FAQ'); break
       case 'INF': navigation.navigate('Informacao'); break
       default: Alert.alert(`Clicado em ${tipo}`); break
