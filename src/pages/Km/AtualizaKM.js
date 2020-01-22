@@ -107,7 +107,7 @@ export default function AtualizaKM({ placa, navigation }) {
             }
           }
         }
-        // gravaKm()
+        gravaKm()
       })
       setIsLoading(false)
 
