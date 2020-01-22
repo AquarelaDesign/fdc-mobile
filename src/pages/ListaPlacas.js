@@ -99,13 +99,66 @@ export default function ListaPlacas({ navigation }) {
 
   function handleNavigate(placa) {
     switch (tipo) {
+      case 'EXC': ExcluiVeiculo(placa); break
       case 'PAS': navigation.navigate('Passagem', { placa }); break
       case 'ETQ': navigation.navigate('Etiqueta', { placa }); break
       case 'KMS': navigation.navigate('Km', { placa }); break
       default: Alert.alert(`A opção ${tipo} ainda não foi implementada!`); break
     }
+  }
 
-    // navigation.navigate('Km', { placa })
+  function ExcluiVeiculo(placa) {
+    Alert.alert(
+      placa,
+      `Confirma a Exclusão da Placa?`,
+      [
+        {
+          text: 'Excluir',
+          onPress: () => {
+            console.log('Excluir Pressionado!')
+            
+            async function Exclui() {
+              try {
+                await Api.post('', querystring.stringify({
+                  pservico: 'wfcvei',
+                  pmetodo: 'ExcluiPlaca',
+                  pcodprg: '',
+                  pemail: email,
+                  pplaca: placa,
+                })).then(response => {
+                  if (response.status === 200) {
+                    if (response.data.ProDataSet !== undefined) {
+                      // const { ttfccva } = response.data.ProDataSet
+                      // setIsLoading(false)
+                    } else {
+                      // setIsLoading(false)
+                    }
+                  } else {
+                    // setIsLoading(false)
+                  }
+                })
+              } catch (error) {
+                const { response } = error
+                if (response !== undefined) {
+                  // console.log(response.data.errors[0])
+                  // setIsLoading(false)
+                } else {
+                  // console.log(error)
+                  // setIsLoading(false)
+                }
+              }
+            }
+            // Exclui()
+    
+          },
+        },
+        {
+          text: 'Cancelar',
+          onPress: () => console.log('Cancelar Pressionado!'),
+        }
+
+      ]
+    )
   }
 
   return (
