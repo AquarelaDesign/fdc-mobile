@@ -36,7 +36,7 @@ export default function Informacao({ navigation }) {
         
         <View style={GlobalStyles.boxContainer}>
           <Text style={styles.msgTitle}>
-            Simples, direto e objetivo.
+            Simples, direto e objetivo
           </Text>
           <View style={GlobalStyles.boxSpace}>
           </View>
@@ -76,37 +76,39 @@ const styles = StyleSheet.create({
 
   msgTitle: {
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 40,
     color: '#FFFFFF',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
     // marginTop: height - (height / 2) - 40, 
-    padding: 10,
+    paddingTop: 30,
     width: width - 10, 
   },
 
   msgText: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#FFFFFF',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
     // marginTop: height - (height / 2) - 40, 
-    padding: 10,
+    paddingTop: 50,
+    // padding: 10,
     width: width - 10, 
   },
 
   link: {
     color: '#FFFACD', 
+    fontSize: 20,
     fontWeight: 'bold',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    padding: 10,
+    paddingTop: 50,
     width: width - 10, 
   },
 
