@@ -4,13 +4,10 @@ import {
   Animated,
   AsyncStorage,
   Dimensions,
-  Easing,
-  Image,
   ImageBackground,
   Keyboard,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
 } from 'react-native'
 
@@ -19,7 +16,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 
 import Api from '../../services/oapi'
-import GlobalStyles, { colors, _url } from '../../GlobalStyles'
+import GlobalStyles, { _url } from '../../GlobalStyles'
 import FormTextInput from '../../components/FormTextInput'
 import FormButton from '../../components/FormButton'
 import FormSwitch from '../../components/FormSwitch'
@@ -30,7 +27,7 @@ import cheio from '../../assets/tanque_cheio.png'
 import parcial from '../../assets/tanque_parcial.png'
 
 const querystring = require('querystring')
-const { width, height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 
 const validationSchema = Yup.object().shape({
   km: Yup.string()
@@ -53,15 +50,8 @@ const validationSchema = Yup.object().shape({
 export default function AtualizaKM({ placa, navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
-  // const [placa, setPlaca] = useState('')
   const [imgSwitch, setimgSwitch] = useState(parcial)
   
-  // const [km, setKm] = useState('')
-  // const [encheu, setEncheu] = useState(false)
-  // const [quant, setQuant] = useState('')
-  // const [valor, setValor] = useState('')
-  // const [RotateValueHolder, setRotateValueHolder] = useState(0)
-
   const initialValues = { 
     km: '', 
     encheu: false,
@@ -69,25 +59,7 @@ export default function AtualizaKM({ placa, navigation }) {
     valor: '',
   }
 
-/*   
-  const sRotateData = useRef(new Animated.Value(0)).current
-
-  const RotateData = sRotateData.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  })  
-
-  useEffect(() => {
-    Animated.timing(RotateData, {
-      toValue: 1,
-      duration: 3000,
-      easing: Easing.linear,
-    }).start()
-  }, [])
- */
-  
   function handleSubmit (values, props) {
-    // console.log('values', values)
     if (values.km.length > 0 && 
         values.quant.length > 0 &&
         values.valor.length > 0
@@ -96,9 +68,6 @@ export default function AtualizaKM({ placa, navigation }) {
       console.log('values-ok', placa, values)
       Keyboard.dismiss()
       
-      // props.buscaHistorico()
-      console.log('props', props)
-
       AsyncStorage.getItem('email').then(Email => {
         setEmail(Email)
   
