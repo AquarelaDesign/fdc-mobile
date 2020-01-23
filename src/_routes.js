@@ -21,6 +21,7 @@ import Promocoes from './pages/Promocoes/Promocoes'
 import InfoPromo from './pages/Promocoes/Info'
 
 import Outros from './pages/Outros/Outros'
+import Mensagens from './pages/Outros/Mensagens'
 import ConsultaPJ from './pages/Outros/ConsultaPJ'
 import FAQ from './pages/Outros/FAQ'
 import Informacao from './pages/Outros/Informacao'
@@ -144,6 +145,16 @@ const routes = {
   Outros: {
     path: '/outros',
     screen: Outros,
+    navigationOptions: ({ navigation }) => ({
+      drawerLabel: () => null,
+      drawerLockMode: 'unlocked',
+      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Mensagens: {
+    path: '/mensagens',
+    screen: Mensagens,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
