@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 
 import {
+  Alert,
   AsyncStorage,
+  Dimensions,
   SafeAreaView,
   StyleSheet,
   Image,
@@ -11,6 +13,9 @@ import {
   TouchableOpacity 
 } from 'react-native'
 
+import { Notifications } from 'expo'
+import * as Permissions from 'expo-permissions'
+
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles from '../GlobalStyles'
@@ -19,15 +24,19 @@ import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
 import loading from '../assets/json/car-scan.json'
 
+import btnLogo from '../assets/logo-mini.png'
 import passagens from '../assets/Passagens.png'
 import etiquetas from '../assets/Etiquetas.png'
 import km from '../assets/KM.png'
 import promocoes from '../assets/Promocoes.png'
 import outros from '../assets/Outros.png'
 
+const { width } = Dimensions.get('window')
+
 export default function Home({ navigation }) {  
   const [isLoading, setIsLoading] = useState(false)
   const [isOficina, setIsOficina] = useState(false)
+  const [token, setToken] = useState(null)
 
   useEffect(() => {
     async function init() {
@@ -43,6 +52,27 @@ export default function Home({ navigation }) {
       }
     }
     init()
+
+    async function registerForPushNotifications() {
+      const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+  
+      if (status !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+        if (status !== 'granted') {
+          return
+        }
+      }
+  
+      const token = await Notifications.getExpoPushTokenAsync()
+  
+      this.subscription = Notifications.addListener(this.handleNotification)
+  
+      this.setState({
+        token,
+      })
+    }
+    registerForPushNotifications()
+  
   }, [])
 
   const onPress = (tipo) => {
@@ -53,6 +83,7 @@ export default function Home({ navigation }) {
     switch (tipo) {
       // case 'PAS': navigation.navigate('Passagens')
       // case 'ETQ': navigation.navigate('Etiquetas')
+      case 'PAR': Alert.alert(`Clicado em ${tipo}`); break
       case 'PRO': navigation.navigate('Promocoes'); break
       case 'OUT': navigation.navigate('Outros'); break
       case 'IND': navigation.navigate('Indicadores'); break
@@ -74,6 +105,12 @@ export default function Home({ navigation }) {
         style={GlobalStyles.background}
         source={bg}
       >
+        <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('PAR')}>
+          <View style={styles.boxBtn}>
+            <Image style={styles.boxIcone} source={btnLogo} />
+          </View>
+        </TouchableOpacity>
+
         <Image style={styles.logo} source={logo} />
 
         <View style={GlobalStyles.boxSpace}>
@@ -134,6 +171,25 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: "contain",
     alignSelf: "center",
-    marginTop: 50,
+    marginTop: -10,
+  },
+
+  boxBtn: {
+    marginTop: 70,
+    width: width + 60,
+    height: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignSelf: 'baseline',
+    justifyContent: 'flex-end',
+  },
+
+  boxIcone: {
+    height: 40,
+    resizeMode: "contain",
+    alignSelf: "flex-end",
+    marginTop: 0,
+    zIndex: 0, 
+    position: 'absolute',
   },
 })
