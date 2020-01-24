@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:9280793479:android:628a5b386af300aedd8122",
+        "mobilesdk_app_id": "1:9280793479:android:b189cc470f498a57dd8122",
         "android_client_info": {
-          "package_name": "com.app.p5154AB"
+          "package_name": "com.procyon.fdc"
         }
       },
       "oauth_client": [
