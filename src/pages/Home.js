@@ -67,9 +67,7 @@ export default function Home({ navigation }) {
   
       this.subscription = Notifications.addListener(this.handleNotification)
   
-      this.setState({
-        token,
-      })
+      setToken(token)
     }
     registerForPushNotifications()
   
