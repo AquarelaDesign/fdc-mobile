@@ -21,6 +21,7 @@ import bg from '../../assets/fundo-app.png'
 export default function Indicadores({ navigation }) {
   const onPress = (tipo) => {
     switch (tipo) {
+      case 'ETQ':  navigation.navigate('Etiquetas'); break
       case 'REC':  navigation.navigate('Recebimentos'); break
       case 'DOC': navigation.navigate('Documentos'); break
       default: Alert.alert(`Clicado em ${tipo}`); break

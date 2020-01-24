@@ -27,6 +27,7 @@ import FAQ from './pages/Outros/FAQ'
 import Informacao from './pages/Outros/Informacao'
 
 import Indicadores from './pages/Indicadores/Indicadores'
+import Etiquetas from './pages/Indicadores/Etiquetas'
 import Recebimentos from './pages/Indicadores/Recebimentos'
 import Documentos from './pages/Indicadores/Documentos'
 
@@ -198,6 +199,15 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLockMode: 'unlocked',
       drawerIcon: <Icon name="bar-chart" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Etiquetas: {
+    path: '/etiquetas',
+    screen: Etiquetas,
+    navigationOptions: ({ navigation }) => ({
+      drawerLockMode: 'unlocked',
+      drawerIcon: <Icon name="tags" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
