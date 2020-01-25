@@ -4,6 +4,7 @@ import {
   AsyncStorage,
   Dimensions,
   FlatList,
+  Image,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
@@ -20,6 +21,7 @@ import Globais, { getRandom } from '../../globais'
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
+import sad from '../../assets/sad.png'
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
 
@@ -46,14 +48,13 @@ const Promocoes = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [oficina, setOficina] = useState({})
-  const [promo, setPromo] = useState([])
+  const [promo, setPromo] = useState(undefined)
   const [promoFilter, setPromoFilter] = useState([])
   const [query, setQuery] = useState('')
   const debounceQuery = useDebounce(query, 300)
 
   useEffect(() => {
     setIsLoading(true)
-    // setPlaca(navigation.getParam('placa'))
 
     AsyncStorage.getItem('oficina').then(Oficina => {
       setOficina(Oficina)
@@ -68,9 +69,7 @@ const Promocoes = ({ navigation }) => {
             pmetodo: 'buscapromocoesApp',
             pcodprg: '',
             pemail: email,
-            // pplaca: placa,
           })).then(response => {
-            // console.log('1=>', response)
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttpromo } = response.data.ProDataSet
@@ -106,21 +105,22 @@ const Promocoes = ({ navigation }) => {
   useEffect(() => {
     const lowerCaseQuery = debounceQuery.toLowerCase()
     
-    console.log('lowerCaseQuery =>', lowerCaseQuery)
-    
-    const newPromos = promo
-      // .filter((ttpromo) => {
-      //   console.log('filter =>', ttpromo.placa, promoFilter)
-      //   ttpromo.placa.includes(lowerCaseQuery)
-      // }) 
-      .map((ttpromo) => ({
-        ...ttpromo,
-        order: ttpromo.placa !== undefined ? ttpromo.placa.indexOf(lowerCaseQuery) : '',
-      }))
-      .sort((a, b) => a.order - b.order)
+    // console.log('lowerCaseQuery =>', lowerCaseQuery)
+    if (promo !== undefined) {
+      const newPromos = promo
+        // .filter((ttpromo) => {
+        //   console.log('filter =>', ttpromo.placa, promoFilter)
+        //   ttpromo.placa.includes(lowerCaseQuery)
+        // }) 
+        .map((ttpromo) => ({
+          ...ttpromo,
+          order: ttpromo.placa !== undefined ? ttpromo.placa.indexOf(lowerCaseQuery) : '',
+        }))
+        .sort((a, b) => a.order - b.order)
 
-      console.log('newPromos =>', newPromos)
-      setPromo(newPromos)
+        // console.log('newPromos =>', newPromos)
+        setPromo(newPromos)
+      }
   }, [debounceQuery])
 
   const pressPro = (item) => {
@@ -154,10 +154,16 @@ const Promocoes = ({ navigation }) => {
         >
           {
             promo === undefined ?
-              <Text style={styles.msgText}>
-                Não foi encontrada nenhuma promoção vigente para este veículo.
-                Continue atualizando as informações de quilometragem para receber promoções exclusivas.
-              </Text>
+            // <View style={{marginTop: height - (height / 2) - 200}}>
+            <View style={{marginTop: 100}}>
+              <Image style={styles.boxIcone} source={sad} />
+                <Text style={[styles.row, styles.msgText]}>
+                  Não foram encontradas promoções vigentes até o momento.
+                </Text>
+                <Text style={[styles.row, styles.msgText]}>
+                  Mas fique alerta e continue atualizando as informações de quilometragem para em breve receber promoções exclusivas!
+                </Text>
+              </View>
               :
               <View>
               {/* 
@@ -229,6 +235,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 10,
   },
 
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+
   listItem: {
     display: 'flex',
     width: Dimensions.get('window').width - 10,
@@ -259,11 +270,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
     textAlign: 'justify',
-    marginTop: height - (height / 2) - 40,
     paddingRight: 10,
     width: width - 20,
   },
 
+  boxIcone: {
+    height: 120,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginBottom: 30,
+  },
 })
 
 export default Promocoes

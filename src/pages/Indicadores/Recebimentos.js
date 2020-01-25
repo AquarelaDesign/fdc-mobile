@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
+  Dimensions,
   SafeAreaView,
   View,
   Text,
@@ -12,6 +13,7 @@ import {
 import { ListItem } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
 import Lottie from 'lottie-react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { LinearGradient } from '../../components/LinearGradient'
 import Api from '../../services/oapi'
@@ -120,6 +122,11 @@ export default Recebimentos = ({ navigation }) => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
+      <View style={styles.row}>
+        <Icon name="calculator" size={40} color="#007189" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Text style={styles.title}>Recebimentos</Text>
+      </View>
+
       <ScrollView>
         <View style={styles.list}>
           {recs.map((l, i) => (
@@ -143,6 +150,7 @@ export default Recebimentos = ({ navigation }) => {
                 marginHorizontal: 16,
                 marginVertical: 8,
                 borderRadius: 8,
+                marginBottom: 5,
               }}
             />
           ))}
@@ -155,7 +163,26 @@ export default Recebimentos = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   list: {
-    marginTop: 20,
-    borderTopWidth: 1,
+    marginTop: 10,
+    marginBottom: 50,
+    borderTopWidth: 0,
   },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+
+  title: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#FFF',
+    width: Dimensions.get('window').width - 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+    textTransform: "uppercase",
+  },
+
 })

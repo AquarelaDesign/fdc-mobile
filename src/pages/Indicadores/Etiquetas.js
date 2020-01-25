@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
+  Dimensions,
   SafeAreaView,
   View,
   Text,
@@ -12,6 +13,7 @@ import {
 import { ListItem } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
 import Lottie from 'lottie-react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { LinearGradient } from '../../components/LinearGradient'
 import Api from '../../services/oapi'
@@ -23,14 +25,7 @@ const querystring = require('querystring')
 const Etiquetas = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
-  const [etqs, setEtqs] = useState([{
-    qtetqn: 0, 
-    qtetqp: 0, 
-    qtetqtot: 0, 
-    qtetqv: 0, 
-    qtperd: 0, 
-    qtreal: 0
-  }])
+  const [etqs, setEtqs] = useState([])
 
   const Legendas = {
     qtetqn: "Abertas",
@@ -67,20 +62,20 @@ const Etiquetas = () => {
 
       for (let [key, value] of Object.entries(dados)) {
         if (value !== 0) {
-          etq.push({
-            icon: Icones[key],
-            title: Legendas[key],
-            linearGradientColors: Cores[key],
-            valor: value,
-          })
+          for (let [k, v] of Object.entries(value)) {
+            etq.push({
+              icon: Icones[k],
+              title: Legendas[k],
+              linearGradientColors: Cores[k],
+              valor: v,
+            })
+          }
         }
       }
-      console.log('setEtqs', etq)
+
       setEtqs(etq)
       setIsLoading(false)
     }
-
-    montaLista(etqs)
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
@@ -93,11 +88,9 @@ const Etiquetas = () => {
             pcodprg: 'TFCINI',
             pemail: email,
           })).then(response => {
-            console.log('response', response)
             if (response.status === 200) {
-              if (response.data.data !== undefined) {
+              if (response.data.ProDataSet !== undefined) {
                 const { ttresetq } = response.data.ProDataSet
-                console.log('ttresetq', ttresetq)
                 montaLista(ttresetq)
               }
             } 
@@ -117,8 +110,6 @@ const Etiquetas = () => {
       buscaEtq()
     })
   }, [email])
-
-  console.log('etqs', etqs)
 
   const formataValor = (valor) => {
     return (
@@ -140,11 +131,14 @@ const Etiquetas = () => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
+      <View style={styles.row}>
+        <Icon name="tags" size={40} color="#007189" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Text style={styles.title}>Etiquetas</Text>
+      </View>
+
       <ScrollView>
         <View style={styles.list}>
-          {
-          /* 
-          etqs.map((l, i) => (
+          {etqs.map((l, i) => (
             <ListItem
               key={i}
               leftIcon={{
@@ -153,9 +147,9 @@ const Etiquetas = () => {
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: '#f7ff00', fontWeight: 'bold' }}
+              titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 13, }}
               rightTitle={formataValor(l.valor)}
-              rightTitleStyle={{ color: 'green', fontWeight: 'bold' }}
+              rightTitleStyle={{ color: 'green', fontWeight: 'bold', fontSize: 13, }}
               linearGradientProps={{
                 colors: l.linearGradientColors,
                 start: [1, 0],
@@ -166,11 +160,10 @@ const Etiquetas = () => {
                 marginHorizontal: 16,
                 marginVertical: 8,
                 borderRadius: 8,
+                marginBottom: 5,
               }}
             />
-          ))
-           */
-          }
+          ))}
         </View> 
       </ScrollView>
       {isLoading ? Loading() : <></>}
@@ -180,9 +173,28 @@ const Etiquetas = () => {
 
 const styles = StyleSheet.create({
   list: {
-    marginTop: 20,
-    borderTopWidth: 1,
+    marginTop: 10,
+    marginBottom: 50,
+    borderTopWidth: 0,
   },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+
+  title: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#FFF',
+    width: Dimensions.get('window').width - 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+    textTransform: "uppercase",
+  },
+
 })
 
 export default Etiquetas

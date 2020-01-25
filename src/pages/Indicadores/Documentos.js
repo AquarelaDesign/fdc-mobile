@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
+  Dimensions,
   SafeAreaView,
   View,
   Text,
@@ -13,6 +14,7 @@ import { ListItem } from 'react-native-elements'
 import Axios from 'axios'
 import NumberFormat from 'react-number-format'
 import Lottie from 'lottie-react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { LinearGradient } from '../../components/LinearGradient'
 import { dataInicial, dataFinal } from '../../globais'
@@ -248,6 +250,11 @@ const Documentos = () => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
+      <View style={styles.row}>
+        <Icon name="file" size={40} color="#007189" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Text style={styles.title}>Documentos</Text>
+      </View>
+
       <ScrollView>
         <View style={styles.list}>
           {docs.map((l, i) => (
@@ -259,9 +266,9 @@ const Documentos = () => {
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: '#f7ff00', fontWeight: 'bold' }}
+              titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 13, }}
               rightTitle={formataValor(l.valor)}
-              rightTitleStyle={{ color: 'green', fontWeight: 'bold' }}
+              rightTitleStyle={{ color: 'green', fontWeight: 'bold', fontSize: 13, }}
               linearGradientProps={{
                 colors: l.linearGradientColors,
                 start: [1, 0],
@@ -272,6 +279,7 @@ const Documentos = () => {
                 marginHorizontal: 16,
                 marginVertical: 8,
                 borderRadius: 8,
+                marginBottom: 5,
               }}
             />
           ))}
@@ -284,9 +292,28 @@ const Documentos = () => {
 
 const styles = StyleSheet.create({
   list: {
-    marginTop: 20,
-    borderTopWidth: 1,
+    marginTop: 10,
+    marginBottom: 50,
+    borderTopWidth: 0,
   },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+
+  title: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#FFF',
+    width: Dimensions.get('window').width - 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+    textTransform: "uppercase",
+  },
+
 })
 
 export default Documentos
