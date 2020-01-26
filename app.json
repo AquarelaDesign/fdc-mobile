@@ -29,7 +29,6 @@
     },
     "android": {
       "package": "com.procyon.fdc",
-      "googleServicesFile": "./google-services.json",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBqitr0K9UhX_Se7tKwdcaZoPXE-eViE4Q"
