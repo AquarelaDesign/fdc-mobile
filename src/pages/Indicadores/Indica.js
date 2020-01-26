@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 
 import { ListItem } from 'react-native-elements'
-import NumberFormat from 'react-number-format'
 import Lottie from 'lottie-react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -27,20 +26,6 @@ const Indica = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [inds, setInds] = useState([])
-
-  const Cores = {
-    vlpec: ['#3F51B5', '#2196F3'],
-    vlserv: ['#4CAF50', '#8BC34A'],
-    qtdtot: ['#F44336', '#E91E63'],
-    tikmed: ['#FF9800', '#F44336'],
-  }
-  
-  const Icones = {
-    vlpec: "gears",
-    vlserv: "wrench",
-    qtdtot: "calculator",
-    tikmed: "flag",
-  }
 
   useEffect(() => {
     setIsLoading(true)
@@ -87,7 +72,7 @@ const Indica = () => {
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
 
-      async function buscaEtq() {
+      async function buscaIndica() {
         try {
           await Api.post('', querystring.stringify({
             pservico: 'wfcpas',
@@ -101,7 +86,6 @@ const Indica = () => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttresumo } = response.data.ProDataSet
-                // console.log('ttresumo', ttresumo)
                 montaLista(ttresumo)
               }
             } 
@@ -110,29 +94,15 @@ const Indica = () => {
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
-            // console.log('Error-1', response.data.errors[0])
             setIsLoading(false)
           } else {
-            // console.log('Error-2', error)
             setIsLoading(false)
           }
         }
       }
-      buscaEtq()
+      buscaIndica()
     })
   }, [email])
-
-  const formataValor = (valor) => {
-    return (
-      <NumberFormat
-        value={valor}
-        displayType={'text'}
-        fixedDecimalScale={true}
-        decimalScale={0}
-        renderText={value => <Text style={GlobalStyles.listaValor}>{value}</Text>}
-      />
-    )
-  }
 
   function calcTot(total, per, dec) {
     try {
@@ -141,7 +111,6 @@ const Indica = () => {
       let ret = valor.toFixed(dec).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1')
       return ret.replace('.',',')
     } catch (error) {
-      // console.log('calcTot-error', error)
       return '0'
     }
   }
@@ -157,7 +126,6 @@ const Indica = () => {
       let ret =  (tipo === 'currency' ? 'R$ ' : '') + xVal.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1')
       return ret.replace('.',',')
     } catch (error) {
-      // console.log('retValor-error', error)
       return tipo === 'currency' ? 'R$ 0,00' : '0,00'
     }
   }
@@ -189,8 +157,6 @@ const Indica = () => {
               titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 17, }}
               subtitle={l.subtitle}
               subtitleStyle={{ color: 'white', fontSize: 14,  }}
-              // rightTitle={formataValor(l.valor)}
-              // rightTitleStyle={{ color: 'green', fontWeight: 'bold', fontSize: 13, }}
               linearGradientProps={{
                 colors: l.linearGradientColors,
                 start: [1, 0],
