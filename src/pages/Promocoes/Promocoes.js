@@ -17,15 +17,14 @@ import Lottie from 'lottie-react-native'
 
 import { SearchBar } from 'react-native-elements'
 
-import Globais, { getRandom } from '../../globais'
-import GlobalStyles, { colors, _url } from '../../GlobalStyles'
+import GlobalStyles, { colors, _url, searchStyle } from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
 import sad from '../../assets/sad.png'
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
 
-const { width, height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 const querystring = require('querystring')
 
 const useDebounce = (value, delay) => {
@@ -50,8 +49,9 @@ const Promocoes = ({ navigation }) => {
   const [oficina, setOficina] = useState({})
   const [promo, setPromo] = useState(undefined)
   const [promoFilter, setPromoFilter] = useState([])
-  const [query, setQuery] = useState('')
-  const debounceQuery = useDebounce(query, 300)
+  const [filtrar, setFiltrar] = useState('')
+  
+  const debounceQuery = useDebounce(filtrar, 300)
 
   useEffect(() => {
     setIsLoading(true)
@@ -90,10 +90,8 @@ const Promocoes = ({ navigation }) => {
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
-            // console.log('1=>', response.data.errors[0])
             setIsLoading(false)
           } else {
-            // console.log('2=>', error)
             setIsLoading(false)
           }
         }
@@ -105,20 +103,14 @@ const Promocoes = ({ navigation }) => {
   useEffect(() => {
     const lowerCaseQuery = debounceQuery.toLowerCase()
     
-    // console.log('lowerCaseQuery =>', lowerCaseQuery)
     if (promo !== undefined) {
       const newPromos = promo
-        // .filter((ttpromo) => {
-        //   console.log('filter =>', ttpromo.placa, promoFilter)
-        //   ttpromo.placa.includes(lowerCaseQuery)
-        // }) 
         .map((ttpromo) => ({
           ...ttpromo,
           order: ttpromo.placa !== undefined ? ttpromo.placa.indexOf(lowerCaseQuery) : '',
         }))
         .sort((a, b) => a.order - b.order)
 
-        // console.log('newPromos =>', newPromos)
         setPromo(newPromos)
       }
   }, [debounceQuery])
@@ -139,6 +131,23 @@ const Promocoes = ({ navigation }) => {
     return Sticky_header_View
   }
 
+  clear = () => {
+    setFiltrar('')
+  }
+ 
+  function SearchFilterFunction(text) {
+    // passando o texto inserido em textinput
+    const newData = promo.filter(function(item) {
+      // aplicar filtro ao texto inserido na barra de pesquisa
+      const itemData = item.placa ? item.placa.toUpperCase() : ''.toUpperCase()
+      const textData = text.toUpperCase()
+      return itemData.indexOf(textData) > -1
+    })
+    
+    setFiltrar(text)
+    setPromoFilter(newData)
+  }
+
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -154,7 +163,6 @@ const Promocoes = ({ navigation }) => {
         >
           {
             promo === undefined ?
-            // <View style={{marginTop: height - (height / 2) - 200}}>
             <View style={{marginTop: 100}}>
               <Image style={styles.boxIcone} source={sad} />
                 <Text style={[styles.row, styles.msgText]}>
@@ -166,32 +174,39 @@ const Promocoes = ({ navigation }) => {
               </View>
               :
               <View>
-              {/* 
-              <SearchBar
-                style={styles.searchBar}
-                placeholder="Filtrar Placas..."
-                onChangeText={setQuery}
-                value={query}
-              />
-              */}
-              <FlatList
-                style={styles.list}
-                data={promo}
-                keyExtractor={prom => `${promo.idprom}${promo.descri}`}
+                <SearchBar
+                  round
+                  searchIcon={{ size: 24 }}
+                  
+                  containerStyle={searchStyle.containerStyle}
+                  inputStyle={searchStyle.inputStyle}
+                  leftIconContainerStyle={searchStyle.leftIconContainerStyle}
+                  rightIconContainerStyle={searchStyle.rightIconContainerStyle}
+                  inputContainerStyle={searchStyle.inputContainerStyle}
 
-                renderItem={({ item, index }) => (
-                  <TouchableHighlight
-                    onPress={() => pressPro(item)}>
-                    <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                      <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.placa.toUpperCase()}</Text>
-                      <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descricao}</Text>
-                    </View>
-                  </TouchableHighlight>
-                )}
+                  placeholder="Filtrar Placas..."
+                  onChangeText={text => SearchFilterFunction(text)}
+                  onClear={text => SearchFilterFunction('')}
+                  value={filtrar}
+                />
+                <FlatList
+                  style={styles.list}
+                  data={promoFilter}
+                  keyExtractor={prom => `${prom.idprom}${prom.descri}`}
 
-                ListHeaderComponent={FlatList_header_pro}
-                stickyHeaderIndices={[0]}
-              />
+                  renderItem={({ item, index }) => (
+                    <TouchableHighlight
+                      onPress={() => pressPro(item)}>
+                      <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.placa.toUpperCase()}</Text>
+                        <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descricao}</Text>
+                      </View>
+                    </TouchableHighlight>
+                  )}
+
+                  ListHeaderComponent={FlatList_header_pro}
+                  stickyHeaderIndices={[0]}
+                />
               </View>
           }
         </ImageBackground>
@@ -222,17 +237,12 @@ const styles = StyleSheet.create({
   header_style: {
     fontWeight: 'bold',
     backgroundColor: '#4169E1',
-    // marginTop: 20,
   },
 
   list: {
     paddingHorizontal: 5,
     flexGrow: 0,
     marginBottom: 90,
-  },
-
-  searchBar: {
-    width: Dimensions.get('window').width - 10,
   },
 
   row: {
@@ -250,7 +260,6 @@ const styles = StyleSheet.create({
   },
 
   listText: {
-    // fontWeight: 'bold',
     fontSize: 14,
     color: '#FFFFFF',
     textAlign: 'right',

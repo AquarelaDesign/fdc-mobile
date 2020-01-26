@@ -3,6 +3,9 @@ import {
   Dimensions,
 } from 'react-native'
 
+const bg_color = 'rgba(65,105,225,0.9)' //'#4169E1'
+const im_color = 'rgba(135,206,250,0.9)' //'#87CEFA'
+
 let width = Dimensions.get('window').width
 
 export default StyleSheet.create({
@@ -109,6 +112,36 @@ export default StyleSheet.create({
   },
   
 })
+
+export const searchStyle = {
+  containerStyle: {
+    backgroundColor: bg_color, 
+    borderWidth: 0, 
+    borderRadius: 5,
+    marginHorizontal: 5,
+    height: 60,
+    marginBottom: 5,
+    marginTop: 5,
+    // width: Dimensions.get('window').width - 10,
+  },
+  
+  inputStyle: {
+    backgroundColor: im_color
+  },
+
+  leftIconContainerStyle: {
+    backgroundColor: bg_color
+  },
+  
+  rightIconContainerStyle: {
+    backgroundColor: bg_color
+  },
+  
+  inputContainerStyle: {
+    backgroundColor: bg_color
+  },
+
+}
 
 export const colors = ['rgba(135,206,250,0.5)', 'rgba(173,216,230,0.5)']
 
