@@ -15,7 +15,7 @@ import GlobalStyles, { _url } from '../../GlobalStyles'
 import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../../assets/fundo-app.png'
 
-const { width, height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 
 export default function Informacao({ navigation }) {
   
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 
   msgTitle: {
     fontWeight: 'bold',
-    fontSize: 40,
+    fontSize: 35,
     color: '#FFFFFF',
     flexDirection: 'row',
     alignSelf: 'center',
@@ -88,14 +88,14 @@ const styles = StyleSheet.create({
   },
 
   msgText: {
-    fontSize: 20,
+    fontSize: 17,
     color: '#FFFFFF',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
     // marginTop: height - (height / 2) - 40, 
-    paddingTop: 50,
+    paddingTop: 30,
     // padding: 10,
     width: width - 10, 
   },
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    paddingTop: 50,
+    paddingTop: 30,
     width: width - 10, 
   },
 
