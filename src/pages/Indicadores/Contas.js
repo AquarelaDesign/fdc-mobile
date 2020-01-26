@@ -90,7 +90,6 @@ const Contas = () => {
                   qtpag,
                   qtrec
                 }
-
                 montaLista(totais)
               }
             } 
