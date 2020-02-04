@@ -11,6 +11,7 @@ import {
   Text,
   TouchableHighlight,
   View,
+  Alert,
 } from 'react-native'
 
 import Lottie from 'lottie-react-native'
@@ -87,6 +88,8 @@ export default function Mensagens({ navigation }) {
       navigation.navigate(item.abretela, {
         placa: item.placa,
       })
+    } else {
+      Alert.alert(item.txtmsg)
     }
   }
 
@@ -130,6 +133,7 @@ export default function Mensagens({ navigation }) {
                   </View>
                 </TouchableHighlight>
               )}
+              
             />
 
           }
@@ -184,7 +188,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingRight: 10,
-    height: 80,
+    paddingBottom: 5,
+    marginBottom: 5,
+    height: 60,
   },
   
   listText: {
