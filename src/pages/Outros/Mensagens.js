@@ -3,34 +3,54 @@ import React, { useState, useEffect } from 'react'
 import {
   AsyncStorage,
   Dimensions,
-  FlatList,
   Image,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
-  Alert,
 } from 'react-native'
 
 import Lottie from 'lottie-react-native'
 
-import GlobalStyles, { colors, _url } from '../../GlobalStyles'
+import { SearchBar } from 'react-native-elements'
+
+import GlobalStyles, { _url, searchStyle } from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
 import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
+import CustomListview from '../../components/CustomListview'
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
 
-export default function Mensagens({ navigation }) {
+const useDebounce = (value, delay) => {
+  const [debounceValue, setDebounceValue] = useState(value)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounceValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [value, delay])
+
+  return debounceValue
+}
+
+const Mensagens = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [oficina, setOficina] = useState({})
   const [email, setEmail] = useState('')
   const [mens, setMens] = useState([])
+  const [mensFilter, setMensFilter] = useState([])
+  const [filtrar, setFiltrar] = useState('')
+
+  const debounceQuery = useDebounce(filtrar, 300)
 
   useEffect(() => {
     setIsLoading(true)
@@ -51,12 +71,20 @@ export default function Mensagens({ navigation }) {
             ptipmsg: 'A',
           })).then(response => {
             // console.log('response =>', response.status, response)
-            
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttpush } = response.data.ProDataSet
-                console.log('ttpush =>', ttpush)
-                setMens(ttpush)
+
+                const pushOrd = Object.values(ttpush)
+                  .map((ttpush) => ({
+                    ...ttpush,
+                    upperCasePlaca: ttpush.placa.toUpperCase(),
+                  }))
+                  .sort((a, b) => a.placa > b.placa)
+                
+                // console.log('ttpush =>', ttpush)
+                setMens(pushOrd)
+                setMensFilter(pushOrd)
               }
             } 
             setIsLoading(false)
@@ -76,21 +104,36 @@ export default function Mensagens({ navigation }) {
     })
   }, [email, oficina])
 
-  const getRandom = () => {
-    const min = 1
-    const max = 100
-    const rand = min + Math.random() * (max - min)
-    return rand.toString()
+  useEffect(() => {
+    const lowerCaseQuery = debounceQuery.toLowerCase()
+    
+    if (mens !== undefined) {
+      const newPushs = mens
+        .map((ttpush) => ({
+          ...ttpush,
+          order: ttpush.placa !== undefined ? ttpush.placa.indexOf(lowerCaseQuery) : '',
+        }))
+        .sort((a, b) => a.placa > b.placa)
+
+        setMens(newPushs)
+      }
+  }, [debounceQuery])
+
+  clear = () => {
+    setFiltrar('')
   }
 
-  const pressMsg = (item) => {
-    if (item.abretela !== '') {
-      navigation.navigate(item.abretela, {
-        placa: item.placa,
-      })
-    } else {
-      Alert.alert(item.txtmsg)
-    }
+  function SearchFilterFunction(text) {
+    // passando o texto inserido em textinput
+    const newData = mens.filter(function(item) {
+      // aplicar filtro ao texto inserido na barra de pesquisa
+      const itemData = item.placa ? item.placa.toUpperCase() : ''.toUpperCase()
+      const textData = text.toUpperCase()
+      return itemData.indexOf(textData) > -1
+    })
+    
+    setFiltrar(text)
+    setMensFilter(newData)
   }
 
   function Loading() {
@@ -107,35 +150,33 @@ export default function Mensagens({ navigation }) {
       >
         <Image style={styles.logo} source={logo} />
 
-        {/* <View style={GlobalStyles.boxSpace}></View> */}
-
         <View style={GlobalStyles.boxContainer}>
           {
             mens === undefined ? 
+            <View>
               <Text style={styles.msgText}>
                 Você ainda não recebeu mensagens push.
               </Text>
+            </View>
             :
-            
-            <FlatList 
-              style={styles.list}
-              data={mens}
-              keyExtractor={mens => mens.datenv + mens.horenv + getRandom()}
-              
-              // numColumns={5}
-              renderItem={({ item, index }) => (
-                <TouchableHighlight onPress={() => pressMsg(item)}>
-                  <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                    <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.datenv}</Text> 
-                    <Text style={[styles.listText, { width: '35%' }]}>{item.horenv}</Text> 
-                    <Text style={[styles.listText, { width: '30%' }]}>{item.placa}</Text> 
-                    <Text style={[styles.listText, { width: '100%' }]}>{item.txtmsg}</Text> 
-                  </View>
-                </TouchableHighlight>
-              )}
-              
-            />
+            <View>
+              <SearchBar
+                round
+                searchIcon={{ size: 24 }}
+                
+                containerStyle={searchStyle.containerStyle}
+                inputStyle={searchStyle.inputStyle}
+                leftIconContainerStyle={searchStyle.leftIconContainerStyle}
+                rightIconContainerStyle={searchStyle.rightIconContainerStyle}
+                inputContainerStyle={searchStyle.inputContainerStyle}
 
+                placeholder="Filtrar Placas..."
+                onChangeText={text => SearchFilterFunction(text)}
+                onClear={text => SearchFilterFunction('')}
+                value={filtrar}
+              />
+              <CustomListview itemList={mensFilter} />
+            </View>
           }
         </View>
       </ImageBackground>
@@ -152,18 +193,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
 
-  link: {
-    color: '#FFFACD',
-    fontSize: 20,
-    fontWeight: 'bold',
-    flexDirection: 'row',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    paddingTop: 50,
-    width: width - 10,
-  },
-
   msgText: {
     fontSize: 22,
     color: '#FFFFFF',
@@ -175,31 +204,6 @@ const styles = StyleSheet.create({
     width: width - 20, 
   },
   
-  list: {
-    paddingHorizontal: 5,
-    flexGrow: 0,
-    paddingBottom: 100,
-    // marginBottom: 120,
-  },
-
-  listItem: {
-    display: 'flex',
-    width: Dimensions.get('window').width - 10,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingRight: 10,
-    paddingBottom: 5,
-    marginBottom: 5,
-    height: 60,
-  },
-  
-  listText: {
-    // fontWeight: 'bold',
-    fontSize: 14,
-    color: '#FFFFFF',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-
 })
+
+export default Mensagens
