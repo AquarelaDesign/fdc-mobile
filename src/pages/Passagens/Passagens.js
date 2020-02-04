@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native'
 
-import { TabView, SceneMap } from 'react-native-tab-view'
+import {Container, Header, Tab, Tabs, TabHeading, Icon } from 'native-base'
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
@@ -32,15 +32,6 @@ export default function Passagens({ navigation }) {
   const [pass, setPass] = useState([])
   const [serv, setServ] = useState([])
   const [peca, setPeca] = useState([])
-
-  const [state, setState] = useState({
-    index: 0,
-    routes: [
-      { key: 'passagem', title: 'Passagens' },
-      { key: 'servicos', title: 'Serviços' },
-      { key: 'pecas', title: 'Peças' },
-    ],
-  })
 
   useEffect(() => {
     setIsLoading(true)
@@ -156,17 +147,6 @@ export default function Passagens({ navigation }) {
     buscaPeca()
   }
 
-  const pressPas = (item) => {
-    navigation.navigate('Passagem1', {
-      idgpas: item.idgpas,
-      info: item,
-    })
-  }
-
-  const pressSer = (item) => {
-    navigation.navigate('Infopass',{ dados: item })
-  }
-
   const FlatList_header_pass = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
@@ -220,6 +200,13 @@ export default function Passagens({ navigation }) {
     </View>
   )
 
+  const pressPas = (item) => {
+    navigation.navigate('Passagem', {
+      idgpas: item.idgpas,
+      info: item,
+    })
+  }
+
   const FlatList_header_pecser = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
@@ -257,6 +244,10 @@ export default function Passagens({ navigation }) {
       </ImageBackground>
     </View>
   )
+
+  const pressSer = (item) => {
+    navigation.navigate('Infopass',{ dados: item })
+  }
 
   const Pecas = () => (
     <View style={styles.scene}>
@@ -297,7 +288,7 @@ export default function Passagens({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: -15}]}>
       {
         pass === undefined ? 
           <Text style={styles.msgText}
@@ -310,17 +301,20 @@ export default function Passagens({ navigation }) {
             e seguir as instruções.
           </Text>
         :
-        <TabView
-          style={styles.tabContainer}
-          navigationState={state}
-          renderScene={SceneMap({
-            passagem: Passagem,
-            servicos: Servicos,
-            pecas: Pecas,
-          })}
-          onIndexChange={index => setState({index: index, routes: state.routes})}
-          initialLayout={{ width: Dimensions.get('window').width }}
-        />
+        <Container>
+          <Header hasTabs/>
+          <Tabs initialPage={0}>
+            <Tab heading={ <TabHeading><Icon name="md-car" /><Text style={{color:'#FFF'}}> Passagens</Text></TabHeading>}>
+              {Passagem()}
+            </Tab>
+            <Tab heading={ <TabHeading><Icon name="md-construct" /><Text style={{color:'#FFF'}}> Serviços</Text></TabHeading>}>
+              {Servicos()}
+            </Tab>
+            <Tab heading={ <TabHeading><Icon name="md-cog" /><Text style={{color:'#FFF'}}> Peças</Text></TabHeading>}>
+              {Pecas()}
+            </Tab>
+          </Tabs>
+        </Container>
       }
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
@@ -337,12 +331,7 @@ const styles = StyleSheet.create({
 
   scene: {
     flex: 1,
-    marginTop: 10,
-  },
-  
-  tabContainer: {
-    flex: 1,
-    marginTop: 38,
+    // marginTop: 10,
   },
   
   header_style: {

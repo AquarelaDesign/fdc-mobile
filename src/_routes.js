@@ -8,8 +8,8 @@ import Home from './pages/Home'
 import Browser from './pages/Browser'
 import ListaPlacas from './pages/ListaPlacas'
 
-import Passagem from './pages/Passagens/Passagens'
-import Passagem1 from './pages/Passagens/Passagem'
+import Passagens from './pages/Passagens/Passagens'
+import Passagem from './pages/Passagens/Passagem'
 import Infopass from './pages/Passagens/Info'
 
 import Etiqueta from './pages/Etiquetas/Etiquetas'
@@ -65,9 +65,9 @@ const routes = {
       headerTransparent: true,
     }),
   },
-  Passagem: {
-    path: '/passagem',
-    screen: Passagem,
+  Passagens: {
+    path: '/passagens',
+    screen: Passagens,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
@@ -75,9 +75,9 @@ const routes = {
       headerTransparent: true,
     }),
   },
-  Passagem1: {
-    path: '/passagem1',
-    screen: Passagem1,
+  Passagem: {
+    path: '/passagem',
+    screen: Passagem,
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',

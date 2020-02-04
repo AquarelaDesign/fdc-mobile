@@ -12,10 +12,9 @@ import {
   View,
 } from 'react-native'
 
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view'
+import { Container, Header, Tab, Tabs, TabHeading, Icon } from 'native-base'
 import MapView, { Marker } from 'react-native-maps'
 import Lottie from 'lottie-react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 
 import GlobalStyles from '../../GlobalStyles'
 import Api from '../../services/oapi'
@@ -52,16 +51,6 @@ export default function Passagem({ navigation }) {
     longitude: -49.260244,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.048244186046511636,
-  })
-
-  const [state, setState] = useState({
-    index: 0,
-    routes: [
-      { key: 'relatos', title: 'Relatos' },
-      { key: 'servicos', title: 'Serviços' },
-      { key: 'pecas', title: 'Peças' },
-      { key: 'info', title: 'Info' },
-    ],
   })
 
   useEffect(() => {
@@ -170,33 +159,6 @@ export default function Passagem({ navigation }) {
       coordenadas(dados)
     })
   }, [email, oficina, dados])
-  
-  // console.log('idgpas', idgpas)
-  // console.log('info', info)
-  // console.log('oficina', oficina)
-  // console.log('serv', serv)
-
-  const getTabBarIcon = (props) => {
-    const { route } = props
-      
-    switch (route.key) {
-      case 'relatos':
-        return <Icon name='edit' size={30} color={'#FFFAF0'} />
-        break
-      case 'servicos':
-        return <Icon name='wrench' size={30} color={'#FFFAF0'} />
-        break
-      case 'pecas':
-        return <Icon name='cogs' size={30} color={'#FFFAF0'} />
-        break
-      case 'info':
-        return <Icon name='info-circle' size={30} color={'#FFFAF0'} />
-        break
-      default:      
-        return <Icon name='remove' size={30} color={'#FFFAF0'}/>
-      break
-    }
-  }
   
   const bServ = (idgpas) => {
     setIsLoading(true)
@@ -325,18 +287,6 @@ export default function Passagem({ navigation }) {
     </View>
   )
 
-  const FlatListItemSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: "100%",
-          backgroundColor: "#607D8B",
-        }}
-      />
-    )
-  }
-
   const FlatList_header_pecas = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
@@ -453,6 +403,24 @@ export default function Passagem({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
+      <Container>
+        <Header hasTabs/>
+        <Tabs initialPage={0}>
+          <Tab heading={ <TabHeading><Icon name="md-paper" /><Text style={{color:'#FFF'}}> Relatos</Text></TabHeading>}>
+            {Relatos()}
+          </Tab>
+          <Tab heading={ <TabHeading><Icon name="md-construct" /><Text style={{color:'#FFF'}}> Serviços</Text></TabHeading>}>
+            {Servicos()}
+          </Tab>
+          <Tab heading={ <TabHeading><Icon name="md-cog" /><Text style={{color:'#FFF'}}> Peças</Text></TabHeading>}>
+            {Pecas()}
+          </Tab>
+          <Tab heading={ <TabHeading><Icon name="md-cog" /><Text style={{color:'#FFF'}}> Info</Text></TabHeading>}>
+            {Info()}
+          </Tab>
+        </Tabs>
+      </Container>
+      {/* 
       <TabView
         style={styles.tabContainer}
         navigationState={state}
@@ -475,7 +443,8 @@ export default function Passagem({ navigation }) {
             labelStyle={styles.noLabel}
           />
         }
-      />
+      /> 
+      */}
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )

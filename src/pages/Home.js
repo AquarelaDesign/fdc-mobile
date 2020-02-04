@@ -16,11 +16,6 @@ import {
 import { Notifications } from 'expo'
 import * as Permissions from 'expo-permissions'
 
-import { FireSQL } from 'firesql'
-import * as firebase from 'firebase/app'
-
-// import firebaseConfig from '../services/config'
-
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles from '../GlobalStyles'
@@ -38,25 +33,6 @@ import outros from '../assets/Outros.png'
 
 const { width } = Dimensions.get('window')
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBxyrnh_8GEZk5C1ghaUG0Cqqh0KvmxTno",
-  authDomain: "ficha-do-carro.firebaseapp.com",
-  databaseURL: "https://ficha-do-carro.firebaseio.com",
-  projectId: "ficha-do-carro",
-  storageBucket: "ficha-do-carro.appspot.com",
-  messagingSenderId: "9280793479",
-  appId: "1:9280793479:web:d48a2fc11b0a699edd8122",
-  measurementId: "G-HXMZ44X0BZ"
-}
-
-firebase.initializeApp(firebaseConfig)
-const dbRef = firebase.firestore()
-
-// const db = firebase.database()
-// const ref = db.ref("/users")
-
-const fireSQL = new FireSQL(dbRef)
-
 export default function Home({ navigation }) {  
   const [isLoading, setIsLoading] = useState(false)
   const [isOficina, setIsOficina] = useState(false)
@@ -65,21 +41,6 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     setIsLoading(true)
-
-    // async function init() {
-    //   const Oficina = await AsyncStorage.getItem('oficina')
-
-    //   if (Oficina) {
-    //     const ofi = JSON.parse(Oficina)
-    //     if (ofi.tipusu !== undefined) {
-    //       setIsOficina(ofi.tipusu === 'OFI' ? true : false)
-    //     }
-    //     setIsLoading(false)
-    //   } else {
-    //     setIsLoading(false)
-    //   }
-    //   registerForPushNotifications()
-    // }
 
     AsyncStorage.getItem('oficina').then(Oficina => {
       if (Oficina) {
@@ -115,53 +76,8 @@ export default function Home({ navigation }) {
       console.log('token', token)
       setToken(token)
 
-      const consultaReg = fireSQL.query(`
-        SELECT email
-        FROM users
-        WHERE email = '${Email}'
-        ORDER BY email
-        LIMIT 1
-      `)
-
-      console.log('consultaReg', consultaReg)
-
-      consultaReg
-      .then(users => {
-        console.log('users', users)
-        // for (const email of users) {
-        //   console.log(
-        //     `${city.city} in ${city.country} has ${city.people} people`
-        //   )
-        // }
-      })
-      .catch(err => {
-        console.log('O registro não foi encontrado...', err)
-
-        // let addDoc = dbRef.collection('users').add({
-        //   email: Email,
-        //   name: token
-        // }).then(ref => {
-        //   console.log('registro adicionado ID: ', ref.id);
-        // })        
-      })
-
-      //ref.orderByChild("email").equalTo(email).limitToFirst(1).on("child_added", consultaReg)
-
-      // POSTAR o token para o nosso back-end para que possamos usá-lo para enviar push a partir daí
-      // var updates = {}
-      // updates['/expoToken'] = token
-      // await firebase.database().ref('/users/' + currentUser.uid).update(updates)
-
     }
 
-    async function consultaReg(snapshot) {
-      console.log('snapshot', snapshot)
-    }
-
-    
-    // init()
-    // registerForPushNotifications()
-  
   }, [])
 
   const onPress = (tipo) => {

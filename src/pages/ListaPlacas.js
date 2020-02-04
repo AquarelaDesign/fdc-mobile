@@ -100,7 +100,7 @@ export default function ListaPlacas({ navigation }) {
   function handleNavigate(placa) {
     switch (tipo) {
       case 'EXC': ExcluiVeiculo(placa); break
-      case 'PAS': navigation.navigate('Passagem', { placa }); break
+      case 'PAS': navigation.navigate('Passagens', { placa }); break
       case 'ETQ': navigation.navigate('Etiqueta', { placa }); break
       case 'KMS': navigation.navigate('Km', { placa }); break
       default: Alert.alert(`A opção ${tipo} ainda não foi implementada!`); break
