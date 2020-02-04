@@ -33,6 +33,8 @@ import Contas from './pages/Indicadores/Contas'
 import Recebimentos from './pages/Indicadores/Recebimentos'
 import Documentos from './pages/Indicadores/Documentos'
 
+import Menu from './pages/Menu/Menu'
+import InfoConfig from './pages/Menu/Info'
 
 const routes = {
   Login: {
@@ -243,6 +245,24 @@ const routes = {
   Documentos: {
     path: '/documentos',
     screen: Documentos,
+    navigationOptions: ({ navigation }) => ({
+      drawerLockMode: 'unlocked',
+      drawerIcon: <Icon name="file" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Menu: {
+    path: '/menu',
+    screen: Menu,
+    navigationOptions: ({ navigation }) => ({
+      drawerLockMode: 'unlocked',
+      drawerIcon: <Icon name="file" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  InfoConfig: {
+    path: '/infoconfig',
+    screen: InfoConfig,
     navigationOptions: ({ navigation }) => ({
       drawerLockMode: 'unlocked',
       drawerIcon: <Icon name="file" size={20} color="#7159c1" />,

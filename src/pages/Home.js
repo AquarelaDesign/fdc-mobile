@@ -88,7 +88,7 @@ export default function Home({ navigation }) {
     switch (tipo) {
       // case 'PAS': navigation.navigate('Passagens')
       // case 'ETQ': navigation.navigate('Etiquetas')
-      case 'PAR': Alert.alert(`Clicado em ${tipo}`); break
+      case 'PAR': navigation.navigate('Menu'); break
       case 'PRO': navigation.navigate('Promocoes'); break
       case 'OUT': navigation.navigate('Outros'); break
       case 'IND': navigation.navigate('Indicadores'); break
