@@ -13,8 +13,8 @@ import {
   TouchableOpacity 
 } from 'react-native'
 
-import { Notifications } from 'expo'
-import * as Permissions from 'expo-permissions'
+// import { Notifications } from 'expo'
+// import * as Permissions from 'expo-permissions'
 
 import Lottie from 'lottie-react-native'
 
@@ -37,7 +37,7 @@ export default function Home({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isOficina, setIsOficina] = useState(false)
   const [email, setEmail] = useState('')
-  const [token, setToken] = useState(null)
+  // const [token, setToken] = useState(null)
 
   useEffect(() => {
     setIsLoading(true)
@@ -56,9 +56,10 @@ export default function Home({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      registerForPushNotifications(Email)
+      // registerForPushNotifications(Email)
     })
 
+    /*
     async function registerForPushNotifications(Email) {
       const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
   
@@ -77,7 +78,8 @@ export default function Home({ navigation }) {
       setToken(token)
 
     }
-
+    */
+   
   }, [])
 
   const onPress = (tipo) => {
