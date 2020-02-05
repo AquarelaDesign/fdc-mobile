@@ -4,6 +4,7 @@ import { Icon } from 'native-base'
 
 const CustomRow = ({ title, description, icone }) => (
   <View style={styles.container}>
+    {console.log(description)}
     <Icon name={icone} style={styles.photo} />
     <View style={styles.container_text}>
       <Text style={styles.title}>

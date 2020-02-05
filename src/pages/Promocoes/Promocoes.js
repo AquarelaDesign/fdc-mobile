@@ -80,7 +80,7 @@ const Promocoes = ({ navigation }) => {
                     upperCasePlaca: ttpromo.placa.toUpperCase(),
                   }))
                   .sort((a, b) => a.placa > b.placa)
-
+                
                 setPromo(promOrd)
                 setPromoFilter(promOrd)
               }

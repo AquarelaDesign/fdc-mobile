@@ -81,8 +81,7 @@ const Mensagens = ({ navigation }) => {
                     upperCasePlaca: ttpush.placa.toUpperCase(),
                   }))
                   .sort((a, b) => a.placa > b.placa)
-                
-                // console.log('ttpush =>', ttpush)
+
                 setMens(pushOrd)
                 setMensFilter(pushOrd)
               }
@@ -92,10 +91,8 @@ const Mensagens = ({ navigation }) => {
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
-            // console.log('1=>', response.data.errors[0])
             setIsLoading(false)
           } else {
-            // console.log('2=>', error)
             setIsLoading(false)
           }
         }
@@ -183,7 +180,7 @@ const Mensagens = ({ navigation }) => {
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
-}
+} 
 
 const styles = StyleSheet.create({
   logo: {
