@@ -35,6 +35,7 @@ import Documentos from './pages/Indicadores/Documentos'
 
 import Menu from './pages/Menu/Menu'
 import InfoConfig from './pages/Menu/Info'
+import Usuario from './pages/Menu/Usuario'
 
 const routes = {
   Login: {
@@ -263,6 +264,15 @@ const routes = {
   InfoConfig: {
     path: '/infoconfig',
     screen: InfoConfig,
+    navigationOptions: ({ navigation }) => ({
+      drawerLockMode: 'unlocked',
+      drawerIcon: <Icon name="file" size={20} color="#7159c1" />,
+      headerTransparent: true,
+    }),
+  },
+  Usuario: {
+    path: '/usuario',
+    screen: Usuario,
     navigationOptions: ({ navigation }) => ({
       drawerLockMode: 'unlocked',
       drawerIcon: <Icon name="file" size={20} color="#7159c1" />,
