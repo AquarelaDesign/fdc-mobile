@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import {
   AsyncStorage,
   Dimensions,
-  Image,
+  FlatList,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native'
 
+import { Icon } from 'native-base'
 import Lottie from 'lottie-react-native'
 
 import { SearchBar } from 'react-native-elements'
@@ -18,10 +19,8 @@ import { SearchBar } from 'react-native-elements'
 import GlobalStyles, { _url, searchStyle } from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
-import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
-import CustomListview from '../../components/CustomListview'
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
@@ -42,7 +41,7 @@ const useDebounce = (value, delay) => {
   return debounceValue
 }
 
-const Mensagens = ({ navigation }) => {
+const Mensagens = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [oficina, setOficina] = useState({})
   const [email, setEmail] = useState('')
@@ -61,43 +60,45 @@ const Mensagens = ({ navigation }) => {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaMsgs() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcmsg',
-            pmetodo: 'buscapush',
-            pcodprg: '',
-            pemail: email,
-            ptipmsg: 'A',
-          })).then(response => {
-            // console.log('response =>', response.status, response)
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttpush } = response.data.ProDataSet
+      if (email !== '') {
+        async function buscaMsgs() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcmsg',
+              pmetodo: 'buscapush',
+              pcodprg: '',
+              pemail: email,
+              ptipmsg: 'A',
+            })).then(response => {
+              // console.log('response =>', response.status, response)
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttpush } = response.data.ProDataSet
 
-                const pushOrd = Object.values(ttpush)
-                  .map((ttpush) => ({
-                    ...ttpush,
-                    upperCasePlaca: ttpush.placa.toUpperCase(),
-                  }))
-                  .sort((a, b) => a.placa > b.placa)
+                  const pushOrd = Object.values(ttpush)
+                    .map((ttpush) => ({
+                      ...ttpush,
+                      upperCasePlaca: ttpush.placa.toUpperCase(),
+                    }))
+                    .sort((a, b) => a.placa > b.placa)
 
-                setMens(pushOrd)
-                setMensFilter(pushOrd)
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            setIsLoading(false)
-          } else {
-            setIsLoading(false)
+                  setMens(pushOrd)
+                  setMensFilter(pushOrd)
+                }
+              } 
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              setIsLoading(false)
+            } else {
+              setIsLoading(false)
+            }
           }
         }
+        buscaMsgs()
       }
-      buscaMsgs()
     })
   }, [email, oficina])
 
@@ -133,6 +134,13 @@ const Mensagens = ({ navigation }) => {
     setMensFilter(newData)
   }
 
+  const getRandom = () => {
+    const min = 1
+    const max = 100
+    const rand = min + Math.random() * (max - min)
+    return rand.toString()
+  }
+  
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -140,42 +148,60 @@ const Mensagens = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 35,}]}>
       <ImageBackground
         style={GlobalStyles.background}
         source={bg}
       >
-        <Image style={styles.logo} source={logo} />
+        {
+          mens === undefined ? 
+          <View style={{marginTop: 100}}>
+            <Text style={[styles.row, styles.msgText]}>
+              Você ainda não recebeu mensagens push.
+            </Text>
+          </View>
+          :
+          <View>
+            {!isLoading ? (
+            <SearchBar
+              round
+              searchIcon={{ size: 24 }}
+              
+              containerStyle={searchStyle.containerStyle}
+              inputStyle={searchStyle.inputStyle}
+              leftIconContainerStyle={searchStyle.leftIconContainerStyle}
+              rightIconContainerStyle={searchStyle.rightIconContainerStyle}
+              inputContainerStyle={searchStyle.inputContainerStyle}
 
-        <View style={GlobalStyles.boxContainer}>
-          {
-            mens === undefined ? 
-            <View>
-              <Text style={styles.msgText}>
-                Você ainda não recebeu mensagens push.
-              </Text>
-            </View>
-            :
-            <View>
-              <SearchBar
-                round
-                searchIcon={{ size: 24 }}
-                
-                containerStyle={searchStyle.containerStyle}
-                inputStyle={searchStyle.inputStyle}
-                leftIconContainerStyle={searchStyle.leftIconContainerStyle}
-                rightIconContainerStyle={searchStyle.rightIconContainerStyle}
-                inputContainerStyle={searchStyle.inputContainerStyle}
+              placeholder="Filtrar Placas..."
+              onChangeText={text => SearchFilterFunction(text)}
+              onClear={text => SearchFilterFunction('')}
+              value={filtrar}
+            />
+            ) : null}
+            <FlatList
+              style={styles.list}
+              data={mensFilter}
+              keyExtractor={item => item.datenv + item.horenv + getRandom()}
 
-                placeholder="Filtrar Placas..."
-                onChangeText={text => SearchFilterFunction(text)}
-                onClear={text => SearchFilterFunction('')}
-                value={filtrar}
-              />
-              <CustomListview itemList={mensFilter} />
-            </View>
-          }
-        </View>
+              renderItem={({ item }) => 
+              (
+                <View style={styles.listItem}>
+                  <Icon name='md-chatbubbles' style={styles.icone} />
+                  <View style={styles.container_text}>
+                    <Text style={styles.title}>
+                      {`${item.datenv} - ${item.horenv} - ${item.placa}`}
+                    </Text>
+                    <Text style={styles.description}>
+                      {item.txtmsg}
+                    </Text>
+                  </View>
+                </View>
+              )}
+              
+            />
+          </View>
+        }
       </ImageBackground>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
@@ -190,17 +216,66 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
 
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+
   msgText: {
-    fontSize: 22,
+    fontSize: 18,
     color: '#FFFFFF',
     flexDirection: 'row',
     alignSelf: 'center',
-    textAlign: 'center',
-    marginTop: 200, 
+    textAlign: 'justify',
     paddingRight: 10,
-    width: width - 20, 
+    width: width - 20,
   },
-  
+
+  list: {
+    paddingHorizontal: 5,
+    flexGrow: 0,
+    marginBottom: 90,
+  },
+
+  listItem: {
+    display: 'flex',
+    width: Dimensions.get('window').width - 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 10,
+    height: 100,
+    backgroundColor: 'rgba(224,255,255,0.5)',
+    elevation: 2,
+    marginRight: 16,
+    marginTop: 4,
+    marginBottom: 4,
+    borderRadius: 5,
+  },
+
+  title: {
+    fontSize: 14,
+    color: '#000',
+    color: '#4169E1'
+  },
+
+  container_text: {
+    flex: 1,
+    flexDirection: 'column',
+    marginLeft: 12,
+    justifyContent: 'center',
+  },
+
+  description: {
+    fontSize: 11,
+    fontStyle: 'italic',
+  },
+
+  icone: {
+    height: 30,
+    width: 30,
+    color: '#4169E1'
+  },
+
 })
 
 export default Mensagens

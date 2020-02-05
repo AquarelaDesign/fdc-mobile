@@ -148,6 +148,13 @@ const Promocoes = ({ navigation }) => {
     setPromoFilter(newData)
   }
 
+  const getRandom = () => {
+    const min = 1
+    const max = 100
+    const rand = min + Math.random() * (max - min)
+    return rand.toString()
+  }
+  
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -156,61 +163,59 @@ const Promocoes = ({ navigation }) => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 25,}]}>
-      <View style={styles.scene}>
-        <ImageBackground
-          style={GlobalStyles.background}
-          source={bg}
-        >
-          {
-            promo === undefined ?
-            <View style={{marginTop: 100}}>
-              <Image style={styles.boxIcone} source={sad} />
-              <Text style={[styles.row, styles.msgText]}>
-                Não foram encontradas promoções vigentes até o momento.
-              </Text>
-              <Text style={[styles.row, styles.msgText]}>
-                Mas fique alerta e continue atualizando as informações de quilometragem para em breve receber promoções exclusivas!
-              </Text>
-            </View>
-            :
-            <View>
-              <SearchBar
-                round
-                searchIcon={{ size: 24 }}
-                
-                containerStyle={searchStyle.containerStyle}
-                inputStyle={searchStyle.inputStyle}
-                leftIconContainerStyle={searchStyle.leftIconContainerStyle}
-                rightIconContainerStyle={searchStyle.rightIconContainerStyle}
-                inputContainerStyle={searchStyle.inputContainerStyle}
+      <ImageBackground
+        style={GlobalStyles.background}
+        source={bg}
+      >
+        {
+          promo === undefined ?
+          <View style={{marginTop: 100}}>
+            <Image style={styles.boxIcone} source={sad} />
+            <Text style={[styles.row, styles.msgText]}>
+              Não foram encontradas promoções vigentes até o momento.
+            </Text>
+            <Text style={[styles.row, styles.msgText]}>
+              Mas fique alerta e continue atualizando as informações de quilometragem para em breve receber promoções exclusivas!
+            </Text>
+          </View>
+          :
+          <View>
+            <SearchBar
+              round
+              searchIcon={{ size: 24 }}
+              
+              containerStyle={searchStyle.containerStyle}
+              inputStyle={searchStyle.inputStyle}
+              leftIconContainerStyle={searchStyle.leftIconContainerStyle}
+              rightIconContainerStyle={searchStyle.rightIconContainerStyle}
+              inputContainerStyle={searchStyle.inputContainerStyle}
 
-                placeholder="Filtrar Placas..."
-                onChangeText={text => SearchFilterFunction(text)}
-                onClear={text => SearchFilterFunction('')}
-                value={filtrar}
-              />
-              <FlatList
-                style={styles.list}
-                data={promoFilter}
-                keyExtractor={prom => `${prom.idprom}${prom.descri}`}
+              placeholder="Filtrar Placas..."
+              onChangeText={text => SearchFilterFunction(text)}
+              onClear={text => SearchFilterFunction('')}
+              value={filtrar}
+            />
+            <FlatList
+              style={styles.list}
+              data={promoFilter}
+              keyExtractor={prom => prom.idprom + prom.descri + getRandom()}
 
-                renderItem={({ item, index }) => (
-                  <TouchableHighlight
-                    onPress={() => pressPro(item)}>
-                    <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                      <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.placa.toUpperCase()}</Text>
-                      <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descricao}</Text>
-                    </View>
-                  </TouchableHighlight>
-                )}
+              renderItem={({ item, index }) => (
+                <TouchableHighlight
+                  onPress={() => pressPro(item)}>
+                  <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                    <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.placa.toUpperCase()}</Text>
+                    <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descricao}</Text>
+                  </View>
+                </TouchableHighlight>
+              )}
 
-                ListHeaderComponent={FlatList_header_pro}
-                stickyHeaderIndices={[0]}
-              />
-            </View>
-          }
-        </ImageBackground>
-      </View>
+              ListHeaderComponent={FlatList_header_pro}
+              stickyHeaderIndices={[0]}
+            />
+          </View>
+        }
+      </ImageBackground>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
