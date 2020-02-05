@@ -62,41 +62,43 @@ const Promocoes = ({ navigation }) => {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaPro() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcpas',
-            pmetodo: 'buscapromocoesApp',
-            pcodprg: '',
-            pemail: email,
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttpromo } = response.data.ProDataSet
-                
-                const promOrd = Object.values(ttpromo)
-                  .map((ttpromo) => ({
-                    ...ttpromo,
-                    upperCasePlaca: ttpromo.placa.toUpperCase(),
-                  }))
-                  .sort((a, b) => a.placa > b.placa)
-                
-                setPromo(promOrd)
-                setPromoFilter(promOrd)
+      if (email !== '') {
+        async function buscaPro() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcpas',
+              pmetodo: 'buscapromocoesApp',
+              pcodprg: '',
+              pemail: email,
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttpromo } = response.data.ProDataSet
+                  
+                  const promOrd = Object.values(ttpromo)
+                    .map((ttpromo) => ({
+                      ...ttpromo,
+                      upperCasePlaca: ttpromo.placa.toUpperCase(),
+                    }))
+                    .sort((a, b) => a.placa > b.placa)
+                  
+                  setPromo(promOrd)
+                  setPromoFilter(promOrd)
+                }
               }
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              setIsLoading(false)
+            } else {
+              setIsLoading(false)
             }
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            setIsLoading(false)
-          } else {
-            setIsLoading(false)
           }
         }
+        buscaPro()
       }
-      buscaPro()
     })
   }, [email, oficina])
 

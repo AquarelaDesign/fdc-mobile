@@ -43,7 +43,8 @@ export default function ConsultaPJ({ navigation }) {
 
     Keyboard.dismiss()
     const placa = values.placa
-    navigation.navigate('Passagem', { placa })
+    // navigation.navigate('Passagem', { placa })
+    Alert.alert(`Buscar dados para a placa ${placa}`)
   }
   
   return (
@@ -54,9 +55,6 @@ export default function ConsultaPJ({ navigation }) {
       >
         <Image style={styles.logo} source={logo} />
 
-        <View style={GlobalStyles.boxSpace}>
-        </View>
-        
         <View style={GlobalStyles.boxContainer}>
           <View style={styles.parentHr} />
           <Text style={styles.msgText}>

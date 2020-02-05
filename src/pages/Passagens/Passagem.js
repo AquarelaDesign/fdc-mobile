@@ -125,38 +125,40 @@ export default function Passagem({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaRela() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcpas',
-            pmetodo: 'ListaRelatos',
-            pcodprg: '',
-            pemail: email,
-            pidgpas: idgpas,
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttfcrpv } = response.data.ProDataSet
-                setRela(ttfcrpv)
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            // console.log('1=>', response.data.errors[0])
-            setIsLoading(false)
-          } else {
-            // console.log('2=>', error)
-            setIsLoading(false)
+      if (email !== '') {
+        async function buscaRela() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcpas',
+              pmetodo: 'ListaRelatos',
+              pcodprg: '',
+              pemail: email,
+              pidgpas: idgpas,
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttfcrpv } = response.data.ProDataSet
+                  setRela(ttfcrpv)
+                }
+              } 
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              // console.log('1=>', response.data.errors[0])
+              setIsLoading(false)
+            } else {
+              // console.log('2=>', error)
+              setIsLoading(false)
+            }
           }
         }
+        buscaRela()
+        bServ(idgpas)
+        bPeca(idgpas)
+        coordenadas(dados)
       }
-      buscaRela()
-      bServ(idgpas)
-      bPeca(idgpas)
-      coordenadas(dados)
     })
   }, [email, oficina, dados])
   
@@ -415,7 +417,7 @@ export default function Passagem({ navigation }) {
           <Tab heading={ <TabHeading><Icon name="md-cog" /><Text style={{color:'#FFF'}}> Peças</Text></TabHeading>}>
             {Pecas()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-cog" /><Text style={{color:'#FFF'}}> Info</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="md-information-circle-outline" /><Text style={{color:'#FFF'}}> Info</Text></TabHeading>}>
             {Info()}
           </Tab>
         </Tabs>

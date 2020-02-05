@@ -27,8 +27,9 @@ const querystring = require('querystring')
 export default function Passagens({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
-  const [placa, setPlaca] = useState('')
   const [oficina, setOficina] = useState({})
+  const [placa, setPlaca] = useState('')
+  
   const [pass, setPass] = useState([])
   const [serv, setServ] = useState([])
   const [peca, setPeca] = useState([])
@@ -43,39 +44,41 @@ export default function Passagens({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaPas() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcpas',
-            pmetodo: 'listaPassagens',
-            pcodprg: '',
-            pemail: email,
-            pplaca: placa,
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttfccpvl } = response.data.ProDataSet
-                setPass(ttfccpvl)
-                if (ttfccpvl !== undefined) {
-                  bServ(ttfccpvl[0].placa)
-                  bPeca(ttfccpvl[0].placa)
+      if (email !== '') {
+        async function buscaPas() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcpas',
+              pmetodo: 'listaPassagens',
+              pcodprg: '',
+              pemail: email,
+              pplaca: placa,
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttfccpvl } = response.data.ProDataSet
+                  setPass(ttfccpvl)
+                  if (ttfccpvl !== undefined) {
+                    bServ(ttfccpvl[0].placa)
+                    bPeca(ttfccpvl[0].placa)
+                  }
                 }
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            // console.log('1=>', response.data.errors[0])
-            setIsLoading(false)
-          } else {
-            // console.log('2=>', error)
-            setIsLoading(false)
+              } 
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              // console.log('1=>', response.data.errors[0])
+              setIsLoading(false)
+            } else {
+              // console.log('2=>', error)
+              setIsLoading(false)
+            }
           }
         }
+        buscaPas()
       }
-      buscaPas()
     })
   }, [email, oficina])
   

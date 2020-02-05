@@ -54,42 +54,39 @@ export default function ListaPlacas({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      
-      async function buscaPas() {
-        try {
-          
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcvei',
-            pmetodo: 'listaPlacasApp',
-            pcodprg: '',
-            pemail: email,
-            pidapp: oficina.idusu,
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttfccva } = response.data.ProDataSet
-                montaLista(ttfccva)
-              }
-            } 
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            // console.log(response.data.errors[0])
-            setIsLoading(false)
-          } else {
-            // console.log(error)
-            setIsLoading(false)
+      if (email !== '') {
+        async function buscaPas() {
+          try {
+            
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcvei',
+              pmetodo: 'listaPlacasApp',
+              pcodprg: '',
+              pemail: email,
+              pidapp: oficina.idusu,
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttfccva } = response.data.ProDataSet
+                  montaLista(ttfccva)
+                }
+              } 
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              // console.log(response.data.errors[0])
+              setIsLoading(false)
+            } else {
+              // console.log(error)
+              setIsLoading(false)
+            }
           }
         }
+        buscaPas()
       }
-      buscaPas()
-      
     })
   }, [email, oficina, tipo])
-  
-  // console.log('recs', recs)
-  // console.log('oficina', oficina)
   
   function Loading() {
     return (

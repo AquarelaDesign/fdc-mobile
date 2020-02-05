@@ -7,13 +7,12 @@ import {
   ImageBackground,
   SafeAreaView,
   StyleSheet,
-  TextInput, 
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
 
-import { TabView, SceneMap } from 'react-native-tab-view'
+import {Container, Header, Tab, Tabs, TabHeading, Icon } from 'native-base'
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles, { colors, _url } from '../../GlobalStyles'
@@ -23,7 +22,7 @@ import AtualizaKM from './AtualizaKM'
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
 
-const { width, height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 const querystring = require('querystring')
 
 export default function Km({ navigation }) {
@@ -32,15 +31,7 @@ export default function Km({ navigation }) {
   const [placa, setPlaca] = useState('')
   const [historico, setHistorico] = useState([])
   const [resu, setResumo] = useState([])
-  const [state, setState] = useState({
-    index: 0,
-    routes: [
-      { key: 'atualizacao', title: 'Atualizar' },
-      { key: 'historico', title: 'Histórico' },
-      { key: 'resumo', title: 'Resumo' },
-    ],
-  })
-
+  
   useEffect(() => {
     setPlaca(navigation.getParam('placa'))
   }, [])
@@ -49,13 +40,15 @@ export default function Km({ navigation }) {
     setIsLoading(true)
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      buscaHistorico()
+      if (email !== '') {
+        buscaHistorico()
+      }
     })
   }, [email])
   
   const buscaHistorico = () => {
     setIsLoading(true)
-    console.log('buscaHistorico')
+    // console.log('buscaHistorico')
     
     async function bHistorico() {
       try {
@@ -239,18 +232,21 @@ export default function Km({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
-      <TabView
-        style={styles.tabContainer}
-        navigationState={state}
-        renderScene={SceneMap({
-          atualizacao: Atualizacao,
-          historico: Historico,
-          resumo: Resumo,
-        })}
-        onIndexChange={index => setState({index: index, routes: state.routes})}
-        initialLayout={{ width: Dimensions.get('window').width }}
-      />
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: -15}]}>
+      <Container>
+        <Header hasTabs/>
+        <Tabs initialPage={0}>
+          <Tab heading={ <TabHeading><Icon name="md-create" /><Text style={{color:'#FFF'}}> Atualização</Text></TabHeading>}>
+            {Atualizacao()}
+          </Tab>
+          <Tab heading={ <TabHeading><Icon name="md-paper" /><Text style={{color:'#FFF'}}> Histórico</Text></TabHeading>}>
+            {Historico()}
+          </Tab>
+          <Tab heading={ <TabHeading><Icon name="md-clipboard" /><Text style={{color:'#FFF'}}> Resumo</Text></TabHeading>}>
+            {Resumo()}
+          </Tab>
+        </Tabs>
+      </Container>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )

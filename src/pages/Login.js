@@ -25,10 +25,8 @@ import bg from '../assets/splash.png'
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  //const [showAlert, setShowAlert] = useState([false])
 
   useEffect(() => {
-    // const email = getEmail()
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
     })
@@ -40,7 +38,6 @@ export default function Login({ navigation }) {
           "token": token
         })
 
-        // console.log('response', response.data.valid)
         if (response.data.valid) {
           navigation.navigate('Home')
         }
@@ -75,7 +72,6 @@ export default function Login({ navigation }) {
         Alert.alert(response.data.errors[0])
       } else {
         Alert.alert('Falha ao conectar com o servidor, por favor tente mais tarde.')
-        // console.log('Erro:', error)
       }
     }
 

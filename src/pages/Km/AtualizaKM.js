@@ -65,7 +65,7 @@ export default function AtualizaKM({ placa, navigation }) {
         values.valor.length > 0
         ) {
       setIsLoading(true)
-      console.log('values-ok', placa, values)
+      // console.log('values-ok', placa, values)
       Keyboard.dismiss()
       
       AsyncStorage.getItem('email').then(Email => {

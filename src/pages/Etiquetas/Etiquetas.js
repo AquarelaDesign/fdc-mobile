@@ -37,37 +37,39 @@ export default function Etiquetas({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      async function buscaEtq() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcpas',
-            pmetodo: 'BuscaEtiquetas',
-            pcodprg: '',
-            pemail: email,
-            pplaca: placa,
-            pqtdias: 0,
-            pkm: 0,
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttfcetq } = response.data.ProDataSet
-                setEtq(ttfcetq)
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            // console.log('1=>', response.data.errors[0])
-            setIsLoading(false)
-          } else {
-            // console.log('2=>', error)
-            setIsLoading(false)
+      if (email !== '') {
+        async function buscaEtq() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcpas',
+              pmetodo: 'BuscaEtiquetas',
+              pcodprg: '',
+              pemail: email,
+              pplaca: placa,
+              pqtdias: 0,
+              pkm: 0,
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttfcetq } = response.data.ProDataSet
+                  setEtq(ttfcetq)
+                }
+              } 
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              // console.log('1=>', response.data.errors[0])
+              setIsLoading(false)
+            } else {
+              // console.log('2=>', error)
+              setIsLoading(false)
+            }
           }
         }
+        buscaEtq()
       }
-      buscaEtq()
     })
   }, [email, placa])
   
@@ -86,6 +88,13 @@ export default function Etiquetas({ navigation }) {
     navigation.navigate('Infoetq',{ dados: item })
   }
   
+  const getRandom = () => {
+    const min = 1
+    const max = 100
+    const rand = min + Math.random() * (max - min)
+    return rand.toString()
+  }
+  
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -93,7 +102,7 @@ export default function Etiquetas({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 40,}]}>
       <ImageBackground
         style={GlobalStyles.background}
         source={bg}
@@ -109,7 +118,7 @@ export default function Etiquetas({ navigation }) {
           <FlatList 
             style={styles.list}
             data={etq}
-            keyExtractor={etq => `${etq.idgpas}${etq.descri}`}
+            keyExtractor={etq => etq.idgpas + etq.descri + getRandom()}
 
             renderItem={({ item, index }) => (
               <TouchableHighlight
@@ -145,8 +154,8 @@ const styles = StyleSheet.create({
 
   list: {
     paddingHorizontal: 5,
-    flex: 1,
-    marginTop: 38,
+    flexGrow: 0,
+    marginBottom: 90,
   },
   
   listItem: {

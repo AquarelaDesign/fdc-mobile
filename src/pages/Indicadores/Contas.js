@@ -55,56 +55,57 @@ const Contas = () => {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
+      if (email !== '') {
+        async function buscaContas() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcfin',
+              pmetodo: 'ListaResumo',
+              pcodprg: 'TFCFIN',
+              pemail: email,
+              pdtini: dataInicial,
+              pdtfim: dataFinal,
+              ptipcon: 'A',
+            })).then(response => {
+              console.log(response)
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttresumo } = response.data.ProDataSet
 
-      async function buscaContas() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcfin',
-            pmetodo: 'ListaResumo',
-            pcodprg: 'TFCFIN',
-            pemail: email,
-            pdtini: dataInicial,
-            pdtfim: dataFinal,
-            ptipcon: 'A',
-          })).then(response => {
-            console.log(response)
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttresumo } = response.data.ProDataSet
-
-                let totpag = 0
-                let totrec = 0
-                let qtpag = 0
-                let qtrec = 0
-                
-                ttresumo.forEach((value, key) => {
-                  totpag += value.totpag
-                  totrec += value.totrec
-                  qtpag += value.qtpag
-                  qtrec += value.qtrec
-                })
-  
-                const totais = { 
-                  totpag,
-                  totrec,
-                  qtpag,
-                  qtrec
+                  let totpag = 0
+                  let totrec = 0
+                  let qtpag = 0
+                  let qtrec = 0
+                  
+                  ttresumo.forEach((value, key) => {
+                    totpag += value.totpag
+                    totrec += value.totrec
+                    qtpag += value.qtpag
+                    qtrec += value.qtrec
+                  })
+    
+                  const totais = { 
+                    totpag,
+                    totrec,
+                    qtpag,
+                    qtrec
+                  }
+                  montaLista(totais)
                 }
-                montaLista(totais)
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            setIsLoading(false)
-          } else {
-            setIsLoading(false)
+              } 
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              setIsLoading(false)
+            } else {
+              setIsLoading(false)
+            }
           }
         }
+        buscaContas()
       }
-      buscaContas()
     })
   }, [email])
 

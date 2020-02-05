@@ -79,35 +79,36 @@ const Etiquetas = () => {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-
-      async function buscaEtq() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcpas',
-            pmetodo: 'ResumoEtiquetas',
-            pcodprg: 'TFCINI',
-            pemail: email,
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttresetq } = response.data.ProDataSet
-                montaLista(ttresetq)
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            // console.log('Error-1', response.data.errors[0])
-            setIsLoading(false)
-          } else {
-            // console.log('Error-2', error)
-            setIsLoading(false)
+      if (email !== '') {
+        async function buscaEtq() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcpas',
+              pmetodo: 'ResumoEtiquetas',
+              pcodprg: 'TFCINI',
+              pemail: email,
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttresetq } = response.data.ProDataSet
+                  montaLista(ttresetq)
+                }
+              } 
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              // console.log('Error-1', response.data.errors[0])
+              setIsLoading(false)
+            } else {
+              // console.log('Error-2', error)
+              setIsLoading(false)
+            }
           }
         }
+        buscaEtq()
       }
-      buscaEtq()
     })
   }, [email])
 

@@ -196,35 +196,37 @@ const Documentos = () => {
       const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
       const url = `${uri}?prog=wsimporc&email=${Email}&di=${dataInicial}&df=${dataFinal}&t=R`
       
-      async function buscaNotas() {
-        try {
-          await Axios.get(
-            url
-          ).then(response => {
-            if (response.status === 200) {
-              const { ListaDocs } = response.data.Lista
-              // console.log('response', response)
-              // console.log('ListaDocs', ListaDocs)
-              calculaNotas(ListaDocs)
+      if (email !== '') {
+        async function buscaNotas() {
+          try {
+            await Axios.get(
+              url
+            ).then(response => {
+              if (response.status === 200) {
+                const { ListaDocs } = response.data.Lista
+                // console.log('response', response)
+                // console.log('ListaDocs', ListaDocs)
+                calculaNotas(ListaDocs)
+              } else {
+                buscaNotas()
+              }
+              setIsLoading(false)
+            })
+          } catch (error) {
+            
+            const { response } = error
+            if (response !== undefined) {
+              // console.log('err1', response.data.errors[0])
+              setIsLoading(false)
             } else {
-              buscaNotas()
+              // console.log('err2', error)
+              setIsLoading(false)
             }
-            setIsLoading(false)
-          })
-        } catch (error) {
-          
-          const { response } = error
-          if (response !== undefined) {
-            // console.log('err1', response.data.errors[0])
-            setIsLoading(false)
-          } else {
-            // console.log('err2', error)
-            setIsLoading(false)
           }
+          
         }
-        
+        buscaNotas()
       }
-      buscaNotas()
     })
   }, [email])
 

@@ -71,36 +71,37 @@ const Indica = () => {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-
-      async function buscaIndica() {
-        try {
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcpas',
-            pmetodo: 'ListaPassagens',
-            pcodprg: 'TFCMON',
-            pemail: email,
-            pdatini: dataInicial,
-            pdatfim: dataFinal,
-            psituac: 'TOD',
-          })).then(response => {
-            if (response.status === 200) {
-              if (response.data.ProDataSet !== undefined) {
-                const { ttresumo } = response.data.ProDataSet
-                montaLista(ttresumo)
-              }
-            } 
-            setIsLoading(false)
-          })
-        } catch (error) {
-          const { response } = error
-          if (response !== undefined) {
-            setIsLoading(false)
-          } else {
-            setIsLoading(false)
+      if (email !== '') {
+        async function buscaIndica() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcpas',
+              pmetodo: 'ListaPassagens',
+              pcodprg: 'TFCMON',
+              pemail: email,
+              pdatini: dataInicial,
+              pdatfim: dataFinal,
+              psituac: 'TOD',
+            })).then(response => {
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  const { ttresumo } = response.data.ProDataSet
+                  montaLista(ttresumo)
+                }
+              } 
+              setIsLoading(false)
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              setIsLoading(false)
+            } else {
+              setIsLoading(false)
+            }
           }
         }
+        buscaIndica()
       }
-      buscaIndica()
     })
   }, [email])
 

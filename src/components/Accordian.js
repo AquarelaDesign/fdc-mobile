@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     paddingRight: 18,
     alignItems: 'center',
-    backgroundColor: Colors.RED,
+    backgroundColor: 'rgba(224,255,255,0.5)',
     color: Colors.WHITE,
   },
   
