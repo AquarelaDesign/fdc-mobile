@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 
 import {
   Alert,
@@ -11,6 +11,8 @@ import {
   View,
   ImageBackground,
 } from 'react-native'
+
+import Lottie from 'lottie-react-native'
 
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -30,21 +32,66 @@ const validationSchema = Yup.object().shape({
 })
 
 export default function ConsultaPJ({ navigation }) {
+  const [isLoading, setIsLoading] = useState(false)
   
   const initialValues = { 
     placa: '', 
   }
 
-  function handleSubmit (values, props) {
+  const handleSubmit = (values, props) => {
     if (values.placa.length === 0) {
       Alert.alert('Informe a Placa para consulta')
       return
     }
 
-    Keyboard.dismiss()
     const placa = values.placa
     // navigation.navigate('Passagem', { placa })
-    Alert.alert(`Buscar dados para a placa ${placa}`)
+    setIsLoading(true)
+    Keyboard.dismiss()
+    
+    AsyncStorage.getItem('email').then(Email => {
+      setEmail(Email)
+      if (email !== '' && placa !== '') {
+        async function gravaKm() {
+          try {
+            await Api.post('', querystring.stringify({
+              pservico: 'wfcpas',
+              pmetodo: 'ListaPassagens',
+              pcodprg: '',
+              pemail: email,
+              pplaca: placa,
+            })).then(response => {
+              console.log(response)
+              /*
+              if (response.status === 200) {
+                if (response.data.ProDataSet !== undefined) {
+                  // const { ttfccva } = response.data.ProDataSet
+                  props.buscaHistorico()
+                  setIsLoading(false)
+                } else {
+                  setIsLoading(false)
+                }
+              } else {
+                setIsLoading(false)
+              }
+              */
+            })
+          } catch (error) {
+            const { response } = error
+            if (response !== undefined) {
+              // console.log(response.data.errors[0])
+              setIsLoading(false)
+            } else {
+              // console.log(error)
+              setIsLoading(false)
+            }
+          }
+        }
+        gravaKm()
+      }
+    })
+    setIsLoading(false)
+
   }
   
   return (

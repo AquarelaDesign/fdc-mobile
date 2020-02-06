@@ -24,7 +24,7 @@ import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
 import loading from '../assets/json/car-scan.json'
 
-import btnLogo from '../assets/logo-mini.png'
+import btnLogo from '../assets/bt-menu.png'
 import passagens from '../assets/Passagens.png'
 import etiquetas from '../assets/Etiquetas.png'
 import km from '../assets/KM.png'
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
 
   boxBtn: {
-    marginTop: 70,
+    marginTop: 60,
     width: width + 60,
     height: 20,
     flexDirection: 'row',

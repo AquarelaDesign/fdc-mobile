@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 
 import {
   Animated,
@@ -29,25 +29,7 @@ import parcial from '../../assets/tanque_parcial.png'
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
 
-const validationSchema = Yup.object().shape({
-  km: Yup.string()
-    .matches(!/^1000([.][0]{1,3})?$|^\d{1,3}$|^\d{1,3}([.]\d{1,3})$|^([.]\d{1,3})$/, {
-      message: 'Km possui um formato inválido',
-      excludeEmptyString: true,
-    }),
-  quant: Yup.string()
-    .matches(!/^1000([.][0]{1,2})?$|^\d{1,2}$|^\d{1,2}([.]\d{1,2})$|^([.]\d{1,2})$/, {
-      message: 'Quantidade possui um formato inválido',
-      excludeEmptyString: true,
-    }),
-  valor: Yup.string()
-    .matches(!/^1000([.][0]{1,2})?$|^\d{1,2}$|^\d{1,2}([.]\d{1,2})$|^([.]\d{1,2})$/, {
-      message: 'valor possui um formato inválido',
-      excludeEmptyString: true,
-    }),
-})
-
-export default function AtualizaKM({ placa, navigation }) {
+const AtualizaKM = ({ placa, navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [imgSwitch, setimgSwitch] = useState(parcial)
@@ -59,18 +41,22 @@ export default function AtualizaKM({ placa, navigation }) {
     valor: '',
   }
 
-  function handleSubmit (values, props) {
+  useEffect(() => {
+    AsyncStorage.getItem('email').then(Email => {
+      setEmail(Email)
+    })
+  }, [email])
+
+  const handleSubmit = (values, props) => {
     if (values.km.length > 0 && 
         values.quant.length > 0 &&
         values.valor.length > 0
         ) {
       setIsLoading(true)
-      // console.log('values-ok', placa, values)
       Keyboard.dismiss()
       
-      AsyncStorage.getItem('email').then(Email => {
-        setEmail(Email)
-  
+      console.log('email', email, placa)
+      if (email !== '' && placa !== '') {
         async function gravaKm() {
           try {
             await Api.post('', querystring.stringify({
@@ -79,15 +65,16 @@ export default function AtualizaKM({ placa, navigation }) {
               pcodprg: '',
               pemail: email,
               pplaca: placa,
-              pquant: values.quant,
-              pkm: values.km.replace('.',''),
+              pquant: values.quant, // .replace(',','').replace('.',','),
+              pkm: values.km, // .replace(',','').replace('.',','),
               ptanqch: values.encheu ? 'S' : 'N',
-              pvalor: values.valor.replace('R$ ',''),
+              pvalor: values.valor.replace('R$ ','') // .replace(',','').replace('.',','),
             })).then(response => {
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
-                  // const { ttfccva } = response.data.ProDataSet
-                  props.buscaHistorico()
+                  const { ttfckmv } = response.data.ProDataSet
+                  props.updateHistory(ttfckmv)
+                  console.log('ttfckmv', ttfckmv)
                   setIsLoading(false)
                 } else {
                   setIsLoading(false)
@@ -99,22 +86,20 @@ export default function AtualizaKM({ placa, navigation }) {
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              // console.log(response.data.errors[0])
+              console.log('Error-1', response.data.errors[0])
               setIsLoading(false)
             } else {
-              // console.log(error)
+              console.log('Error-1', error)
               setIsLoading(false)
             }
           }
         }
         gravaKm()
-      })
-      setIsLoading(false)
-
+      }
     }
   }
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
@@ -243,7 +228,7 @@ export default function AtualizaKM({ placa, navigation }) {
                     type={'money'}
                     options={{
                       precision: 2,
-                      separator: '.',
+                      separator: ',',
                       delimiter: '',
                       unit: 'R$ ',
                       suffixUnit: ''
@@ -348,3 +333,5 @@ const styles = StyleSheet.create({
   },
 
 })
+
+export default AtualizaKM

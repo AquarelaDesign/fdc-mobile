@@ -46,7 +46,7 @@ export default function Km({ navigation }) {
     })
   }, [email])
   
-  const buscaHistorico = () => {
+  const buscaHistorico = (data) => {
     setIsLoading(true)
     // console.log('buscaHistorico')
     
@@ -82,7 +82,13 @@ export default function Km({ navigation }) {
         }
       }
     }
-    bHistorico()
+    
+    if (data !== undefined) {
+      setHistorico(data)
+    } else {
+      bHistorico()
+    }
+    
   }
 
   const buscaResumo = () => {
@@ -123,7 +129,7 @@ export default function Km({ navigation }) {
 
   const Atualizacao = () => (
     <View style={styles.scene}>
-      <AtualizaKM placa={placa} callback={buscaHistorico} />
+      <AtualizaKM placa={placa} updateHistory={buscaHistorico} />
     </View>
   )
 
