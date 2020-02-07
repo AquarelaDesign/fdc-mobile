@@ -69,10 +69,8 @@ export default function Passagens({ navigation }) {
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              // console.log('1=>', response.data.errors[0])
               setIsLoading(false)
             } else {
-              // console.log('2=>', error)
               setIsLoading(false)
             }
           }
@@ -105,10 +103,8 @@ export default function Passagens({ navigation }) {
       } catch (error) {
         const { response } = error
         if (response !== undefined) {
-          // console.log(response.data.errors[0])
           setIsLoading(false)
         } else {
-          // console.log(error)
           setIsLoading(false)
         }
       }
@@ -139,10 +135,8 @@ export default function Passagens({ navigation }) {
       } catch (error) {
         const { response } = error
         if (response !== undefined) {
-          // console.log(response.data.errors[0])
           setIsLoading(false)
         } else {
-          // console.log(error)
           setIsLoading(false)
         }
       }
@@ -181,7 +175,6 @@ export default function Passagens({ navigation }) {
           data={pass}
           keyExtractor={pass => pass.idgpas.toString() + getRandom()}
           
-          // numColumns={5}
           renderItem={({ item, index }) => (
             <TouchableHighlight
               onPress={() => pressPas(item)}>
@@ -334,7 +327,6 @@ const styles = StyleSheet.create({
 
   scene: {
     flex: 1,
-    // marginTop: 10,
   },
   
   header_style: {
@@ -358,7 +350,6 @@ const styles = StyleSheet.create({
   },
   
   listText: {
-    // fontWeight: 'bold',
     fontSize: 14,
     color: '#FFFFFF',
     textAlign: 'right',

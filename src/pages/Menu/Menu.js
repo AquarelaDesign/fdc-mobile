@@ -28,7 +28,6 @@ export default function Menu({ navigation }) {
     }
   }
   
-  // style={[GlobalStyles.AndroidSafeArea, styles.container]}
   return (
     <SafeAreaView style={GlobalStyles.container}>
       <ImageBackground

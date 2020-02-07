@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
   Dimensions,
-  Image,
   ImageBackground,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -98,9 +96,6 @@ export default function Info({ navigation }) {
   
   }, [dados])
   
-  // console.log('dados', dados)
-  // console.log('region', region)
-
   return (
     <SafeAreaView style={GlobalStyles.container}>
       <ImageBackground
@@ -244,11 +239,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#00FFFF',
     textAlign: 'left',
-    // height: 20,
   },
 
   vtext: {
-    // marginTop: 5,
     width: width,
   },
 
@@ -257,8 +250,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#F0E68C',
     textAlign: 'left',
-    // width: '100%',
-    // height: 20,
   },
 
   map: {

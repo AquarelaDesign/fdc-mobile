@@ -1,7 +1,8 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 
 import {
   Alert,
+  AsyncStorage,
   Dimensions,
   SafeAreaView,
   StyleSheet,
@@ -12,10 +13,7 @@ import {
   ImageBackground,
 } from 'react-native'
 
-import Lottie from 'lottie-react-native'
-
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 
 import GlobalStyles, { _url } from '../../GlobalStyles'
 import FormTextInput from '../../components/FormTextInput'
@@ -26,17 +24,18 @@ import bg from '../../assets/fundo-app.png'
 
 const { width } = Dimensions.get('window')
 
-const validationSchema = Yup.object().shape({
-  placa: Yup.string()
-    .required('Informe a Placa para consulta'),
-})
-
 export default function ConsultaPJ({ navigation }) {
-  const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState('')
   
   const initialValues = { 
     placa: '', 
   }
+
+  useEffect(() => {
+    AsyncStorage.getItem('email').then(Email => {
+      setEmail(Email)
+    })
+  }, [email])
 
   const handleSubmit = (values, props) => {
     if (values.placa.length === 0) {
@@ -45,53 +44,11 @@ export default function ConsultaPJ({ navigation }) {
     }
 
     const placa = values.placa
-    // navigation.navigate('Passagem', { placa })
-    setIsLoading(true)
     Keyboard.dismiss()
     
-    AsyncStorage.getItem('email').then(Email => {
-      setEmail(Email)
-      if (email !== '' && placa !== '') {
-        async function gravaKm() {
-          try {
-            await Api.post('', querystring.stringify({
-              pservico: 'wfcpas',
-              pmetodo: 'ListaPassagens',
-              pcodprg: '',
-              pemail: email,
-              pplaca: placa,
-            })).then(response => {
-              console.log(response)
-              /*
-              if (response.status === 200) {
-                if (response.data.ProDataSet !== undefined) {
-                  // const { ttfccva } = response.data.ProDataSet
-                  props.buscaHistorico()
-                  setIsLoading(false)
-                } else {
-                  setIsLoading(false)
-                }
-              } else {
-                setIsLoading(false)
-              }
-              */
-            })
-          } catch (error) {
-            const { response } = error
-            if (response !== undefined) {
-              // console.log(response.data.errors[0])
-              setIsLoading(false)
-            } else {
-              // console.log(error)
-              setIsLoading(false)
-            }
-          }
-        }
-        gravaKm()
-      }
-    })
-    setIsLoading(false)
-
+    if (email !== '' && placa !== '') {
+      navigation.navigate('Passagens', { placa })
+    }
   }
   
   return (
@@ -119,14 +76,11 @@ export default function ConsultaPJ({ navigation }) {
               handleSubmit(values)
               resetForm()
             }}
-            // validationSchema={validationSchema}
           >
             {({ 
               handleChange, 
               values, 
               handleSubmit,
-              resetForm,
-              // errors,
             }) => (
               <Fragment>
 
@@ -182,7 +136,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    // marginTop: height - (height / 2) - 40, 
     paddingTop: 30,
     width: width - 10, 
   },
@@ -194,9 +147,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    // marginTop: height - (height / 2) - 40, 
     paddingTop: 50,
-    // padding: 10,
     width: width - 10, 
   },
   

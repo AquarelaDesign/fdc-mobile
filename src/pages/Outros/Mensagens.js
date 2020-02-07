@@ -70,7 +70,6 @@ const Mensagens = () => {
               pemail: email,
               ptipmsg: 'A',
             })).then(response => {
-              // console.log('response =>', response.status, response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttpush } = response.data.ProDataSet

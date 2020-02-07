@@ -146,10 +146,8 @@ export default function Passagem({ navigation }) {
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              // console.log('1=>', response.data.errors[0])
               setIsLoading(false)
             } else {
-              // console.log('2=>', error)
               setIsLoading(false)
             }
           }
@@ -184,10 +182,8 @@ export default function Passagem({ navigation }) {
       } catch (error) {
         const { response } = error
         if (response !== undefined) {
-          // console.log(response.data.errors[0])
           setIsLoading(false)
         } else {
-          // console.log(error)
           setIsLoading(false)
         }
       }
@@ -217,10 +213,8 @@ export default function Passagem({ navigation }) {
       } catch (error) {
         const { response } = error
         if (response !== undefined) {
-          // console.log(response.data.errors[0])
           setIsLoading(false)
         } else {
-          // console.log(error)
           setIsLoading(false)
         }
       }
@@ -422,31 +416,6 @@ export default function Passagem({ navigation }) {
           </Tab>
         </Tabs>
       </Container>
-      {/* 
-      <TabView
-        style={styles.tabContainer}
-        navigationState={state}
-        renderScene={SceneMap({
-          relatos: Relatos,
-          servicos: Servicos,
-          pecas: Pecas,
-          info: Info,
-        })}
-        onIndexChange={index => setState({index: index, routes: state.routes})}
-        initialLayout={{ height: 100, width: Dimensions.get('window').width }}
-        renderTabBar={props =>
-          <TabBar
-            {...props}
-            indicatorStyle={{backgroundColor: 'red'}}
-            renderIcon={
-              props => getTabBarIcon(props)
-            }
-            tabStyle={styles.bubble}
-            labelStyle={styles.noLabel}
-          />
-        }
-      /> 
-      */}
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
@@ -489,7 +458,6 @@ const styles = StyleSheet.create({
   },
   
   listText: {
-    // fontWeight: 'bold',
     fontSize: 14,
     color: '#FFFFFF',
     textAlign: 'right',
@@ -499,7 +467,6 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    // marginTop: 3,
     paddingHorizontal: 20,
     width: width,
   },
@@ -518,7 +485,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#00FFFF',
     textAlign: 'left',
-    // height: 20,
   },
 
   vtext: {
@@ -531,8 +497,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#FFFFE0',
     textAlign: 'left',
-    // width: '100%',
-    // height: 20,
   },
 
   map: {
@@ -551,7 +515,6 @@ const styles = StyleSheet.create({
   },
   
   bubble: {
-    // backgroundColor: 'lime',
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 10

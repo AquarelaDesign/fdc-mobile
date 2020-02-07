@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
 } from 'react-native'
 
@@ -29,6 +28,7 @@ export default function Km({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [placa, setPlaca] = useState('')
+  const [initialTab, setInitialTab] = useState(1)
   const [historico, setHistorico] = useState([])
   const [resu, setResumo] = useState([])
   
@@ -48,7 +48,6 @@ export default function Km({ navigation }) {
   
   const buscaHistorico = (data) => {
     setIsLoading(true)
-    // console.log('buscaHistorico')
     
     async function bHistorico() {
       try {
@@ -62,8 +61,15 @@ export default function Km({ navigation }) {
           if (response.status === 200) {
             if (response.data.ProDataSet !== undefined) {
               const { ttfckmv } = response.data.ProDataSet
-              // console.log('ttfckmv-h', ttfckmv)
-              setHistorico(ttfckmv)
+              
+              const kmOrd = Object.values(ttfckmv)
+              .map((ttfckmv) => ({
+                ...ttfckmv,
+                upperCasePlaca: ttfckmv.placa.toUpperCase(),
+              }))
+              .sort((a, b) => a.placa > b.placa)
+              
+              setHistorico(kmOrd)
               if (ttfckmv !== undefined) {
                 buscaResumo()
               }
@@ -74,17 +80,24 @@ export default function Km({ navigation }) {
       } catch (error) {
         const { response } = error
         if (response !== undefined) {
-          // console.log('1=>', response.data.errors[0])
           setIsLoading(false)
         } else {
-          // console.log('2=>', error)
           setIsLoading(false)
         }
       }
     }
     
-    if (data !== undefined) {
-      setHistorico(data)
+    if (data && data.length > 0) {
+      const kmOrd = Object.values(data)
+      .map((data) => ({
+        ...data,
+        upperCasePlaca: data.placa.toUpperCase(),
+      }))
+      .sort((a, b) => a.placa > b.placa)
+
+      setHistorico(kmOrd)
+      setIsLoading(false)
+      // setInitialTab(1)
     } else {
       bHistorico()
     }
@@ -127,11 +140,13 @@ export default function Km({ navigation }) {
     bResumo()
   }
 
-  const Atualizacao = () => (
-    <View style={styles.scene}>
-      <AtualizaKM placa={placa} updateHistory={buscaHistorico} />
-    </View>
-  )
+  function Atualizacao() {
+    return (
+      <View style={styles.scene}>
+        <AtualizaKM placa={placa} buscaHistorico={buscaHistorico} />
+      </View>
+    )
+  }
 
   const FlatList_header_hist = () => {
     var Sticky_header_View = (
@@ -158,15 +173,12 @@ export default function Km({ navigation }) {
           
           // numColumns={5}
           renderItem={({ item, index }) => (
-            <TouchableHighlight
-              onPress={() => pressHist(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
-                <Text style={[styles.listText, { width: '20%' }]}>{item.kilome}</Text> 
-                <Text style={[styles.listText, { width: '20%' }]}>{item.quant}</Text> 
-                <Text style={[styles.listText, { width: '20%' }]}>{item.valor}</Text> 
-              </View>
-            </TouchableHighlight>
+            <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
+              <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
+              <Text style={[styles.listText, { width: '20%' }]}>{item.kilome}</Text> 
+              <Text style={[styles.listText, { width: '20%' }]}>{item.quant}</Text> 
+              <Text style={[styles.listText, { width: '20%' }]}>{item.valor}</Text> 
+            </View>
           )}
 
           ListHeaderComponent={FlatList_header_hist}
@@ -176,14 +188,6 @@ export default function Km({ navigation }) {
       </ImageBackground>
     </View>
   )
-
-  const pressHist = (item) => {
-    console.log('item',item)
-    // navigation.navigate('Passagem1', {
-    //   idgpas: item.idgpas,
-    //   info: item,
-    // })
-  }
 
   const Resumo = () => (
     <View style={styles.scene}>
@@ -241,7 +245,7 @@ export default function Km({ navigation }) {
     <SafeAreaView style={[GlobalStyles.container, {marginTop: -15}]}>
       <Container>
         <Header hasTabs/>
-        <Tabs initialPage={0}>
+        <Tabs initialPage={initialTab}>
           <Tab heading={ <TabHeading><Icon name="md-create" /><Text style={{color:'#FFF'}}> Atualização</Text></TabHeading>}>
             {Atualizacao()}
           </Tab>

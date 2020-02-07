@@ -75,10 +75,8 @@ export default function ListaPlacas({ navigation }) {
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              // console.log(response.data.errors[0])
               setIsLoading(false)
             } else {
-              // console.log(error)
               setIsLoading(false)
             }
           }
@@ -112,7 +110,6 @@ export default function ListaPlacas({ navigation }) {
         {
           text: 'Excluir',
           onPress: () => {
-            console.log('Excluir Pressionado!')
             
             async function Exclui() {
               try {
@@ -125,27 +122,20 @@ export default function ListaPlacas({ navigation }) {
                 })).then(response => {
                   if (response.status === 200) {
                     if (response.data.ProDataSet !== undefined) {
-                      // const { ttfccva } = response.data.ProDataSet
-                      // setIsLoading(false)
-                    } else {
-                      // setIsLoading(false)
+                      Alert.alert(`A Placa ${placa} foi excluída do seu perfil!`)
                     }
-                  } else {
-                    // setIsLoading(false)
-                  }
+                  } 
                 })
               } catch (error) {
                 const { response } = error
                 if (response !== undefined) {
-                  // console.log(response.data.errors[0])
-                  // setIsLoading(false)
+                  console.log(response.data.errors[0])
                 } else {
-                  // console.log(error)
-                  // setIsLoading(false)
+                  console.log(error)
                 }
               }
             }
-            // Exclui()
+            Exclui()
     
           },
         },
@@ -221,7 +211,6 @@ const styles = StyleSheet.create({
   },
   
   listText: {
-    // fontWeight: 'bold',
     fontSize: 22,
     color: '#FFFFFF',
     textAlign: 'center',

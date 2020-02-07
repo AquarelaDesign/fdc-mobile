@@ -13,7 +13,6 @@ import {
 
 import Lottie from 'lottie-react-native'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
 
 import Api from '../../services/oapi'
 import GlobalStyles, { _url } from '../../GlobalStyles'
@@ -29,7 +28,7 @@ import parcial from '../../assets/tanque_parcial.png'
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
 
-const AtualizaKM = ({ placa, navigation }) => {
+const AtualizaKM = ({ placa, buscaHistorico }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [imgSwitch, setimgSwitch] = useState(parcial)
@@ -47,7 +46,7 @@ const AtualizaKM = ({ placa, navigation }) => {
     })
   }, [email])
 
-  const handleSubmit = (values, props) => {
+  const handleSubmit = (values) => {
     if (values.km.length > 0 && 
         values.quant.length > 0 &&
         values.valor.length > 0
@@ -55,7 +54,6 @@ const AtualizaKM = ({ placa, navigation }) => {
       setIsLoading(true)
       Keyboard.dismiss()
       
-      console.log('email', email, placa)
       if (email !== '' && placa !== '') {
         async function gravaKm() {
           try {
@@ -65,16 +63,15 @@ const AtualizaKM = ({ placa, navigation }) => {
               pcodprg: '',
               pemail: email,
               pplaca: placa,
-              pquant: values.quant, // .replace(',','').replace('.',','),
-              pkm: values.km, // .replace(',','').replace('.',','),
+              pquant: values.quant, 
+              pkm: values.km,
               ptanqch: values.encheu ? 'S' : 'N',
-              pvalor: values.valor.replace('R$ ','') // .replace(',','').replace('.',','),
+              pvalor: values.valor.replace('R$ ','') 
             })).then(response => {
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttfckmv } = response.data.ProDataSet
-                  props.updateHistory(ttfckmv)
-                  console.log('ttfckmv', ttfckmv)
+                  buscaHistorico(ttfckmv)
                   setIsLoading(false)
                 } else {
                   setIsLoading(false)
@@ -86,10 +83,8 @@ const AtualizaKM = ({ placa, navigation }) => {
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              console.log('Error-1', response.data.errors[0])
               setIsLoading(false)
             } else {
-              console.log('Error-1', error)
               setIsLoading(false)
             }
           }
@@ -119,14 +114,11 @@ const AtualizaKM = ({ placa, navigation }) => {
             handleSubmit(values)
             resetForm()
           }}
-          // validationSchema={validationSchema}
         >
           {({ 
             handleChange, 
             values, 
             handleSubmit,
-            resetForm,
-            // errors,
           }) => (
             <Fragment>
               {setimgSwitch(values.encheu ? cheio : parcial)}
@@ -143,8 +135,6 @@ const AtualizaKM = ({ placa, navigation }) => {
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '50%'}]}>
                   <FormTextInput
-                    // type={'custom'}
-                    // options={{mask: '999.999'}}
                     type={'money'}
                     options={{
                       precision: 0,
@@ -160,7 +150,6 @@ const AtualizaKM = ({ placa, navigation }) => {
                     keyboardType="numeric"
                     autoCorrect={false}
                     autoCapitalize="none"
-                    // includeRawValueInChangeText={true}
                     onChangeText={handleChange('km')}
                   />
                 </View>
@@ -182,14 +171,12 @@ const AtualizaKM = ({ placa, navigation }) => {
                         style={{
                           width: 100,
                           height: 50,
-                          // transform: [{ rotate: RotateData }],
                         }}
                         resizeMode="contain"
                       />
                     </View>
                   </View>
                 </View>
-                {/* <Text style={{ color: 'red' }}>{errors.km}</Text> */}
               </View>
 
               <View style={styles.row}>
@@ -204,8 +191,6 @@ const AtualizaKM = ({ placa, navigation }) => {
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '50%'}]}>
                   <FormTextInput
-                    // type={'custom'}
-                    // options={{mask: '9999.99'}}
                     type={'money'}
                     options={{
                       precision: 2,

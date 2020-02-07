@@ -19,7 +19,7 @@ import loading from '../../assets/json/car-scan.json'
 
 const { width } = Dimensions.get('window')
 
-const Promocoes = () => {
+const Usuario = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [oficina, setOficina] = useState({})
 
@@ -39,7 +39,7 @@ const Promocoes = () => {
     )
   }
 
-  console.log('oficina', oficina.nome)
+  // console.log('oficina', oficina.nome)
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 25,}]}>
@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Promocoes
+export default Usuario
