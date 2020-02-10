@@ -4,6 +4,7 @@ import {
   AsyncStorage,
   Dimensions,
   FlatList,
+  Image,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
@@ -20,6 +21,8 @@ import AtualizaKM from './AtualizaKM'
 
 import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
+import cheio from '../../assets/tanque_cheio.png'
+import parcial from '../../assets/tanque_parcial.png'
 
 const { width } = Dimensions.get('window')
 const querystring = require('querystring')
@@ -151,10 +154,11 @@ export default function Km({ navigation }) {
   const FlatList_header_hist = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left' }]}>Data</Text> 
-        <Text style={[styles.listText, { width: '20%' }]}>KM</Text> 
-        <Text style={[styles.listText, { width: '20%' }]}>Qtde</Text> 
-        <Text style={[styles.listText, { width: '20%' }]}>R$</Text> 
+        <Text style={[styles.listText, { paddingLeft: 10, width: '34%', textAlign: 'left' }]}>Data</Text> 
+        <Text style={[styles.listText, { width: '17%' }]}>KM</Text> 
+        <Text style={[styles.listText, { width: '17%' }]}>Qtde</Text> 
+        <Text style={[styles.listText, { width: '17%' }]}>R$</Text> 
+        <Text style={[styles.listText, { width: '15%' }]}>Tanq.</Text> 
       </View>
     )
     return Sticky_header_View
@@ -174,10 +178,15 @@ export default function Km({ navigation }) {
           // numColumns={5}
           renderItem={({ item, index }) => (
             <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-              <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
-              <Text style={[styles.listText, { width: '20%' }]}>{item.kilome}</Text> 
-              <Text style={[styles.listText, { width: '20%' }]}>{item.quant}</Text> 
-              <Text style={[styles.listText, { width: '20%' }]}>{item.valor}</Text> 
+              <Text style={[styles.listText, { paddingLeft: 10, width: '34%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
+              <Text style={[styles.listText, { width: '17%' }]}>{item.kilome}</Text> 
+              <Text style={[styles.listText, { width: '17%' }]}>{item.quant}</Text> 
+              <Text style={[styles.listText, { width: '17%' }]}>{item.valor}</Text> 
+              <Image 
+                style={{flex: 1, marginTop: 5, marginLeft: 15, alignSelf: "center", }} 
+                resizeMode='contain' 
+                source={item.tanqch ? cheio : parcial} 
+              />
             </View>
           )}
 
