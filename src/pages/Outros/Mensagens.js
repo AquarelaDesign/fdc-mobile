@@ -13,6 +13,7 @@ import {
 
 import { Icon } from 'native-base'
 import Lottie from 'lottie-react-native'
+import 'abortcontroller-polyfill'
 
 import { SearchBar } from 'react-native-elements'
 
@@ -52,6 +53,12 @@ const Mensagens = () => {
   const debounceQuery = useDebounce(filtrar, 300)
 
   useEffect(() => {
+    const AbortController = window.AbortController
+    const abortController = new AbortController()
+    const signal = abortController.signal
+
+    let isCancelled = false
+
     setIsLoading(true)
 
     AsyncStorage.getItem('oficina').then(Oficina => {
@@ -60,7 +67,7 @@ const Mensagens = () => {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      if (email !== '') {
+      if (email !== '' && !isCancelled) {
         async function buscaMsgs() {
           try {
             await Api.post('', querystring.stringify({
@@ -69,7 +76,9 @@ const Mensagens = () => {
               pcodprg: '',
               pemail: email,
               ptipmsg: 'A',
-            })).then(response => {
+            }), { 
+              signal: signal 
+            }).then(response => {
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttpush } = response.data.ProDataSet
@@ -98,13 +107,20 @@ const Mensagens = () => {
         }
         buscaMsgs()
       }
+
     })
+
+    return () => {
+      isCancelled = true
+      abortController.abort()
+    }      
   }, [email, oficina])
 
   useEffect(() => {
+    let isCancelled = false
     const lowerCaseQuery = debounceQuery.toLowerCase()
     
-    if (mens !== undefined) {
+    if (mens !== undefined && !isCancelled) {
       const newPushs = mens
         .map((ttpush) => ({
           ...ttpush,
@@ -112,8 +128,14 @@ const Mensagens = () => {
         }))
         .sort((a, b) => a.placa > b.placa)
 
-        setMens(newPushs)
-      }
+      setMens(newPushs)
+    }
+    
+    return () => {
+      // console.log('isCancelled', isCancelled)
+      isCancelled = true
+    }      
+  
   }, [debounceQuery])
 
   clear = () => {
