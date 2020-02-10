@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 
 import Lottie from 'lottie-react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import GlobalStyles from '../../GlobalStyles'
 
@@ -48,6 +49,9 @@ const Usuario = () => {
           style={GlobalStyles.background}
           source={bg}
         >
+
+          <Icon style={styles.logo} name="user-circle-o" size={120}/>
+
           <View style={styles.container}>
             <View style={styles.row}>
               <View style={styles.vlegend}>
@@ -104,6 +108,12 @@ const Usuario = () => {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    alignSelf: "center",
+    marginTop: 100,
+    color: "#007189",
+  },
+
   scene: {
     flex: 1,
     marginTop: 10,
