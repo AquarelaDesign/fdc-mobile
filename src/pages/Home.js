@@ -37,6 +37,7 @@ export default function Home({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isOficina, setIsOficina] = useState(false)
   const [email, setEmail] = useState('')
+  const [oficina, setOficina] = useState({})
   const [token, setToken] = useState(null)
   const [notification, setNotification] = useState('')
 
@@ -48,6 +49,7 @@ export default function Home({ navigation }) {
         const ofi = JSON.parse(Oficina)
         if (ofi.tipusu !== undefined) {
           setIsOficina(ofi.tipusu === 'OFI' ? true : false)
+          setOficina(JSON.parse(Oficina))
         }
         setIsLoading(false)
       } else {
@@ -76,7 +78,11 @@ export default function Home({ navigation }) {
 
       console.log('token', token)
       setToken(token)
+
       // salvar token na base do FDC
+      if (oficina.tknpsh !== token) {
+        salvaToken(token)
+      }
 
     }
    
@@ -86,6 +92,36 @@ export default function Home({ navigation }) {
     // do whatever you want to do with the notification
     setNotification(Notification)
     console.log(Notification)
+  }
+
+  const salvaToken = (token) => {
+    if (email !== '' && token !== '') {
+      async function GravaToken() {
+        try {
+          await Api.post('', querystring.stringify({
+            pservico: 'wfcusu',
+            pmetodo: 'GravaToken',
+            pcodprg: '',
+            pemail: email,
+            ptiptkn: 'push',
+            ptoken: token, 
+          })).then(response => {
+            if (response.status === 200) {
+              if (response.data.ProDataSet !== undefined) {
+                const { ttfcusu } = response.data.ProDataSet
+                AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu))
+              } 
+            } else {
+              console.log('response.status', response.status)
+            }
+          })
+        } catch (error) {
+          const { response } = error
+          console.log('error', response)
+        }
+      }
+      GravaToken()
+    }
   }
 
   const onPress = (tipo) => {
