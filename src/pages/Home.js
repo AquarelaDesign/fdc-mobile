@@ -104,7 +104,8 @@ export default function Home({ navigation }) {
             pcodprg: '',
             pemail: email,
             ptiptkn: 'push',
-            ptoken: token, 
+            ptoken: token,
+            pidcli: oficina.idusu,
           })).then(response => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
