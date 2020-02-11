@@ -13,8 +13,8 @@ import {
   TouchableOpacity 
 } from 'react-native'
 
-// import { Notifications } from 'expo'
-// import * as Permissions from 'expo-permissions'
+import { Notifications } from 'expo'
+import * as Permissions from 'expo-permissions'
 
 import Lottie from 'lottie-react-native'
 
@@ -37,7 +37,8 @@ export default function Home({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isOficina, setIsOficina] = useState(false)
   const [email, setEmail] = useState('')
-  // const [token, setToken] = useState(null)
+  const [token, setToken] = useState(null)
+  const [notification, setNotification] = useState('')
 
   useEffect(() => {
     setIsLoading(true)
@@ -56,10 +57,9 @@ export default function Home({ navigation }) {
 
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-      // registerForPushNotifications(Email)
+      registerForPushNotifications(Email)
     })
 
-    /*
     async function registerForPushNotifications(Email) {
       const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
   
@@ -72,15 +72,21 @@ export default function Home({ navigation }) {
   
       const token = await Notifications.getExpoPushTokenAsync()
   
-      // this.subscription = Notifications.addListener(this.handleNotification)
+      const subscription = Notifications.addListener(_handleNotification)
 
       console.log('token', token)
       setToken(token)
+      // salvar token na base do FDC
 
     }
-    */
    
   }, [])
+
+  _handleNotification = Notification => {
+    // do whatever you want to do with the notification
+    setNotification(Notification)
+    console.log(Notification)
+  }
 
   const onPress = (tipo) => {
     if (!isOficina && tipo === 'IND') {
