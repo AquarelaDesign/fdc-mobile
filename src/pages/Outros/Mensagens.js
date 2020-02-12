@@ -4,24 +4,26 @@ import {
   AsyncStorage,
   Dimensions,
   FlatList,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native'
 
-import { Icon } from 'native-base'
+import { LinearGradient } from 'expo-linear-gradient'
+
 import Lottie from 'lottie-react-native'
-import 'abortcontroller-polyfill'
+import GlobalStyles, {
+  _url, searchStyle, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
 
-import { SearchBar } from 'react-native-elements'
+import loading from '../../assets/json/car-scan.json'
 
-import GlobalStyles, { _url, searchStyle } from '../../GlobalStyles'
 import Api from '../../services/oapi'
 
-import bg from '../../assets/fundo-app.png'
-import loading from '../../assets/json/car-scan.json'
+import { Icon } from 'native-base'
+import 'abortcontroller-polyfill'
+import { SearchBar } from 'react-native-elements'
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
@@ -170,9 +172,11 @@ const Mensagens = () => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 35,}]}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
+        start={bg_start}
+        end={bg_end}
       >
         {
           mens === undefined ? 
@@ -223,7 +227,7 @@ const Mensagens = () => {
             />
           </View>
         }
-      </ImageBackground>
+      </LinearGradient>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )

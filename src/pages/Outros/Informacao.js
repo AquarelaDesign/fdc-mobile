@@ -7,13 +7,15 @@ import {
   Image,
   Text,
   View,
-  ImageBackground,
 } from 'react-native'
 
-import GlobalStyles, { _url } from '../../GlobalStyles'
+import { LinearGradient } from 'expo-linear-gradient'
+
+import GlobalStyles, {
+  _url, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
 
 import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
-import bg from '../../assets/fundo-app.png'
 
 const { width } = Dimensions.get('window')
 
@@ -25,9 +27,11 @@ export default function Informacao({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
+        start={bg_start}
+        end={bg_end}
       >
         <Image style={styles.logo} source={logo} />
 
@@ -61,7 +65,7 @@ export default function Informacao({ navigation }) {
             Copyright by Procyon Informática
           </Text>
         </View>
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   )
 }
@@ -77,7 +81,7 @@ const styles = StyleSheet.create({
   msgTitle: {
     fontWeight: 'bold',
     fontSize: 35,
-    color: '#FFFFFF',
+    color: '#FFFACD',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
 
   msgText: {
     fontSize: 17,
-    color: '#FFFFFF',
+    color: '#FFFACD',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',

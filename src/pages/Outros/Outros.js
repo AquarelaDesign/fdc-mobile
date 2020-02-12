@@ -7,26 +7,25 @@ import {
   Image,
   Text,
   View,
-  ImageBackground,
   TouchableOpacity 
 } from 'react-native'
 
-import GlobalStyles from '../../GlobalStyles'
+import { LinearGradient } from 'expo-linear-gradient'
+
+import GlobalStyles, {
+  bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
 
 import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
-import bg from '../../assets/fundo-app.png'
-
 import ExcluiVeiculos from '../../assets/ExcluiVeiculos.png'
 import Mensagens from '../../assets/Mensagens.png'
 import ConsultaPJ from '../../assets/ConsultaPJ.png'
 import FAQ from '../../assets/FAQ.png'
 import Informacao from '../../assets/Informacao.png'
 
-
 export default function Outros({ navigation }) {
   const onPress = (tipo) => {
     switch (tipo) {
-      // case 'REC':  navigation.navigate('Recebimentos'); break
       case 'EXC': navigation.navigate('ListaPlacas', { tipo: 'EXC' }); break
       case 'MEN': navigation.navigate('Mensagens'); break
       case 'CON': navigation.navigate('ConsultaPJ'); break
@@ -36,12 +35,13 @@ export default function Outros({ navigation }) {
     }
   }
   
-  // style={[GlobalStyles.AndroidSafeArea, styles.container]}
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
+        start={bg_start}
+        end={bg_end}
       >
         <Image style={styles.logo} source={logo} />
 
@@ -84,7 +84,7 @@ export default function Outros({ navigation }) {
             <View style={GlobalStyles.box}></View>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   )
 }

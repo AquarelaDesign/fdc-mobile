@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
 import {
-  Alert,
   AsyncStorage,
   Dimensions,
   SafeAreaView,
@@ -9,22 +8,23 @@ import {
   Image,
   Text,
   View,
-  ImageBackground,
   TouchableOpacity 
 } from 'react-native'
+
+import { LinearGradient } from 'expo-linear-gradient'
+
+import Lottie from 'lottie-react-native'
+import GlobalStyles, {
+  bg_colors, bg_start, bg_end
+} from '../GlobalStyles'
+
+import Api from '../services/oapi'
 
 import { Notifications } from 'expo'
 import * as Permissions from 'expo-permissions'
 
-import Lottie from 'lottie-react-native'
-
-import GlobalStyles from '../GlobalStyles'
-
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
-import bg from '../assets/fundo-app.png'
 import loading from '../assets/json/car-scan.json'
-
-import Api from '../services/oapi'
 
 import btnLogo from '../assets/bt-menu.png'
 import passagens from '../assets/Passagens.png'
@@ -131,14 +131,11 @@ export default function Home({ navigation }) {
     }
 
     switch (tipo) {
-      // case 'PAS': navigation.navigate('Passagens')
-      // case 'ETQ': navigation.navigate('Etiquetas')
       case 'PAR': navigation.navigate('Menu'); break
       case 'PRO': navigation.navigate('Promocoes'); break
       case 'OUT': navigation.navigate('Outros'); break
       case 'IND': navigation.navigate('Indicadores'); break
       default: navigation.navigate('ListaPlacas', { tipo: tipo }); break
-      //Alert.alert(`Clicado em ${tipo}`)
     }
     
   }
@@ -151,10 +148,12 @@ export default function Home({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      >
+        start={bg_start}
+        end={bg_end}
+        >
         <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('PAR')}>
           <View style={styles.boxBtn}>
             <Image style={styles.boxIcone} source={btnLogo} />
@@ -211,7 +210,7 @@ export default function Home({ navigation }) {
           </TouchableOpacity>
         </View>
         {isLoading ? Loading() : <></>}
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   )
 }

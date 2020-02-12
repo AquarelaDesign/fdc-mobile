@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react'
+
 import {
   Dimensions,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
+import GlobalStyles, {
+  bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
+
 import MapView, { Marker } from 'react-native-maps'
 const { width, height } = Dimensions.get('window')
-
-import GlobalStyles from '../../GlobalStyles'
-
-import bg from '../../assets/fundo-app.png'
 
 export default function Info({ navigation }) {
   const [dados, setDados] = useState('')
@@ -101,10 +103,12 @@ export default function Info({ navigation }) {
   
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      > 
+        start={bg_start}
+        end={bg_end}
+      >
         <View style={styles.container}>
           <View style={styles.row}>
             <Text style={styles.title}>{dados.placa}</Text>
@@ -174,7 +178,7 @@ export default function Info({ navigation }) {
           </MapView>
 
         </View>
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   )
 }

@@ -6,15 +6,17 @@ import {
   StyleSheet,
   Image,
   View,
-  ImageBackground,
 } from 'react-native'
+
+import { LinearGradient } from 'expo-linear-gradient'
+
+import GlobalStyles, {
+  _url, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
 
 import Accordian from '../../components/Accordian'
 
-import GlobalStyles, { _url } from '../../GlobalStyles'
-
 import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
-import bg from '../../assets/fundo-app.png'
 
 const { width } = Dimensions.get('window')
 
@@ -61,9 +63,11 @@ export default function FAQ({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
+        start={bg_start}
+        end={bg_end}
       >
         <Image style={styles.logo} source={logo} />
 
@@ -73,7 +77,7 @@ export default function FAQ({ navigation }) {
         <View style={GlobalStyles.boxContainer}>
           {renderAccordians()}
         </View>
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   )
 }

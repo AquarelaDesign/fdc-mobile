@@ -7,16 +7,18 @@ import {
   Image,
   Text,
   View,
-  ImageBackground,
   TouchableOpacity 
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
+import GlobalStyles, {
+  bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
+
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-import GlobalStyles from '../../GlobalStyles'
-
 import logo from '../../assets/SimplesDiretObjetivo-branco-sombra.png'
-import bg from '../../assets/fundo-app.png'
 
 export default function Menu({ navigation }) {
   const onPress = (tipo) => {
@@ -30,9 +32,11 @@ export default function Menu({ navigation }) {
   
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
+        start={bg_start}
+        end={bg_end}
       >
         <Image style={styles.logo} source={logo} />
 
@@ -68,7 +72,7 @@ export default function Menu({ navigation }) {
             <View style={GlobalStyles.box}></View>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   )
 }

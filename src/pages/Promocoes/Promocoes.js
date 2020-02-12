@@ -5,7 +5,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -13,16 +12,20 @@ import {
   View,
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
 import Lottie from 'lottie-react-native'
+import GlobalStyles, {
+  _url, colors, searchStyle, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
+
+import loading from '../../assets/json/car-scan.json'
+
+import Api from '../../services/oapi'
 
 import { SearchBar } from 'react-native-elements'
 
-import GlobalStyles, { colors, _url, searchStyle } from '../../GlobalStyles'
-import Api from '../../services/oapi'
-
 import sad from '../../assets/sad.png'
-import bg from '../../assets/fundo-app.png'
-import loading from '../../assets/json/car-scan.json'
 
 const { width } = Dimensions.get('window')
 const querystring = require('querystring')
@@ -126,8 +129,8 @@ const Promocoes = ({ navigation }) => {
   const FlatList_header_pro = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Placa</Text>
-        <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>Descrição</Text>
+        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Placa</Text>
+        <Text style={[styles.listText, { color: '#ff0', width: '65%', textAlign: 'left', }]}>Descrição</Text>
       </View>
     )
     return Sticky_header_View
@@ -165,9 +168,11 @@ const Promocoes = ({ navigation }) => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 25,}]}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
+        start={bg_start}
+        end={bg_end}
       >
         {
           promo === undefined ?
@@ -217,7 +222,7 @@ const Promocoes = ({ navigation }) => {
             />
           </View>
         }
-      </ImageBackground>
+      </LinearGradient>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
@@ -268,7 +273,7 @@ const styles = StyleSheet.create({
 
   listText: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: '#4169E1',
     textAlign: 'right',
     flexDirection: 'row',
     alignSelf: 'center',
@@ -282,7 +287,7 @@ const styles = StyleSheet.create({
 
   msgText: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: '#4169E1',
     flexDirection: 'row',
     alignSelf: 'center',
     textAlign: 'justify',

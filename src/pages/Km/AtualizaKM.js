@@ -4,24 +4,28 @@ import {
   Animated,
   AsyncStorage,
   Dimensions,
-  ImageBackground,
   Keyboard,
   StyleSheet,
   Text,
   View,
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
 import Lottie from 'lottie-react-native'
-import { Formik } from 'formik'
+import GlobalStyles, {
+  _url, colors, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
+
+import loading from '../../assets/json/car-scan.json'
 
 import Api from '../../services/oapi'
-import GlobalStyles, { _url } from '../../GlobalStyles'
+
+import { Formik } from 'formik'
 import FormTextInput from '../../components/FormTextInput'
 import FormButton from '../../components/FormButton'
 import FormSwitch from '../../components/FormSwitch'
 
-import bg from '../../assets/fundo-app.png'
-import loading from '../../assets/json/car-scan.json'
 import cheio from '../../assets/tanque_cheio.png'
 import parcial from '../../assets/tanque_parcial.png'
 
@@ -102,10 +106,12 @@ const AtualizaKM = ({ placa, buscaHistorico }) => {
 
   return (
     <View style={styles.scene}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      > 
+        start={bg_start}
+        end={bg_end}
+      >
         <Text style={styles.placa}>{placa}</Text> 
                 
         <Formik
@@ -243,7 +249,7 @@ const AtualizaKM = ({ placa, buscaHistorico }) => {
         </Formik>
 
         {isLoading ? Loading() : <></>}
-      </ImageBackground>
+      </LinearGradient>
     </View>
   )
 }
@@ -252,7 +258,6 @@ const styles = StyleSheet.create({
 
   scene: {
     flex: 1,
-    marginTop: 10,
   },
 
   row: {
@@ -266,8 +271,9 @@ const styles = StyleSheet.create({
   },
 
   legend: {
+    fontWeight: 'bold',
     fontSize: 16,
-    color: '#00FFFF',
+    color: '#4169E1',
     textAlign: 'left',
     paddingLeft: 10,
   },
@@ -305,7 +311,7 @@ const styles = StyleSheet.create({
   button: {
     height: 42,
     width: 160,
-    backgroundColor: '#87CEEB',
+    backgroundColor: '#4169E1',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 2,

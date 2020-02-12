@@ -5,7 +5,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -13,14 +12,18 @@ import {
 } from 'react-native'
 
 import {Container, Header, Tab, Tabs, TabHeading, Icon } from 'native-base'
-import Lottie from 'lottie-react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 
-import GlobalStyles, { colors, _url } from '../../GlobalStyles'
+import Lottie from 'lottie-react-native'
+import GlobalStyles, {
+  _url, colors, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
+
+import loading from '../../assets/json/car-scan.json'
+
 import Api from '../../services/oapi'
 import AtualizaKM from './AtualizaKM'
 
-import bg from '../../assets/fundo-app.png'
-import loading from '../../assets/json/car-scan.json'
 import cheio from '../../assets/tanque_cheio.png'
 import parcial from '../../assets/tanque_parcial.png'
 
@@ -154,11 +157,11 @@ export default function Km({ navigation }) {
   const FlatList_header_hist = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '34%', textAlign: 'left' }]}>Data</Text> 
-        <Text style={[styles.listText, { width: '17%' }]}>KM</Text> 
-        <Text style={[styles.listText, { width: '17%' }]}>Qtde</Text> 
-        <Text style={[styles.listText, { width: '17%' }]}>R$</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>Tanq.</Text> 
+        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '34%', textAlign: 'left' }]}>Data</Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '17%' }]}>KM</Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '17%' }]}>Qtde</Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '17%' }]}>R$</Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>Tanq.</Text> 
       </View>
     )
     return Sticky_header_View
@@ -166,10 +169,12 @@ export default function Km({ navigation }) {
   
   const Historico = () => (
     <View style={styles.scene}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      > 
+        start={bg_start}
+        end={bg_end}
+      >
         <FlatList 
           style={styles.list}
           data={historico}
@@ -194,15 +199,17 @@ export default function Km({ navigation }) {
           stickyHeaderIndices={[0]}
         />
 
-      </ImageBackground>
+      </LinearGradient>
     </View>
   )
 
   const Resumo = () => (
     <View style={styles.scene}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
+        start={bg_start}
+        end={bg_end}
       >
         <View style={styles.row}>
           <View style={[styles.vlegend, {width: '75%',}]}>
@@ -240,7 +247,7 @@ export default function Km({ navigation }) {
           </View>
         </View>
         
-      </ImageBackground>
+      </LinearGradient>
     </View>
   )
 
@@ -255,13 +262,13 @@ export default function Km({ navigation }) {
       <Container>
         <Header hasTabs/>
         <Tabs initialPage={initialTab}>
-          <Tab heading={ <TabHeading><Icon name="md-create" /><Text style={{color:'#FFF'}}> Atualização</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="md-create" /></TabHeading>}>
             {Atualizacao()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-paper" /><Text style={{color:'#FFF'}}> Histórico</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="md-paper" /></TabHeading>}>
             {Historico()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-clipboard" /><Text style={{color:'#FFF'}}> Resumo</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="md-clipboard" /></TabHeading>}>
             {Resumo()}
           </Tab>
         </Tabs>
@@ -306,7 +313,7 @@ const styles = StyleSheet.create({
   listText: {
     // fontWeight: 'bold',
     fontSize: 14,
-    color: '#FFFFFF',
+    color: '#4169E1',
     textAlign: 'right',
     flexDirection: 'row',
     alignSelf: 'center',
@@ -323,8 +330,9 @@ const styles = StyleSheet.create({
   },
 
   legend: {
+    fontWeight: 'bold',
     fontSize: 16,
-    color: '#00FFFF',
+    color: '#4169E1',
     textAlign: 'left',
     paddingLeft: 10,
   },
@@ -332,7 +340,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#F0E68C',
+    color: '#007189',
     textAlign: 'right',
     paddingRight: 10,
   },

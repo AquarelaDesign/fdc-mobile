@@ -15,14 +15,14 @@ import loading from './assets/json/car.json'
 const WINDOW_WIDTH = Dimensions.get('window').width
 
 const styles = {
+  flex: 10,
   position: 'absolute',
   width: '100%',
   height: 50,
-  top: Dimensions.get('window').height - 60,
-  // backgroundColor: '#667db6',
-  padding: 20, 
-  // marginTop: 15,
+  // top: Dimensions.get('window').height - 80,
+  padding: 10,
   backgroundColor: 'transparent',
+  marginBottom: 30,
 }
 
 const CustomDrawerContentComponent = props => (
@@ -55,8 +55,13 @@ const Routes = createAppContainer(
       headerTransparent: true,
       defaultNavigationOptions: ({ navigation }) => ({
         header:
-          <TouchableOpacity style={styles} onPress={() => navigation.goBack()}>
-            <Ionicons style={{color: '#ffffff', width: 50, height: 50}} name={'ios-arrow-dropleft'} size={50} />
+          <TouchableOpacity
+            style={styles}
+            onPress={() => navigation.goBack()}>
+            <Ionicons
+              style={{ color: '#ffffff', width: 50, height: 50 }}
+              name={'ios-arrow-dropleft'}
+              size={50} />
           </TouchableOpacity>
       }),
     },

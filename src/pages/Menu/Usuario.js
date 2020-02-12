@@ -3,20 +3,22 @@ import React, { useState, useEffect } from 'react'
 import {
   AsyncStorage,
   Dimensions,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
 import Lottie from 'lottie-react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import GlobalStyles, {
+  bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
 
-import GlobalStyles from '../../GlobalStyles'
-
-import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
+
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const { width } = Dimensions.get('window')
 
@@ -40,16 +42,15 @@ const Usuario = () => {
     )
   }
 
-  // console.log('oficina', oficina.nome)
-
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 25,}]}>
       <View style={styles.scene}>
-        <ImageBackground
+        <LinearGradient
+          colors={bg_colors}
           style={GlobalStyles.background}
-          source={bg}
+          start={bg_start}
+          end={bg_end}
         >
-
           <Icon style={styles.logo} name="user-circle-o" size={120}/>
 
           <View style={styles.container}>
@@ -100,7 +101,7 @@ const Usuario = () => {
               </View>
             </View>
           </View>
-        </ImageBackground>
+        </LinearGradient>
       </View>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
 
   legend: {
     fontSize: 14,
-    color: '#00FFFF',
+    color: '#007189',
     textAlign: 'left',
     // height: 20,
   },

@@ -4,7 +4,6 @@ import {
   AsyncStorage,
   Dimensions,
   FlatList,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -13,12 +12,15 @@ import {
 } from 'react-native'
 
 import {Container, Header, Tab, Tabs, TabHeading, Icon } from 'native-base'
+import { LinearGradient } from 'expo-linear-gradient'
 import Lottie from 'lottie-react-native'
 
-import GlobalStyles, { colors, _url } from '../../GlobalStyles'
+import GlobalStyles, {
+  colors, _url, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
+
 import Api from '../../services/oapi'
 
-import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
 
 const { width, height } = Dimensions.get('window')
@@ -147,11 +149,17 @@ export default function Passagens({ navigation }) {
   const FlatList_header_pass = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left' }]}>Data</Text> 
-        <Text style={[styles.listText, { width: '20%' }]}>KM</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>R</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>S</Text> 
-        <Text style={[styles.listText, { width: '15%' }]}>P</Text> 
+        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '35%', textAlign: 'left' }]}>Data</Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '20%' }]}>KM</Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>
+          <Icon name="md-paper" style={{color: '#ff0', fontSize: 15}}/>
+        </Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>
+          <Icon name="md-construct" style={{color: '#ff0', fontSize: 15}}/>
+        </Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>
+          <Icon name="md-cog" style={{color: '#ff0', fontSize: 15}}/>
+        </Text> 
       </View>
     )
     return Sticky_header_View
@@ -166,10 +174,12 @@ export default function Passagens({ navigation }) {
   
   const Passagem = () => (
     <View style={styles.scene}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      > 
+        start={bg_start}
+        end={bg_end}
+        >
         <FlatList 
           style={styles.list}
           data={pass}
@@ -192,7 +202,7 @@ export default function Passagens({ navigation }) {
           stickyHeaderIndices={[0]}
         />
 
-      </ImageBackground>
+      </LinearGradient>
     </View>
   )
 
@@ -206,8 +216,8 @@ export default function Passagens({ navigation }) {
   const FlatList_header_pecser = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Data</Text> 
-        <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>Descrição</Text> 
+        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Data</Text> 
+        <Text style={[styles.listText, { color: '#ff0', width: '65%', textAlign: 'left', }]}>Descrição</Text> 
       </View>
     )
     return Sticky_header_View
@@ -215,10 +225,12 @@ export default function Passagens({ navigation }) {
   
   const Servicos = () => (
     <View style={styles.scene}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      > 
+        start={bg_start}
+        end={bg_end}
+        >
         <FlatList 
           style={styles.list}
           data={serv}
@@ -237,7 +249,7 @@ export default function Passagens({ navigation }) {
           ListHeaderComponent={FlatList_header_pecser}
           stickyHeaderIndices={[0]}
         />
-      </ImageBackground>
+      </LinearGradient>
     </View>
   )
 
@@ -247,10 +259,12 @@ export default function Passagens({ navigation }) {
 
   const Pecas = () => (
     <View style={styles.scene}>
-      <ImageBackground
+    <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      > 
+        start={bg_start}
+        end={bg_end}
+        >
         <FlatList 
           style={styles.list}
           data={peca}
@@ -269,7 +283,7 @@ export default function Passagens({ navigation }) {
           ListHeaderComponent={FlatList_header_pecser}
           stickyHeaderIndices={[0]}
         />
-      </ImageBackground>
+      </LinearGradient>
     </View>
   )
 
@@ -300,13 +314,13 @@ export default function Passagens({ navigation }) {
         <Container>
           <Header hasTabs/>
           <Tabs initialPage={0}>
-            <Tab heading={ <TabHeading><Icon name="md-car" /><Text style={{color:'#FFF'}}> Passagens</Text></TabHeading>}>
+            <Tab heading={ <TabHeading><Icon name="md-car" /></TabHeading>}>
               {Passagem()}
             </Tab>
-            <Tab heading={ <TabHeading><Icon name="md-construct" /><Text style={{color:'#FFF'}}> Serviços</Text></TabHeading>}>
+            <Tab heading={ <TabHeading><Icon name="md-construct" /></TabHeading>}>
               {Servicos()}
             </Tab>
-            <Tab heading={ <TabHeading><Icon name="md-cog" /><Text style={{color:'#FFF'}}> Peças</Text></TabHeading>}>
+            <Tab heading={ <TabHeading><Icon name="md-cog" /></TabHeading>}>
               {Pecas()}
             </Tab>
           </Tabs>
@@ -351,7 +365,7 @@ const styles = StyleSheet.create({
   
   listText: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: '#4169E1',
     textAlign: 'right',
     flexDirection: 'row',
     alignSelf: 'center',

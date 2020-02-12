@@ -4,7 +4,6 @@ import {
   AsyncStorage,
   Dimensions,
   FlatList,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -12,18 +11,19 @@ import {
   View,
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
 import Lottie from 'lottie-react-native'
+import GlobalStyles, {
+  colors, bg_colors, bg_start, bg_end
+} from '../../GlobalStyles'
 
-import GlobalStyles from '../../GlobalStyles'
-import Api from '../../services/oapi'
-
-import bg from '../../assets/fundo-app.png'
 import loading from '../../assets/json/car-scan.json'
+
+import Api from '../../services/oapi'
 
 const querystring = require('querystring')
 const { width, height } = Dimensions.get('window')
-
-const colors = ['#00BFFF', '#1E90FF'];
 
 export default function Etiquetas({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -73,12 +73,10 @@ export default function Etiquetas({ navigation }) {
     })
   }, [email, placa])
   
-  // console.log(etq', placa, etq)
-
   const FlatList_header_etq = () => {
     var Sticky_header_View = (
       <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Etiquetas</Text> 
+        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Etiquetas</Text> 
       </View>
     )
     return Sticky_header_View
@@ -103,10 +101,12 @@ export default function Etiquetas({ navigation }) {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 40,}]}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      > 
+        start={bg_start}
+        end={bg_end}
+      >
         {
           etq === undefined ? 
           <Text style={styles.msgText}>
@@ -140,7 +140,7 @@ export default function Etiquetas({ navigation }) {
             stickyHeaderIndices={[0]}
           />
         }
-      </ImageBackground>
+      </LinearGradient>
       {isLoading ? Loading() : <></>}
     </SafeAreaView>
   )
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   
   listText: {
     fontSize: 14,
-    color: '#FFFFFF',
+    color: '#4169E1',
     textAlign: 'right',
     flexDirection: 'row',
     alignSelf: "center",

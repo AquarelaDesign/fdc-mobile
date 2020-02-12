@@ -47,7 +47,7 @@ export default function Login({ navigation }) {
         validateToken()
       })
     }
-  }, [email])
+  }, [])
 
   async function handleSubmit() {
     if (email !== '') {

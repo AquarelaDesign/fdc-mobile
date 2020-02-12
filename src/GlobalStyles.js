@@ -111,6 +111,22 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   
+  linearGradient: {
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5
+  },
+  
+  buttonText: {
+    fontSize: 18,
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+  },
+
 })
 
 export const searchStyle = {
@@ -143,6 +159,10 @@ export const searchStyle = {
 
 }
 
-export const colors = ['rgba(135,206,250,0.5)', 'rgba(173,216,230,0.5)']
+export const colors = ['rgba(135,206,250,0.9)', 'rgba(173,216,230,0.9)']
+
+export const bg_colors = ['#87CEEB', '#00BFFF', '#007189']
+export const bg_start = { x: 1, y: 0.45 }
+export const bg_end = { x: 0, y: 0.75 }
 
 export const _url = 'https://www.fichadocarro.com.br'

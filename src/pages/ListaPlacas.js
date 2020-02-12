@@ -6,21 +6,24 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ImageBackground,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
-import Lottie from 'lottie-react-native'
 
-import GlobalStyles, { colors } from '../GlobalStyles'
-import Api from '../services/oapi'
+import { LinearGradient } from 'expo-linear-gradient'
+
+import Lottie from 'lottie-react-native'
+import GlobalStyles, {
+  colors, bg_colors, bg_start, bg_end
+} from '../GlobalStyles'
 
 import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
-import bg from '../assets/fundo-app.png'
 import loading from '../assets/json/car-scan.json'
+
+import Api from '../services/oapi'
 
 const querystring = require('querystring')
 
@@ -150,10 +153,12 @@ export default function ListaPlacas({ navigation }) {
 
   return (
     <SafeAreaView style={GlobalStyles.container}>
-      <ImageBackground
+      <LinearGradient
+        colors={bg_colors}
         style={GlobalStyles.background}
-        source={bg}
-      >
+        start={bg_start}
+        end={bg_end}
+        >
         <Image style={styles.logo} source={logo} />
         <Text style={styles.title}>Selecione a placa para consulta</Text>
         <FlatList 
@@ -171,7 +176,7 @@ export default function ListaPlacas({ navigation }) {
           )}
         />
         {isLoading ? Loading() : <></>}
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   )
 }
@@ -212,7 +217,8 @@ const styles = StyleSheet.create({
   
   listText: {
     fontSize: 22,
-    color: '#FFFFFF',
+    fontWeight: 'bold',
+    color: '#4169E1',
     textAlign: 'center',
     flexDirection: 'row',
     alignSelf: "center",
