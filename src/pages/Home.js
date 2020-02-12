@@ -24,6 +24,8 @@ import logo from '../assets/SimplesDiretObjetivo-branco-sombra.png'
 import bg from '../assets/fundo-app.png'
 import loading from '../assets/json/car-scan.json'
 
+import Api from '../services/oapi'
+
 import btnLogo from '../assets/bt-menu.png'
 import passagens from '../assets/Passagens.png'
 import etiquetas from '../assets/Etiquetas.png'
@@ -32,6 +34,8 @@ import promocoes from '../assets/Promocoes.png'
 import outros from '../assets/Outros.png'
 
 const { width } = Dimensions.get('window')
+
+const querystring = require('querystring')
 
 export default function Home({ navigation }) {  
   const [isLoading, setIsLoading] = useState(false)
@@ -76,7 +80,6 @@ export default function Home({ navigation }) {
   
       const subscription = Notifications.addListener(_handleNotification)
 
-      console.log('token', token)
       setToken(token)
 
       // salvar token na base do FDC
@@ -86,15 +89,16 @@ export default function Home({ navigation }) {
 
     }
    
-  }, [])
+  }, [email])
 
   _handleNotification = Notification => {
     // do whatever you want to do with the notification
     setNotification(Notification)
-    console.log(Notification)
+    // console.log(Notification)
   }
 
   const salvaToken = (token) => {
+    console.log('token', token, email)
     if (email !== '' && token !== '') {
       async function GravaToken() {
         try {
@@ -107,6 +111,7 @@ export default function Home({ navigation }) {
             ptoken: token,
             pidcli: oficina.idusu,
           })).then(response => {
+            // console.log('response', response)
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttfcusu } = response.data.ProDataSet
