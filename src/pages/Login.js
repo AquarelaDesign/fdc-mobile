@@ -31,50 +31,55 @@ export default function Login({ navigation }) {
       setEmail(Email)
     })
 
-    AsyncStorage.getItem('token').then(token => {
-      async function validateToken() {
-        const response = await api.post('/oapi/validateToken', {
-          "email": email,
-          "token": token
-        })
+    if (email !== '') {
+      AsyncStorage.getItem('token').then(token => {
+        async function validateToken() {
+          const response = await api.post('/oapi/validateToken', {
+            "email": email,
+            "token": token
+          })
 
-        if (response.data.valid) {
-          navigation.navigate('Home')
+          if (response.data.valid) {
+            navigation.navigate('Home')
+          }
         }
-      }
 
-      validateToken()
-    })
-  }, [])
+        validateToken()
+      })
+    }
+  }, [email])
 
   async function handleSubmit() {
-    try {
-      if (email !== 'demo@demo.com') {
-        const response = await api.post('/oapi/login', {
-          "email": email,
-          "senha": password
-        })
+    if (email !== '') {
+      try {
+        if (email !== 'demo@demo.com') {
+          const response = await api.post('/oapi/login', {
+            "email": email,
+            "senha": password
+          })
 
-        const { oficina, token } = response.data
-        await AsyncStorage.setItem('email', email)
-        await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
-        await AsyncStorage.setItem('token', token)
-      } else {
-        await AsyncStorage.setItem('email', email)
-        await AsyncStorage.setItem('oficina', {e_mail: email})
-        await AsyncStorage.setItem('token', '')
+          const { oficina, token } = response.data
+          await AsyncStorage.setItem('email', email)
+          await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
+          await AsyncStorage.setItem('token', token)
+        } else {
+          await AsyncStorage.setItem('email', email)
+          await AsyncStorage.setItem('oficina', { e_mail: email })
+          await AsyncStorage.setItem('token', '')
+        }
+        navigation.navigate('Home')
       }
-      navigation.navigate('Home')
-    }
-    catch (error) {
-      const { response } = error
-      if (response !== undefined) {
-        Alert.alert(response.data.errors[0])
-      } else {
-        Alert.alert('Falha ao conectar com o servidor, por favor tente mais tarde.')
+      catch (error) {
+        const { response } = error
+        if (response !== undefined) {
+          Alert.alert(response.data.errors[0])
+        } else {
+          Alert.alert('Falha ao conectar com o servidor, por favor tente mais tarde.')
+        }
       }
+    } else {
+      Alert.alert('E-mail deve ser informado!')
     }
-
   }
 
   return (
