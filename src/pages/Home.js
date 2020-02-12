@@ -75,15 +75,13 @@ export default function Home({ navigation }) {
           return
         }
       }
-  
       const token = await Notifications.getExpoPushTokenAsync()
-  
       const subscription = Notifications.addListener(_handleNotification)
 
       setToken(token)
 
       // salvar token na base do FDC
-      if (oficina.tknpsh !== token) {
+      if (oficina.tknpsh !== token && email !== '') {
         salvaToken(token)
       }
 
@@ -94,11 +92,9 @@ export default function Home({ navigation }) {
   _handleNotification = Notification => {
     // do whatever you want to do with the notification
     setNotification(Notification)
-    // console.log(Notification)
   }
 
   const salvaToken = (token) => {
-    console.log('token', token, email)
     if (email !== '' && token !== '') {
       async function GravaToken() {
         try {
@@ -107,11 +103,10 @@ export default function Home({ navigation }) {
             pmetodo: 'GravaToken',
             pcodprg: '',
             pemail: email,
+            pemailcli: email,
             ptiptkn: 'push',
             ptoken: token,
-            pidcli: oficina.idusu,
           })).then(response => {
-            // console.log('response', response)
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttfcusu } = response.data.ProDataSet
