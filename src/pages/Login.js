@@ -26,27 +26,31 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    AsyncStorage.getItem('email').then(Email => {
-      setEmail(Email)
-    })
-
-    if (email !== '') {
-      AsyncStorage.getItem('token').then(token => {
-        async function validateToken() {
-          const response = await api.post('/oapi/validateToken', {
-            "email": email,
-            "token": token
-          })
-
-          if (response.data.valid) {
-            navigation.navigate('Home')
-          }
+    if (email === '') {
+      AsyncStorage.getItem('email').then(Email => {
+        if (email !== Email && email !== '') {
+          setEmail(Email)
         }
-
-        validateToken()
       })
     }
   }, [email])
+
+  useEffect(() => {
+    AsyncStorage.getItem('token').then(token => {
+      async function validateToken() {
+        const response = await api.post('/oapi/validateToken', {
+          "email": email,
+          "token": token
+        })
+
+        if (response.data.valid) {
+          navigation.navigate('Home')
+        }
+      }
+
+      validateToken()
+    })
+  }, [])
 
   async function handleSubmit() {
     if (email !== '') {
