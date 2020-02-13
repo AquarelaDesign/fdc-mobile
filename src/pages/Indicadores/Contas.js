@@ -26,6 +26,7 @@ const Contas = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [cons, setCons] = useState([])
+  const [resumo, setResumo] = useState([])
 
   useEffect(() => {
     setIsLoading(true)
@@ -37,7 +38,7 @@ const Contas = () => {
         icon: "bank",
         title: "Contas a Pagar",
         subtitle: `${retValor(dados.totpag, 'currency')}`,
-        linearGradientColors: ['#3F51B5', '#2196F3'],
+        linearGradientColors: ['#061700', '#56ab2f'],
         valor: `${retValor(dados.totpag, 'currency')}`
       })
 
@@ -45,10 +46,23 @@ const Contas = () => {
         icon: "money",
         title: "Contas a Receber",
         subtitle: `${retValor(dados.totrec, 'currency')}`,
-        linearGradientColors: ['#4CAF50', '#8BC34A'],
+        linearGradientColors: ['#2193b0', '#134E5E'],
         valor: `${retValor(dados.totrec, 'currency')}`
       })
-            
+
+      const icone = dados.totrec > dados.totpag ? 'thumbs-up' : 'thumbs-down'
+      const saldo = dados.totrec - dados.totpag
+      const gdcor = dados.totrec > dados.totpag ? ['#4CAF50', '#8BC34A'] : ['#F44336', '#E91E63']
+
+
+      ind.push({
+        icon: icone,
+        title: "Saldo",
+        subtitle: `${retValor(saldo, 'currency')}`,
+        linearGradientColors: gdcor,
+        valor: `${retValor(saldo, 'currency')}`
+      })
+
       setCons(ind)
       setIsLoading(false)
     }
@@ -71,6 +85,8 @@ const Contas = () => {
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttresumo } = response.data.ProDataSet
+
+                  setResumo(ttresumo)
 
                   let totpag = 0
                   let totrec = 0
