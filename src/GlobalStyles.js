@@ -3,10 +3,18 @@ import {
   Dimensions,
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
 const bg_color = 'rgba(65,105,225,0.9)' //'#4169E1'
 const im_color = 'rgba(135,206,250,0.9)' //'#87CEFA'
 
-let width = Dimensions.get('window').width
+const width = Dimensions.get('window').width
+
+export const colors = ['rgba(135,206,250,0.9)', 'rgba(173,216,230,0.9)']
+export const bg_colors = ['#87CEEB', '#00BFFF', '#007189']
+export const bg_start = { x: 1, y: 0.45 }
+export const bg_end = { x: 0, y: 0.75 }
+export const _url = 'https://www.fichadocarro.com.br'
 
 export default StyleSheet.create({
   AndroidSafeArea: {
@@ -16,7 +24,7 @@ export default StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#87CEEB',
   },
 
   background: {
@@ -158,11 +166,3 @@ export const searchStyle = {
   },
 
 }
-
-export const colors = ['rgba(135,206,250,0.9)', 'rgba(173,216,230,0.9)']
-
-export const bg_colors = ['#87CEEB', '#00BFFF', '#007189']
-export const bg_start = { x: 1, y: 0.45 }
-export const bg_end = { x: 0, y: 0.75 }
-
-export const _url = 'https://www.fichadocarro.com.br'

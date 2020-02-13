@@ -10,15 +10,19 @@ import {
   ScrollView,
 } from 'react-native'
 
+import { LinearGradient } from 'expo-linear-gradient'
+
+import Lottie from 'lottie-react-native'
+import GlobalStyles from '../../GlobalStyles'
+
+import loading from '../../assets/json/car-scan.json'
+
+import Api from '../../services/oapi'
+
 import { ListItem } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
-import Lottie from 'lottie-react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 
-import { LinearGradient } from '../../components/LinearGradient'
-import Api from '../../services/oapi'
-import GlobalStyles from '../../GlobalStyles'
-import loading from '../../assets/json/car-scan.json'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const querystring = require('querystring')
 
@@ -131,7 +135,8 @@ const Etiquetas = () => {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
+    <SafeAreaView style={[GlobalStyles.container, { paddingTop: 15, }]}>
+
       <View style={styles.row}>
         <Icon name="tags" size={40} color="#007189" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Etiquetas</Text>
@@ -166,8 +171,10 @@ const Etiquetas = () => {
             />
           ))}
         </View> 
+          
       </ScrollView>
       {isLoading ? Loading() : <></>}
+
     </SafeAreaView>
   )
 }

@@ -48,22 +48,11 @@ export default function Home({ navigation }) {
   useEffect(() => {
     setIsLoading(true)
 
-    AsyncStorage.getItem('oficina').then(Oficina => {
-      if (Oficina) {
-        const ofi = JSON.parse(Oficina)
-        if (ofi.tipusu !== undefined) {
-          setIsOficina(ofi.tipusu === 'OFI' ? true : false)
-          setOficina(JSON.parse(Oficina))
-        }
-        setIsLoading(false)
-      } else {
-        setIsLoading(false)
-      }
-    })
-
     AsyncStorage.getItem('email').then(Email => {
-      setEmail(Email)
-      registerForPushNotifications(Email)
+      if (email !== '') {
+        setEmail(Email)
+        registerForPushNotifications(Email)
+      }
     })
 
     async function registerForPushNotifications(Email) {
@@ -84,10 +73,24 @@ export default function Home({ navigation }) {
       if (oficina.tknpsh !== token && email !== '') {
         salvaToken(token)
       }
-
     }
-   
+    
   }, [email])
+
+  useEffect(() => {
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      if (Oficina) {
+        const ofi = JSON.parse(Oficina)
+        if (ofi.tipusu !== undefined) {
+          setIsOficina(ofi.tipusu === 'OFI' ? true : false)
+          setOficina(JSON.parse(Oficina))
+        }
+        setIsLoading(false)
+      } else {
+        setIsLoading(false)
+      }
+    })
+  }, [oficina])
 
   _handleNotification = Notification => {
     // do whatever you want to do with the notification
