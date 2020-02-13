@@ -14,7 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 import Lottie from 'lottie-react-native'
 import GlobalStyles, {
-  _url, colors, bg_colors, bg_start, bg_end
+  _url, bg_colors, bg_start, bg_end
 } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'

@@ -14,7 +14,6 @@ import {
 
 //import Alerta from '../components/Alerta'
 import api from '../services/api'
-import { getEmail } from '../globais'
 
 import logo from '../assets/logo.png'
 import bg from '../assets/splash.png'
@@ -47,7 +46,7 @@ export default function Login({ navigation }) {
         validateToken()
       })
     }
-  }, [])
+  }, [email])
 
   async function handleSubmit() {
     if (email !== '') {
