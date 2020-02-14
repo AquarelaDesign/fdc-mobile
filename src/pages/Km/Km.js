@@ -16,7 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 import Lottie from 'lottie-react-native'
 import GlobalStyles, {
-  _url, colors, bg_colors, bg_start, bg_end
+  _url, listStyle, colors, bg_colors, bg_start, bg_end
 } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
@@ -156,12 +156,12 @@ export default function Km({ navigation }) {
 
   const FlatList_header_hist = () => {
     var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '34%', textAlign: 'left' }]}>Data</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '17%' }]}>KM</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '17%' }]}>Qtde</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '17%' }]}>R$</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>Tanq.</Text> 
+      <View style={[listStyle.listItem, listStyle.header_style]}>
+        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '34%', textAlign: 'left' }]}>Data</Text> 
+        <Text style={[listStyle.listHeadText, { width: '17%' }]}>KM</Text> 
+        <Text style={[listStyle.listHeadText, { width: '17%' }]}>Qtde</Text> 
+        <Text style={[listStyle.listHeadText, { width: '17%' }]}>R$</Text> 
+        <Text style={[listStyle.listHeadText, { width: '15%' }]}>Tanq.</Text> 
       </View>
     )
     return Sticky_header_View
@@ -176,17 +176,17 @@ export default function Km({ navigation }) {
         end={bg_end}
       >
         <FlatList 
-          style={styles.list}
+          style={listStyle.list}
           data={historico}
           keyExtractor={historico => `${historico.idgpas}${historico.hortra}`}
           
           // numColumns={5}
           renderItem={({ item, index }) => (
-            <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-              <Text style={[styles.listText, { paddingLeft: 10, width: '34%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
-              <Text style={[styles.listText, { width: '17%' }]}>{item.kilome}</Text> 
-              <Text style={[styles.listText, { width: '17%' }]}>{item.quant}</Text> 
-              <Text style={[styles.listText, { width: '17%' }]}>{item.valor}</Text> 
+            <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+              <Text style={[listStyle.listText, { paddingLeft: 10, width: '34%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
+              <Text style={[listStyle.listText, { width: '17%' }]}>{item.kilome}</Text> 
+              <Text style={[listStyle.listText, { width: '17%' }]}>{item.quant}</Text> 
+              <Text style={[listStyle.listText, { width: '17%' }]}>{item.valor}</Text> 
               <Image 
                 style={{flex: 1, marginTop: 5, marginLeft: 15, alignSelf: "center", }} 
                 resizeMode='contain' 
@@ -289,36 +289,6 @@ const styles = StyleSheet.create({
     marginTop: 38,
   },
 
-  header_style: {
-    fontSize: 8,
-    fontWeight: 'bold',
-    backgroundColor: '#4169E1', 
-  },
-
-  list: {
-    paddingHorizontal: 5,
-    flexGrow: 0,
-    marginBottom: 90,
-  },
-
-  listItem: {
-    display: 'flex',
-    width: Dimensions.get('window').width - 10,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingRight: 10,
-    height: 50,
-  },
-  
-  listText: {
-    // fontWeight: 'bold',
-    fontSize: 14,
-    color: '#4169E1',
-    textAlign: 'right',
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -332,7 +302,7 @@ const styles = StyleSheet.create({
   legend: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#4169E1',
+    color: '#FFF',
     textAlign: 'left',
     paddingLeft: 10,
   },
@@ -340,7 +310,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#007189',
+    color: '#FF0',
     textAlign: 'right',
     paddingRight: 10,
   },

@@ -16,7 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 import Lottie from 'lottie-react-native'
 import GlobalStyles, {
-  _url, colors, searchStyle, bg_colors, bg_start, bg_end
+  _url, listStyle, colors, searchStyle, bg_colors, bg_start, bg_end
 } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
@@ -128,9 +128,9 @@ const Promocoes = ({ navigation }) => {
 
   const FlatList_header_pro = () => {
     var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Placa</Text>
-        <Text style={[styles.listText, { color: '#ff0', width: '65%', textAlign: 'left', }]}>Descrição</Text>
+      <View style={[listStyle.listItem, listStyle.header_style]}>
+        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Placa</Text>
+        <Text style={[listStyle.listHeadText, { width: '65%', textAlign: 'left', }]}>Descrição</Text>
       </View>
     )
     return Sticky_header_View
@@ -203,16 +203,16 @@ const Promocoes = ({ navigation }) => {
               value={filtrar}
             />
             <FlatList
-              style={styles.list}
+              style={listStyle.list}
               data={promoFilter}
               keyExtractor={prom => prom.idprom + prom.descri + getRandom()}
 
               renderItem={({ item, index }) => (
                 <TouchableHighlight
                   onPress={() => pressPro(item)}>
-                  <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                    <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.placa.toUpperCase()}</Text>
-                    <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descricao}</Text>
+                  <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                    <Text style={[listStyle.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.placa.toUpperCase()}</Text>
+                    <Text style={[listStyle.listText, { width: '65%', textAlign: 'left', }]}>{item.descricao}</Text>
                   </View>
                 </TouchableHighlight>
               )}
@@ -246,37 +246,9 @@ const styles = StyleSheet.create({
     marginTop: 38,
   },
 
-  header_style: {
-    fontWeight: 'bold',
-    backgroundColor: '#4169E1',
-  },
-
-  list: {
-    paddingHorizontal: 5,
-    flexGrow: 0,
-    marginBottom: 90,
-  },
-
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-  },
-
-  listItem: {
-    display: 'flex',
-    width: Dimensions.get('window').width - 10,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingRight: 10,
-    height: 50,
-  },
-
-  listText: {
-    fontSize: 14,
-    color: '#4169E1',
-    textAlign: 'right',
-    flexDirection: 'row',
-    alignSelf: 'center',
   },
 
   container: {
@@ -287,7 +259,7 @@ const styles = StyleSheet.create({
 
   msgText: {
     fontSize: 18,
-    color: '#4169E1',
+    color: '#FF0',
     flexDirection: 'row',
     alignSelf: 'center',
     textAlign: 'justify',

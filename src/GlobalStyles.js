@@ -5,13 +5,13 @@ import {
 
 import { LinearGradient } from 'expo-linear-gradient'
 
-const bg_color = 'rgba(65,105,225,0.9)' //'#4169E1'
-const im_color = 'rgba(135,206,250,0.9)' //'#87CEFA'
+const bg_color = 'rgba(65,105,225,1)' //'#4169E1'
+const im_color = 'rgba(135,206,250,1)' //'#87CEFA'
 
 const width = Dimensions.get('window').width
 
-export const colors = ['rgba(135,206,250,0.9)', 'rgba(173,216,230,0.9)']
-export const bg_colors = ['#87CEEB', '#00BFFF', '#007189']
+export const colors = ['rgba(30,144,255,1)', 'rgba(0,191,255,1)']
+export const bg_colors = ['#6495ED', '#1E90FF', '#007189']
 export const bg_start = { x: 1, y: 0.45 }
 export const bg_end = { x: 0, y: 0.75 }
 export const _url = 'https://www.fichadocarro.com.br'
@@ -24,7 +24,7 @@ export default StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#87CEEB',
+    backgroundColor: '#007189',
   },
 
   background: {
@@ -59,7 +59,7 @@ export default StyleSheet.create({
 
   boxText: {
     fontSize: 12,
-    color: '#FFF',
+    color: '#FFFFFF',
     marginTop: 10,
   },
 
@@ -165,4 +165,44 @@ export const searchStyle = {
     backgroundColor: bg_color
   },
 
+}
+
+export const listStyle = {
+  header_style: {
+    fontWeight: 'bold',
+    backgroundColor: '#4169E1', 
+  },
+
+  list: {
+    paddingHorizontal: 5,
+    flexGrow: 0,
+    marginBottom: 90,
+  },
+
+  listItem: {
+    display: 'flex',
+    width: Dimensions.get('window').width - 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingRight: 10,
+    height: 50,
+  },
+  
+  listHeadText: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#ff0',
+    textAlign: 'right',
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+
+  listText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    textAlign: 'right',
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  
 }

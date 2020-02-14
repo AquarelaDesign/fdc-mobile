@@ -15,7 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 import Lottie from 'lottie-react-native'
 import GlobalStyles, {
-  colors, bg_colors, bg_start, bg_end
+  listStyle, colors, bg_colors, bg_start, bg_end
 } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
@@ -75,8 +75,8 @@ export default function Etiquetas({ navigation }) {
   
   const FlatList_header_etq = () => {
     var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Etiquetas</Text> 
+      <View style={[listStyle.listItem, listStyle.header_style]}>
+        <Text style={[listStyle.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Etiquetas</Text> 
       </View>
     )
     return Sticky_header_View
@@ -116,7 +116,7 @@ export default function Etiquetas({ navigation }) {
           </Text>
           :
           <FlatList 
-            style={styles.list}
+            style={listStyle.list}
             data={etq}
             keyExtractor={etq => etq.idgpas + etq.descri + getRandom()}
 
@@ -124,13 +124,13 @@ export default function Etiquetas({ navigation }) {
               <TouchableHighlight
                 onPress={() => pressLista(item)}>
                 <View style={{ backgroundColor: colors[index % colors.length], }}>
-                  <View style={styles.listItem}>
-                    <Text style={[styles.listText, { paddingLeft: 10, width: '100%', width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+                  <View style={listStyle.listItem}>
+                    <Text style={[listStyle.listText, { paddingLeft: 10, width: '100%', width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
                   </View>
-                  <View style={styles.listItem}>
-                    <Text style={[styles.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtproxfor}</Text> 
-                    <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}>{ `${item.kmprox} KM` }</Text> 
-                    <Text style={[styles.listText, { paddingLeft: 10, width: '30%', }]}></Text> 
+                  <View style={listStyle.listItem}>
+                    <Text style={[listStyle.listText, { paddingLeft: 10, width: '40%', textAlign: 'left', }]}>{item.dtproxfor}</Text> 
+                    <Text style={[listStyle.listText, { paddingLeft: 10, width: '30%', }]}>{ `${item.kmprox} KM` }</Text> 
+                    <Text style={[listStyle.listText, { paddingLeft: 10, width: '30%', }]}></Text> 
                   </View>
                 </View>
               </TouchableHighlight>
@@ -147,34 +147,6 @@ export default function Etiquetas({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  header_style: {
-    fontWeight: 'bold',
-    backgroundColor: '#4169E1', 
-  },
-
-  list: {
-    paddingHorizontal: 5,
-    flexGrow: 0,
-    marginBottom: 90,
-  },
-  
-  listItem: {
-    display: "flex",
-    width: width - 10,
-    flexDirection: "row",
-    flexWrap: 'wrap',
-    paddingRight: 10,
-    height: 40,
-  },
-  
-  listText: {
-    fontSize: 14,
-    color: '#4169E1',
-    textAlign: 'right',
-    flexDirection: 'row',
-    alignSelf: "center",
-  },
-
   msgText: {
     fontSize: 13,
     color: '#FFFFFF',

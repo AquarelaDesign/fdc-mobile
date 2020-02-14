@@ -106,11 +106,11 @@ export default function ConsultaPJ({ navigation }) {
 
                   <FormButton
                     style={styles.button}
-                    type="solid"
+                    type="outline"
                     onPress={handleSubmit}
                     title="Consulta"
                     buttonStyle={styles.button}
-                    textStyle={styles.buttonText}
+                    titleStyle={styles.buttonText}
                   />
                 </View> 
 
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   msgTitle: {
     fontWeight: 'bold',
     fontSize: 25,
-    color: '#4169E1',
+    color: '#FFFFFF',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
 
   msgText: {
     fontSize: 20,
-    color: '#4169E1',
+    color: '#FFFFFF',
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   
   parentHr: {
     height: 1,
-    color: '#FFF',
+    color: '#FFFFFF',
     width: '100%'
   },
 
@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
     height: 42,
     width: 200,
     backgroundColor: '#4169E1',
+    borderColor: '#87CEFA',
   },
 
   buttonText: {

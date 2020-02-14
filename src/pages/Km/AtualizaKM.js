@@ -237,11 +237,11 @@ const AtualizaKM = ({ placa, buscaHistorico }) => {
 
               <FormButton
                 style={styles.button}
-                type="solid"
+                type="outline"
                 onPress={handleSubmit}
                 title="Gravar"
                 buttonStyle={styles.button}
-                textStyle={styles.buttonText}
+                titleStyle={styles.buttonText}
               />
 
             </Fragment>
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   legend: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#4169E1',
+    color: '#FFFFFF',
     textAlign: 'left',
     paddingLeft: 10,
   },
@@ -315,6 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 2,
+    borderColor: '#87CEFA',
   },
 
   buttonText: {

@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   
   title: {
     fontSize: 18,
-    color: '#444',
+    color: '#FFFFFF',
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   listText: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#4169E1',
+    color: '#FFFFFF',
     textAlign: 'center',
     flexDirection: 'row',
     alignSelf: "center",

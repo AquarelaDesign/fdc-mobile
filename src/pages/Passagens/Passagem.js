@@ -17,7 +17,7 @@ import Lottie from 'lottie-react-native'
 import MapView, { Marker } from 'react-native-maps'
 
 import GlobalStyles, {
-  colors, bg_colors, bg_start, bg_end
+  listStyle, colors, bg_colors, bg_start, bg_end
 } from '../../GlobalStyles'
 
 import Api from '../../services/oapi'
@@ -224,8 +224,8 @@ export default function Passagem({ navigation }) {
 
   const FlatList_header_relser = () => {
     var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Descrição</Text> 
+      <View style={[listStyle.listItem, listStyle.header_style]}>
+        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>Descrição</Text> 
       </View>
     )
     return Sticky_header_View
@@ -240,14 +240,14 @@ export default function Passagem({ navigation }) {
         end={bg_end}
       >
         <FlatList 
-          style={styles.list}
+          style={listStyle.list}
           data={rela}
           keyExtractor={rela => `${rela.idgpas}${rela.descri}`}
 
           renderItem={({ item, index }) => (
             <TouchableHighlight>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+              <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={[listStyle.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -268,14 +268,14 @@ export default function Passagem({ navigation }) {
         end={bg_end}
       >
         <FlatList 
-          style={styles.list}
+          style={listStyle.list}
           data={serv}
           keyExtractor={serv => `${serv.idgpas}${serv.descri}`}
 
           renderItem={({ item, index }) => (
             <TouchableHighlight>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
+              <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={[listStyle.listText, { paddingLeft: 10, width: '100%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -289,9 +289,9 @@ export default function Passagem({ navigation }) {
 
   const FlatList_header_pecas = () => {
     var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '80%', textAlign: 'left', }]}>Descrição</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '20%' }]}>Qtd</Text> 
+      <View style={[listStyle.listItem, listStyle.header_style]}>
+        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '80%', textAlign: 'left', }]}>Descrição</Text> 
+        <Text style={[listStyle.listHeadText, { width: '20%' }]}>Qtd</Text> 
       </View>
     )
     return Sticky_header_View
@@ -306,15 +306,15 @@ export default function Passagem({ navigation }) {
         end={bg_end}
       >
         <FlatList 
-          style={styles.list}
+          style={listStyle.list}
           data={peca}
           keyExtractor={peca => `${peca.idgpas}${peca.descri}`}
 
           renderItem={({ item, index }) => (
             <TouchableHighlight>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '80%', textAlign: 'left', }]}>{item.descri}</Text> 
-                <Text style={[styles.listText, { width: '20%', }]}>{item.quant}</Text> 
+              <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={[listStyle.listText, { paddingLeft: 10, width: '80%', textAlign: 'left', }]}>{item.descri}</Text> 
+                <Text style={[listStyle.listText, { width: '20%', }]}>{item.quant}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -447,32 +447,6 @@ const styles = StyleSheet.create({
     marginTop: 38,
   },
   
-  header_style: {
-    fontWeight: 'bold',
-    backgroundColor: '#4169E1', 
-  },
-
-  list: {
-    paddingHorizontal: 5,
-  },
-
-  listItem: {
-    display: "flex",
-    width: Dimensions.get('window').width - 10,
-    flexDirection: "row",
-    flexWrap: 'wrap',
-    paddingRight: 10,
-    height: 40,
-  },
-  
-  listText: {
-    fontSize: 14,
-    color: '#4169E1',
-    textAlign: 'right',
-    flexDirection: 'row',
-    alignSelf: "center",
-  },
-
   container: {
     flex: 1,
     paddingHorizontal: 20,

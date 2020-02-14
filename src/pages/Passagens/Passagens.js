@@ -16,7 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import Lottie from 'lottie-react-native'
 
 import GlobalStyles, {
-  colors, _url, bg_colors, bg_start, bg_end
+  listStyle, colors, _url, bg_colors, bg_start, bg_end
 } from '../../GlobalStyles'
 
 import Api from '../../services/oapi'
@@ -148,16 +148,16 @@ export default function Passagens({ navigation }) {
 
   const FlatList_header_pass = () => {
     var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '35%', textAlign: 'left' }]}>Data</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '20%' }]}>KM</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>
+      <View style={[listStyle.listItem, listStyle.header_style]}>
+        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '35%', textAlign: 'left' }]}>Data</Text> 
+        <Text style={[listStyle.listHeadText, { width: '20%' }]}>KM</Text> 
+        <Text style={[listStyle.listHeadText, { width: '15%' }]}>
           <Icon name="md-paper" style={{color: '#ff0', fontSize: 15}}/>
         </Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>
+        <Text style={[listStyle.listHeadText, {  width: '15%' }]}>
           <Icon name="md-construct" style={{color: '#ff0', fontSize: 15}}/>
         </Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '15%' }]}>
+        <Text style={[listStyle.listHeadText, { width: '15%' }]}>
           <Icon name="md-cog" style={{color: '#ff0', fontSize: 15}}/>
         </Text> 
       </View>
@@ -181,19 +181,19 @@ export default function Passagens({ navigation }) {
         end={bg_end}
         >
         <FlatList 
-          style={styles.list}
+          style={listStyle.list}
           data={pass}
           keyExtractor={pass => pass.idgpas.toString() + getRandom()}
           
           renderItem={({ item, index }) => (
             <TouchableHighlight
               onPress={() => pressPas(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '20%' }]}>{item.kilome}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totrel}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totser}</Text> 
-                <Text style={[styles.listText, { width: '15%' }]}>{item.totpec}</Text> 
+              <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={[listStyle.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
+                <Text style={[listStyle.listText, { width: '20%' }]}>{item.kilome}</Text> 
+                <Text style={[listStyle.listText, { width: '15%' }]}>{item.totrel}</Text> 
+                <Text style={[listStyle.listText, { width: '15%' }]}>{item.totser}</Text> 
+                <Text style={[listStyle.listText, { width: '15%' }]}>{item.totpec}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -215,9 +215,9 @@ export default function Passagens({ navigation }) {
 
   const FlatList_header_pecser = () => {
     var Sticky_header_View = (
-      <View style={[styles.listItem, styles.header_style]}>
-        <Text style={[styles.listText, { color: '#ff0', paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Data</Text> 
-        <Text style={[styles.listText, { color: '#ff0', width: '65%', textAlign: 'left', }]}>Descrição</Text> 
+      <View style={[listStyle.listItem, listStyle.header_style]}>
+        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>Data</Text> 
+        <Text style={[listStyle.listHeadText, { width: '65%', textAlign: 'left', }]}>Descrição</Text> 
       </View>
     )
     return Sticky_header_View
@@ -232,16 +232,16 @@ export default function Passagens({ navigation }) {
         end={bg_end}
         >
         <FlatList 
-          style={styles.list}
+          style={listStyle.list}
           data={serv}
           keyExtractor={serv => `${serv.idgpas}${serv.descri}${getRandom()}`}
 
           renderItem={({ item, index }) => (
             <TouchableHighlight
               onPress={() => pressSer(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
+              <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={[listStyle.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
+                <Text style={[listStyle.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -266,16 +266,16 @@ export default function Passagens({ navigation }) {
         end={bg_end}
         >
         <FlatList 
-          style={styles.list}
+          style={listStyle.list}
           data={peca}
           keyExtractor={peca => `${peca.idgpas}${peca.descri}${getRandom()}`}
 
           renderItem={({ item, index }) => (
             <TouchableHighlight
               onPress={() => pressSer(item)}>
-              <View style={[styles.listItem, { backgroundColor: colors[index % colors.length] }]}>
-                <Text style={[styles.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
-                <Text style={[styles.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
+              <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
+                <Text style={[listStyle.listText, { paddingLeft: 10, width: '35%', textAlign: 'left', }]}>{item.dtpsgfor}</Text> 
+                <Text style={[listStyle.listText, { width: '65%', textAlign: 'left', }]}>{item.descri}</Text> 
               </View>
             </TouchableHighlight>
           )}
@@ -343,34 +343,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   
-  header_style: {
-    fontWeight: 'bold',
-    backgroundColor: '#4169E1', 
-  },
-
-  list: {
-    paddingHorizontal: 5,
-    flexGrow: 0,
-    marginBottom: 90,
-  },
-
-  listItem: {
-    display: 'flex',
-    width: Dimensions.get('window').width - 10,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingRight: 10,
-    height: 50,
-  },
-  
-  listText: {
-    fontSize: 14,
-    color: '#4169E1',
-    textAlign: 'right',
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-
   container: {
     flex: 1,
     justifyContent: 'center',

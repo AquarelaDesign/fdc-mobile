@@ -85,7 +85,6 @@ export default function Home({ navigation }) {
           setOficina(JSON.parse(Oficina))
         }
         // console.log('ofi', ofi)
-
         if (ofi.tipusu !== undefined) {
           if (token === null) {
             setToken(ofi.reserv_ch3)
@@ -99,7 +98,7 @@ export default function Home({ navigation }) {
   }, [oficina])
 
   if (token !== null && token !== undefined) {
-    console.log('token', token)
+    // console.log('token', token)
   }
 
   _handleNotification = Notification => {
