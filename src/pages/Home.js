@@ -68,7 +68,6 @@ export default function Home({ navigation }) {
       const subscription = Notifications.addListener(_handleNotification)
 
       setToken(token)
-
       // salvar token na base do FDC
       if (oficina.tknpsh !== token && email !== '') {
         salvaToken(token)
@@ -85,12 +84,23 @@ export default function Home({ navigation }) {
           setIsOficina(ofi.tipusu === 'OFI' ? true : false)
           setOficina(JSON.parse(Oficina))
         }
+        // console.log('ofi', ofi)
+
+        if (ofi.tipusu !== undefined) {
+          if (token === null) {
+            setToken(ofi.reserv_ch3)
+          }
+        }
         setIsLoading(false)
       } else {
         setIsLoading(false)
       }
     })
   }, [oficina])
+
+  if (token !== null && token !== undefined) {
+    console.log('token', token)
+  }
 
   _handleNotification = Notification => {
     // do whatever you want to do with the notification

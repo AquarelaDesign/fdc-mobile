@@ -54,7 +54,6 @@ const Contas = () => {
       const saldo = dados.totrec - dados.totpag
       const gdcor = dados.totrec > dados.totpag ? ['#4CAF50', '#8BC34A'] : ['#F44336', '#E91E63']
 
-
       ind.push({
         icon: icone,
         title: "Saldo",
@@ -81,12 +80,11 @@ const Contas = () => {
               pdtfim: dataFinal,
               ptipcon: 'A',
             })).then(response => {
-              console.log(response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttresumo } = response.data.ProDataSet
-
                   setResumo(ttresumo)
+                  // console.log('ttresumo', ttresumo)
 
                   let totpag = 0
                   let totrec = 0

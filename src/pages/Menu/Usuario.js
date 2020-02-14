@@ -27,24 +27,51 @@ const { width } = Dimensions.get('window')
 
 const Usuario = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [oficina, setOficina] = useState({})
-  const [btnSenhaTit, setBtnSenhaTit] = useState('Alterar Senha')
+  const [email, setEmail] = useState('')
+  const [oficina, setOficina] = useState(undefined)
+  const [btnSenhaTit, setBtnSenhaTit] = useState('Cancelar')
   const [isBtnSenha, setIsBtnSenha] = useState(false)
   const [senha, setSenha] = useState('')
   const [senha1, setSenha1] = useState('')
 
+
   useEffect(() => {
     setIsLoading(true)
 
-      AsyncStorage.getItem('oficina').then(Oficina => {
-        if (Oficina) {
-          const tmp = JSON.parse(Oficina) 
-          setOficina(tmp[0])
-          setIsLoading(false)
-        }
-      })
+    AsyncStorage.getItem('email').then(Email => {
+      if (email !== '') {
+        setEmail(Email)
+      }
+    })
+  }, [email])
 
+  useEffect(() => {
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      // console.log('Oficina', Oficina)
+      if (Oficina) {
+        const ofi = JSON.parse(Oficina)
+        if (ofi.nome !== undefined) {
+          setOficina(ofi[0])
+          setOficina(JSON.parse(Oficina))
+        }
+        setIsLoading(false)
+      } else {
+        setIsLoading(false)
+      }
+    })
   }, [])
+
+  useEffect(() => {
+    if (!isBtnSenha) {
+      setBtnSenhaTit('Alterar Senha')
+    } else {
+      if (senha !== '' || senha1 !== '') {
+        setBtnSenhaTit('Gravar')
+      } else {
+        setBtnSenhaTit('Cancelar')
+      }
+    }  
+  }, [senha, senha1])
 
   async function handleEncerra() {
     try {
@@ -60,13 +87,22 @@ const Usuario = ({ navigation }) => {
 
   async function handleSenha() {
     if (isBtnSenha) {
+      if (senha !== '' && senha1 !== '') {
+        if (senha !== senha1) {
+          Alert.alert('As Senhas não são iguais')
+          return
+        }
+      } else if (
+        (senha !== '' && senha1 === '') ||
+        (senha === '' && senha1 !== '')) {
+        Alert.alert('As Senhas não são iguais')
+        return
+      }
       setBtnSenhaTit('Alterar Senha')
       setIsBtnSenha(false)
-      // Alert.alert('Senha Alterada')
     } else {
-      setBtnSenhaTit('Gravar Senha')
+      setBtnSenhaTit('Cancelar')
       setIsBtnSenha(true)
-      // Alert.alert('Senha Gravada')
     }
   }
 
@@ -75,6 +111,8 @@ const Usuario = ({ navigation }) => {
       <Lottie source={loading} autoPlay loop />
     )
   }
+
+  // console.log('oficina', oficina)
 
   return (
     <KeyboardAvoidingView behavior="padding" style={[GlobalStyles.container, {paddingTop: 25,}]}>
@@ -85,57 +123,70 @@ const Usuario = ({ navigation }) => {
           start={bg_start}
           end={bg_end}
         >
-          { !isBtnSenha ?
-          <Icon style={styles.logo} name="user-circle-o" size={120}/>
-          : <></>}
+          <Icon style={styles.logo} name="user-circle-o" size={90}/>
 
           <View style={styles.container}>
-            <View style={styles.row}>
-              <View style={styles.vlegend}>
-                <Text style={styles.legend}>Nome</Text>
+            {oficina !== undefined && !isBtnSenha ?
+            <>
+              <View style={styles.row}>
+                <View style={styles.vlegend}>
+                  <Text style={styles.legend}>Nome</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.vtext} >
-                <Text style={styles.text}>{oficina.nome}</Text>
+              <View style={styles.row}>
+                <View style={styles.vtext} >
+                  <Text style={styles.text}>{oficina.nome}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.vlegend}>
-                <Text style={styles.legend}>Endereço</Text>
+              <View style={styles.row}>
+                <View style={styles.vlegend}>
+                  <Text style={styles.legend}>Endereço</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.vtext} >
-                <Text style={styles.text}>{`${oficina.endrua}, ${oficina.endnum}`}</Text>
+              <View style={styles.row}>
+                <View style={styles.vtext} >
+                  <Text style={styles.text}>{`${oficina.endrua}, ${oficina.endnum}`}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={[styles.vlegend, {width: '70%',}]}>
-                <Text style={styles.legend}>Bairro</Text>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '70%',}]}>
+                  <Text style={styles.legend}>Bairro</Text>
+                </View>
+                <View style={[styles.vlegend, {width: '30%',}]}>
+                  <Text style={styles.legend}>UF</Text>
+                </View>
               </View>
-              <View style={[styles.vlegend, {width: '30%',}]}>
-                <Text style={styles.legend}>UF</Text>
+              <View style={styles.row}>
+                <View style={[styles.vtext, {width: '70%',}]} >
+                  <Text style={styles.text}>{oficina.bairro}</Text>
+                </View>
+                <View style={[styles.vtext, {width: '30%',}]} >
+                  <Text style={styles.text}>{oficina.uf}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={[styles.vtext, {width: '70%',}]} >
-                <Text style={styles.text}>{oficina.bairro}</Text>
+              <View style={styles.row}>
+                <View style={styles.vlegend}>
+                  <Text style={styles.legend}>Fone</Text>
+                </View>
               </View>
-              <View style={[styles.vtext, {width: '30%',}]} >
-                <Text style={styles.text}>{oficina.uf}</Text>
+              <View style={styles.row}>
+                <View style={styles.vtext} >
+                  <Text style={styles.text}>{oficina.fone}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.vlegend}>
-                <Text style={styles.legend}>Fone</Text>
+              <View style={styles.row}>
+                <View style={styles.vlegend}>
+                  <Text style={styles.legend}>E-mail</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.vtext} >
-                <Text style={styles.text}>{oficina.fone}</Text>
+              <View style={styles.row}>
+                <View style={styles.vtext} >
+                  <Text style={styles.text}>{oficina.e_mail}</Text>
+                </View>
               </View>
-            </View>
+            </>
+            : <></>}
+
             <View style={styles.form}>
               { 
                 isBtnSenha 
@@ -176,19 +227,19 @@ const Usuario = ({ navigation }) => {
 
             </View>
 
-
           </View>
         </LinearGradient>
       </View>
       {isLoading ? Loading() : <></>}
     </KeyboardAvoidingView>
   )
+  
 }
 
 const styles = StyleSheet.create({
   logo: {
     alignSelf: "center",
-    marginTop: 60,
+    marginTop: 30,
     color: "#007189",
   },
 
@@ -210,7 +261,7 @@ const styles = StyleSheet.create({
   },
 
   vlegend: {
-    marginTop: 10,
+    marginTop: 5,
     width: width,
   },
 
@@ -238,7 +289,7 @@ const styles = StyleSheet.create({
   form: {
     alignSelf: 'stretch',
     paddingHorizontal: 30,
-    marginTop: 30,
+    marginTop: 20,
   },
 
   label: {

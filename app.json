@@ -1,24 +1,28 @@
 {
   "expo": {
     "name": "fdc-mobile",
-    "slug": "fdc-mobnew",
-    "privacy": "public",
+    "slug": "Ficha_do_Carro",
+    "privacy": "unlisted",
     "sdkVersion": "35.0.0",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#3f51b6"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
+    },
+    "notification": {
+      "icon": "./src/assets/icon-pb.png",
+      "color": "#87CEEB",
+      "iosDisplayInForeground": true
     },
     "assetBundlePatterns": [
       "**/*"

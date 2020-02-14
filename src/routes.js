@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import SafeAreaView from 'react-native-safe-area-view'
 import Lottie from 'lottie-react-native'
 
-import AppLoading from './components/AppLoading'
+import { AppLoading } from 'expo'
 
 import _routes from './_routes'
 import loading from './assets/json/car.json'
@@ -19,7 +19,6 @@ const styles = {
   position: 'absolute',
   width: '100%',
   height: 50,
-  // top: Dimensions.get('window').height - 80,
   padding: 10,
   backgroundColor: 'transparent',
   marginBottom: 30,
@@ -96,23 +95,28 @@ const Menu = createAppContainer(
   ),
 )
 
-const anima = () => {
+const anima = async () => {
   return (
-    <Lottie source={anima} autoPlay loop />
+    <Lottie source={loading} autoPlay loop />
   )
 }
 
 export default () => {
   const [isReady, setIsReady] = useState(false)
 
-  const loadAssetsAsync = async () => {
+  const _cacheResourcesAsync = async () => {
+    const images = [require('./assets/car-loader.gif')];
+
+    const cacheImages = images.map(image => {
+      return Asset.fromModule(image).downloadAsync();
+    }); 
+    return Promise.all(cacheImages);
   }
 
   if (!isReady) {
     return (
       <AppLoading
-        ref={() => anima}
-        startAsync={loadAssetsAsync}
+        startAsync={anima}
         onFinish={() => setIsReady(true)}
         onError={console.warn}
       />
