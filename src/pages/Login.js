@@ -12,8 +12,11 @@ import {
   ImageBackground 
 } from 'react-native'
 
+import Expo, { Constants } from 'expo'
+
 //import Alerta from '../components/Alerta'
 import api from '../services/api'
+import fb from '../services/facebook'
 
 import logo from '../assets/logo.png'
 import bg from '../assets/splash.png'
@@ -24,6 +27,7 @@ import bg from '../assets/splash.png'
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [responseJSON, setResponseJSON] = useState(null)
 
   useEffect(() => {
     if (email === '') {
@@ -51,6 +55,61 @@ export default function Login({ navigation }) {
       validateToken()
     })
   }, [])
+
+  const salvaToken = (token) => {
+    if (email !== '' && token !== '') {
+      async function GravaToken() {
+        try {
+          await Api.post('', querystring.stringify({
+            pservico: 'wfcusu',
+            pmetodo: 'GravaToken',
+            pcodprg: '',
+            pemail: email,
+            pemailcli: email,
+            ptiptkn: 'facebook',
+            ptoken: token,
+          })).then(response => {
+            if (response.status === 200) {
+              if (response.data.ProDataSet !== undefined) {
+                const { ttfcusu } = response.data.ProDataSet
+                AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu))
+              } 
+            } else {
+              console.log('response.status', response.status)
+            }
+          })
+        } catch (error) {
+          const { response } = error
+          console.log('error', response)
+        }
+      }
+      GravaToken()
+    }
+  }
+
+  const callGraph = async tokenfb => {
+    /// Look at the fields... I don't have an `about` on my profile but everything else should get returned.
+    const response = await fetch(
+      `https://graph.facebook.com/me?access_token=${tokenfb}&fields=id,name,email,about,picture`
+    )
+
+    const responseJSON = JSON.stringify(await response.json())
+    setResponseJSON(responseJSON)
+  }
+
+  async function handleSubmitFb() {
+    const {
+      type,
+      tokenfb,
+    } = await Expo.Facebook.logInWithReadPermissionsAsync(fb.appId, {
+      permissions: ['public_profile', 'email', 'user_friends'],
+    })
+
+    if (type === 'success') {
+      callGraph(tokenfb)
+      // salvaToken(tokenfb)
+    }
+  }
 
   async function handleSubmit() {
     if (email !== '') {
@@ -120,6 +179,11 @@ export default function Login({ navigation }) {
           <TouchableOpacity onPress={handleSubmit} style={styles.button}>
             <Text style={styles.buttonText}>Iniciar sessão</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleSubmitFb} style={[styles.button, styles.buttonFb]}>
+            <Text style={styles.buttonText}>facebook</Text>
+          </TouchableOpacity>
+
         </View>
       </ImageBackground>
     </KeyboardAvoidingView>
@@ -162,6 +226,10 @@ const styles = StyleSheet.create({
     height: 44,
     marginBottom: 20,
     borderRadius: 2,
+  },
+
+  buttonFb: {
+    backgroundColor: '#3B5998',
   },
 
   button: {
