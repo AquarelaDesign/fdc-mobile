@@ -3,7 +3,7 @@
     "name": "fdc-mobile",
     "slug": "Ficha_do_Carro",
     "privacy": "unlisted",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android"
@@ -38,6 +38,6 @@
           "apiKey": "AIzaSyBqitr0K9UhX_Se7tKwdcaZoPXE-eViE4Q"
         }
       }
-    }    
+    }
   }
 }

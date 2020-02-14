@@ -12,11 +12,11 @@ import {
   ImageBackground 
 } from 'react-native'
 
-import Expo, { Constants } from 'expo'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import * as Facebook from 'expo-facebook'
 
 //import Alerta from '../components/Alerta'
 import api from '../services/api'
-import fb from '../services/facebook'
 
 import logo from '../assets/logo.png'
 import bg from '../assets/splash.png'
@@ -27,7 +27,7 @@ import bg from '../assets/splash.png'
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [responseJSON, setResponseJSON] = useState(null)
+  const [Response, setResponse] = useState(null)
 
   useEffect(() => {
     if (email === '') {
@@ -87,28 +87,41 @@ export default function Login({ navigation }) {
     }
   }
 
-  const callGraph = async tokenfb => {
+  const callGraph = async token => {
     /// Look at the fields... I don't have an `about` on my profile but everything else should get returned.
     const response = await fetch(
-      `https://graph.facebook.com/me?access_token=${tokenfb}&fields=id,name,email,about,picture`
+      `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,about,picture`
     )
 
     const responseJSON = JSON.stringify(await response.json())
-    setResponseJSON(responseJSON)
+    setResponse(responseJSON)
+    console.log(Response)
   }
 
   async function handleSubmitFb() {
-    const {
-      type,
-      tokenfb,
-    } = await Expo.Facebook.logInWithReadPermissionsAsync(fb.appId, {
-      permissions: ['public_profile', 'email', 'user_friends'],
-    })
+    try {
+      await Facebook.initializeAsync('3265336060162401')
+      const {
+        type,
+        token,
+        expires,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile'],
+      })
 
-    if (type === 'success') {
-      callGraph(tokenfb)
-      // salvaToken(tokenfb)
+      if (type === 'success') {
+        callGraph(token)
+        // salvaToken(tokenfb)
+      } else {
+        console.log('type', type)
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+      console.log(`Facebook Login Error: ${message}`)
     }
+  
   }
 
   async function handleSubmit() {
@@ -181,7 +194,8 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleSubmitFb} style={[styles.button, styles.buttonFb]}>
-            <Text style={styles.buttonText}>facebook</Text>
+            <Icon name="facebook-square" size={20} color="#FFFFFF" />
+            <Text style={styles.buttonText}> facebook</Text>
           </TouchableOpacity>
 
         </View>
@@ -229,10 +243,12 @@ const styles = StyleSheet.create({
   },
 
   buttonFb: {
+    marginTop: 10,
     backgroundColor: '#3B5998',
   },
 
   button: {
+    flexDirection: 'row',
     height: 42,
     backgroundColor: '#007189',
     justifyContent: 'center',
