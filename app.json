@@ -2,7 +2,7 @@
   "expo": {
     "name": "fdc-mobile",
     "slug": "Ficha_do_Carro",
-    "privacy": "unlisted",
+    "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",

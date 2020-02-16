@@ -77,6 +77,10 @@ const Usuario = ({ navigation }) => {
     try {
       await AsyncStorage.setItem('oficina', '')
       await AsyncStorage.setItem('token', '')
+
+      // Incluir Logout do facebook
+      // https://stackoverflow.com/questions/51838676/how-to-logout-using-expo-facebook
+
       navigation.navigate('Login')
     }
     catch (error) {

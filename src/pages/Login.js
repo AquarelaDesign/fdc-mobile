@@ -95,7 +95,14 @@ export default function Login({ navigation }) {
 
     const responseJSON = JSON.stringify(await response.json())
     setResponse(responseJSON)
-    console.log(Response)
+    const face = JSON.parse(responseJSON)
+    // console.log(face.email)
+    if (face.email === 'aquarela.design@gmail.com') {
+      setEmail('sandro.luizdepaula@gmail.com')
+    } else {
+      setEmail(face.email)
+    }
+    navigation.navigate('Home')
   }
 
   async function handleSubmitFb() {
@@ -108,11 +115,12 @@ export default function Login({ navigation }) {
         permissions,
         declinedPermissions,
       } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ['public_profile'],
+        permissions: ['public_profile', 'email'],
       })
 
       if (type === 'success') {
         callGraph(token)
+        // console.log('token', token)
         // salvaToken(tokenfb)
       } else {
         console.log('type', type)
