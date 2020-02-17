@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   View,
   Text,
+  TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from 'react-native'
@@ -128,6 +129,9 @@ const Etiquetas = () => {
     )
   }
 
+  const onFilter = () => {
+  }
+
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -138,8 +142,11 @@ const Etiquetas = () => {
     <SafeAreaView style={[GlobalStyles.container, { paddingTop: 15, }]}>
 
       <View style={styles.row}>
-        <Icon name="tags" size={40} color="#007189" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Icon name="tags" size={40} color="#FFFFFF" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Etiquetas</Text>
+        <TouchableOpacity activeOpacity = { .5 }  onPress={() => onFilter()}>
+          <Icon name="filter" size={30} color="#FFFFFF" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        </TouchableOpacity>
       </View>
 
       <ScrollView>
