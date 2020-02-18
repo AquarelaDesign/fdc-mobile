@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+
 import { 
   View, 
   AsyncStorage, 
@@ -121,7 +122,7 @@ export default function Login({ navigation }) {
       if (type === 'success') {
         callGraph(token)
         // console.log('token', token)
-        // salvaToken(tokenfb)
+        salvaToken(token)
       } else {
         console.log('type', type)
       }

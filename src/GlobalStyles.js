@@ -206,3 +206,59 @@ export const listStyle = {
   },
   
 }
+
+export const modalStyle = {
+  boxIcone: {
+    width: 40,
+    height: 40,
+    marginTop: 30,
+    zIndex: 0, 
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'grey',
+    padding: 25,
+    width: '100%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#D8D8D8',
+  },
+  
+  innerContainer: {
+    alignItems: 'center',
+  },
+
+  form: {
+    alignSelf: 'stretch',
+    paddingHorizontal: 30,
+    marginTop: 30,
+  },
+
+  label: {
+    fontWeight: 'bold',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#444',
+    height: 44,
+    marginBottom: 20,
+    borderRadius: 2,
+    backgroundColor: '#D8D8D8', 
+  },
+
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
+}

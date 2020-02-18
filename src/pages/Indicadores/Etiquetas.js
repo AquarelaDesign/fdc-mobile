@@ -5,7 +5,6 @@ import {
   Button,
   Dimensions,
   Image,
-  Modal,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -17,7 +16,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 
 import Lottie from 'lottie-react-native'
-import GlobalStyles from '../../GlobalStyles'
+import GlobalStyles, { modalStyle } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
 
@@ -148,32 +147,11 @@ const Etiquetas = () => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, { paddingTop: 15, }]}>
-      {/* <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modView}
-        onRequestClose={() => {
-          alert('Modal has been closed.');
-        }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.innerContainer}>
-            <Text>Hello World!</Text>
-
-            <Button
-              onPress={() => {setModView(false)}}
-              title="Close modal"
-            >
-            </Button>
-          </View>
-        </View>
-      </Modal> */}
-
       <Overlay
         isVisible={modView}
         supportedOrientations={['portrait', 'landscape']}
         windowBackgroundColor="rgba(0, 0, 0, .7)"
         overlayBackgroundColor="transparent"
-        // borderRadius="5"
         width="80%"
         height="40%"
         overlayStyle={{
@@ -185,11 +163,10 @@ const Etiquetas = () => {
           shadowRadius: 5,
         }}
         onBackdropPress={() => {
-          // alert('Modal Fechado.')
           setModView(false)
         }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.innerContainer}>
+        <View style={modalStyle.modalContainer}>
+          <View style={modalStyle.innerContainer}>
             <Text
               style={{
                 color: '#4A4A4A',
@@ -208,17 +185,12 @@ const Etiquetas = () => {
         </View>
       </Overlay>
 
-
       <View style={styles.row}>
         <Icon name="tags" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
-        {/* <Image style={styles.boxIcone} source={btnLogo} /> */}
         <Text style={styles.title}>Etiquetas</Text>
-        <TouchableOpacity activeOpacity = { .5 }  onPress={() => onFilter()}>
-          {/* <View style={styles.boxBtn}> */}
-            <Image style={styles.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
-          {/* </View> */}
-        </TouchableOpacity>
-
+        {/* <TouchableOpacity activeOpacity = { .5 }  onPress={() => onFilter()}>
+          <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
+        </TouchableOpacity> */}
       </View>
 
       <ScrollView>
@@ -280,42 +252,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
     textTransform: "uppercase",
-  },
-
-  boxBtn: {
-    // marginTop: 60,
-    width: 40,
-    height: 40,
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    // alignSelf: 'baseline',
-    // justifyContent: 'flex-end',
-  },
-
-  boxIcone: {
-    width: 40,
-    height: 40,
-    // resizeMode: "contain",
-    // alignSelf: "flex-end",
-    marginTop: 30,
-    zIndex: 0, 
-    // position: 'relative',
-  },
-
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'grey',
-    padding: 25,
-    width: '100%',
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#D8D8D8',
-  },
-  
-  innerContainer: {
-    alignItems: 'center',
   },
 
 })

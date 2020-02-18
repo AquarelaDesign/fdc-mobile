@@ -2,29 +2,43 @@ import React, { useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
+  Button,
   Dimensions,
+  Image,
   SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput, 
+  TouchableOpacity,
+  View,
 } from 'react-native'
 
-import { ListItem } from 'react-native-elements'
-import Axios from 'axios'
-import NumberFormat from 'react-number-format'
-import Lottie from 'lottie-react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-
 import { LinearGradient } from '../../components/LinearGradient'
-import { dataInicial, dataFinal } from '../../globais'
-import GlobalStyles from '../../GlobalStyles'
+
+import Lottie from 'lottie-react-native'
+import GlobalStyles, { modalStyle } from '../../GlobalStyles'
+
 import loading from '../../assets/json/car-scan.json'
+
+import Axios from 'axios'
+
+import { ListItem, Overlay } from 'react-native-elements'
+import NumberFormat from 'react-number-format'
+
+import Icon from 'react-native-vector-icons/FontAwesome'
+import btnLogo from '../../assets/filter.png'
+
+const { width } = Dimensions.get('window')
+import { dataInicial, dataFinal } from '../../globais'
 
 const Documentos = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [docs, setDocs] = useState([])
+  const [modView, setModView] = useState(false)
+  const [dtInicio, setDtInicio] = useState(dataInicial)
+  const [dtFinal, setDtFinal] = useState(dataFinal)
 
   const Legendas = {
     canval: "Cancelada com DANFE",
@@ -74,163 +88,167 @@ const Documentos = () => {
   useEffect(() => {
     setIsLoading(true)
 
-    async function calculaNotas(ListaDocs) {
-      setIsLoading(true)
-      let totais = {}
-          totais.canval = 0
-          totais.cancel = 0
-          totais.inu = 0
-          totais.dev = 0
-          totais.imp = 0
-          totais.pas = 0
-          totais.rps = 0
-          totais.nfse = 0
-          totais.err = 0
-          totais.orc = 0
-          totais.val = 0
-          totais.geral = 0
-      
-      if (ListaDocs !== undefined) {
-        ListaDocs.forEach((value, key) => {
-          const _tipo = value.TipoNF;
-    
-          if (value.Tipo === 'CAN' || value.Situacao === 'C') { // Cancelado
-            if (value.Tipo === 'VAL') {
-              totais.canval++
-              totais.geral++
-            } else {
-              totais.cancel++
-              totais.geral++
-            }
-          } else if (value.Situacao === 'INU') {
-            totais.inu++
-            totais.geral++
-          } else {
-            switch(value.Tipo) {
-              case '': 
-                if (_tipo === 'DEV') {
-                  if (value.Situacao === 'ERR') {
-                    totais.err++
-                  } else {
-                    totais.dev++                       
-                  }
-                  totais.geral++
-                } else if (_tipo === 'NFE') {
-                  totais.imp++
-                  totais.geral++
-                } else {
-                  totais.geral++
-                }
-                break
-              case 'PAS': 
-                if (_tipo === 'NFSE') {
-                  if (value.SerieNFSe === 'RP') {
-                    totais.rps++
-                    totais.geral++
-                  } else {
-                    totais.nfse++
-                    totais.geral++
-                  }
-                } else {
-                  totais.pas++
-                  totais.geral++
-                }
-                break
-              case 'INU': 
-                totais.inu++
-                totais.geral++
-                break
-              case 'ERR': 
-                totais.err++
-                totais.geral++
-                break
-              case 'DEV': 
-                totais.dev++
-                totais.geral++
-                break
-              case 'VAL': 
-                if (!value.chaNFe) {
-                  totais.err++
-                  totais.geral++
-                } else {
-                  totais.val++
-                  totais.geral++
-                }
-                break
-              case 'ORC': 
-                totais.orc++
-                totais.geral++
-                break
-              default:  
-                totais.geral++
-                break
-            }
-          }
-    
-        })
-      } 
-
-      montaLista(totais)
-    }
-
-    async function montaLista(totais) {
-      let doc = []
-
-      for (let [key, value] of Object.entries(totais)) {
-        if (value !== 0) {
-          doc.push({
-            icon: Icones[key],
-            title: Legendas[key],
-            linearGradientColors: Cores[key],
-            valor: value,
-          })
-        }
-      }
-      setDocs(doc)
-      setIsLoading(false)
-    }
-
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
-
-      const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
-      const url = `${uri}?prog=wsimporc&email=${Email}&di=${dataInicial}&df=${dataFinal}&t=R`
-      
-      if (email !== '') {
-        async function buscaNotas() {
-          try {
-            await Axios.get(
-              url
-            ).then(response => {
-              if (response.status === 200) {
-                const { ListaDocs } = response.data.Lista
-                // console.log('response', response)
-                // console.log('ListaDocs', ListaDocs)
-                calculaNotas(ListaDocs)
-              } else {
-                buscaNotas()
-              }
-              setIsLoading(false)
-            })
-          } catch (error) {
-            
-            const { response } = error
-            if (response !== undefined) {
-              // console.log('err1', response.data.errors[0])
-              setIsLoading(false)
-            } else {
-              // console.log('err2', error)
-              setIsLoading(false)
-            }
-          }
-          
-        }
-        buscaNotas()
-      }
+      buscaDados()
     })
   }, [email])
 
-  // console.log('docs', docs)
+  const buscaDados = async () => {
+    setModView(false)
+
+    if (email !== '') {
+      const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
+      const url = `${uri}?prog=wsimporc&email=${email}&di=${dtInicio}&df=${dtFinal}&t=R`
+      
+      async function buscaNotas() {
+        try {
+          await Axios.get(
+            url
+          ).then(response => {
+            if (response.status === 200) {
+              const { ListaDocs } = response.data.Lista
+              // console.log('response', response)
+              // console.log('ListaDocs', ListaDocs)
+              calculaNotas(ListaDocs)
+            } else {
+              buscaNotas()
+            }
+            setIsLoading(false)
+          })
+        } catch (error) {
+          
+          const { response } = error
+          if (response !== undefined) {
+            // console.log('err1', response.data.errors[0])
+            setIsLoading(false)
+          } else {
+            // console.log('err2', error)
+            setIsLoading(false)
+          }
+        }
+        
+      }
+      buscaNotas()
+    }
+
+  }
+
+  const calculaNotas = (ListaDocs) => {
+    setIsLoading(true)
+    let totais = {}
+        totais.canval = 0
+        totais.cancel = 0
+        totais.inu = 0
+        totais.dev = 0
+        totais.imp = 0
+        totais.pas = 0
+        totais.rps = 0
+        totais.nfse = 0
+        totais.err = 0
+        totais.orc = 0
+        totais.val = 0
+        totais.geral = 0
+    
+    if (ListaDocs !== undefined) {
+      ListaDocs.forEach((value, key) => {
+        const _tipo = value.TipoNF;
+  
+        if (value.Tipo === 'CAN' || value.Situacao === 'C') { // Cancelado
+          if (value.Tipo === 'VAL') {
+            totais.canval++
+            totais.geral++
+          } else {
+            totais.cancel++
+            totais.geral++
+          }
+        } else if (value.Situacao === 'INU') {
+          totais.inu++
+          totais.geral++
+        } else {
+          switch(value.Tipo) {
+            case '': 
+              if (_tipo === 'DEV') {
+                if (value.Situacao === 'ERR') {
+                  totais.err++
+                } else {
+                  totais.dev++                       
+                }
+                totais.geral++
+              } else if (_tipo === 'NFE') {
+                totais.imp++
+                totais.geral++
+              } else {
+                totais.geral++
+              }
+              break
+            case 'PAS': 
+              if (_tipo === 'NFSE') {
+                if (value.SerieNFSe === 'RP') {
+                  totais.rps++
+                  totais.geral++
+                } else {
+                  totais.nfse++
+                  totais.geral++
+                }
+              } else {
+                totais.pas++
+                totais.geral++
+              }
+              break
+            case 'INU': 
+              totais.inu++
+              totais.geral++
+              break
+            case 'ERR': 
+              totais.err++
+              totais.geral++
+              break
+            case 'DEV': 
+              totais.dev++
+              totais.geral++
+              break
+            case 'VAL': 
+              if (!value.chaNFe) {
+                totais.err++
+                totais.geral++
+              } else {
+                totais.val++
+                totais.geral++
+              }
+              break
+            case 'ORC': 
+              totais.orc++
+              totais.geral++
+              break
+            default:  
+              totais.geral++
+              break
+          }
+        }
+  
+      })
+    } 
+
+    montaLista(totais)
+  }
+
+  const montaLista = (totais) => {
+    let doc = []
+
+    for (let [key, value] of Object.entries(totais)) {
+      if (value !== 0) {
+        doc.push({
+          icon: Icones[key],
+          title: Legendas[key],
+          linearGradientColors: Cores[key],
+          valor: value,
+        })
+      }
+    }
+    setDocs(doc)
+    setIsLoading(false)
+  }
 
   const formataValor = (valor) => {
     return (
@@ -244,6 +262,14 @@ const Documentos = () => {
     )
   }
 
+  const onFilter = () => {
+    setModView(true)
+  }
+
+  const onFiltrar = () => {
+    buscaDados()
+  }
+
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -252,9 +278,68 @@ const Documentos = () => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
+      <Overlay
+        isVisible={modView}
+        supportedOrientations={['portrait', 'landscape']}
+        windowBackgroundColor="rgba(0, 0, 0, .7)"
+        overlayBackgroundColor="transparent"
+        width="80%"
+        height="40%"
+        overlayStyle={{
+          backgroundColor: 'white',
+          borderRadius: 15,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 5,
+        }}
+        onBackdropPress={() => {
+          setModView(false)
+        }}>
+        <View style={modalStyle.modalContainer}>
+          <View style={modalStyle.innerContainer}>
+            
+            <View style={styles.form}>
+              <Text style={styles.label}>Data Inicial</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Informe a Data de Inicio"
+                placeholderTextColor="#999"
+                keyboardType="numbers-and-punctuation"
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={dtInicio}
+                onChangeText={setDtInicio}
+              />
+
+              <Text style={styles.label}>Data Final</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Informe a Data Final"
+                placeholderTextColor="#999"
+                keyboardType="numbers-and-punctuation"
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={dtFinal}
+                onChangeText={setDtFinal}
+              />
+              
+              <Button
+                onPress={() => {onFiltrar()}}
+                title="Filtrar"
+              >
+              </Button>
+            </View>
+          </View>
+        </View>
+      </Overlay>
+      
       <View style={styles.row}>
-        <Icon name="file" size={40} color="#007189" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Icon name="file" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Documentos</Text>
+        <TouchableOpacity activeOpacity = { .5 }  onPress={() => onFilter()}>
+          <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
+        </TouchableOpacity>
       </View>
 
       <ScrollView>
@@ -286,8 +371,10 @@ const Documentos = () => {
             />
           ))}
         </View> 
+
       </ScrollView>
       {isLoading ? Loading() : <></>}
+
     </SafeAreaView>
   )
 }
@@ -308,7 +395,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     color: '#FFF',
-    width: Dimensions.get('window').width - 10,
+    width: width - 115,
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
