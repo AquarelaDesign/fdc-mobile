@@ -264,7 +264,7 @@ const Documentos = () => {
     )
   }
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
