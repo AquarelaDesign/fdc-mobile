@@ -9,7 +9,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput, 
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -23,14 +22,16 @@ import loading from '../../assets/json/car-scan.json'
 
 import Axios from 'axios'
 
-import { ListItem, Overlay } from 'react-native-elements'
+import { ListItem, Overlay, Divider  } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 import btnLogo from '../../assets/filter.png'
 
-const { width } = Dimensions.get('window')
 import { dataInicial, dataFinal } from '../../globais'
+import DatePicker from 'react-native-datepicker'
+
+const { width } = Dimensions.get('window')
 
 const Documentos = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -96,6 +97,7 @@ const Documentos = () => {
 
   const buscaDados = async () => {
     setModView(false)
+    setIsLoading(true)
 
     if (email !== '') {
       const uri = 'http://fdc.procyon.com.br/wss/i/integra.php'
@@ -262,14 +264,6 @@ const Documentos = () => {
     )
   }
 
-  const onFilter = () => {
-    setModView(true)
-  }
-
-  const onFiltrar = () => {
-    buscaDados()
-  }
-
   function Loading() {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -296,36 +290,70 @@ const Documentos = () => {
         onBackdropPress={() => {
           setModView(false)
         }}>
+
         <View style={modalStyle.modalContainer}>
           <View style={modalStyle.innerContainer}>
             
-            <View style={styles.form}>
-              <Text style={styles.label}>Data Inicial</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Informe a Data de Inicio"
-                placeholderTextColor="#999"
-                keyboardType="numbers-and-punctuation"
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={dtInicio}
-                onChangeText={setDtInicio}
+            <View style={modalStyle.form}>
+              <Text style={modalStyle.label}>Data Inicial</Text>
+              <DatePicker
+                style={{
+                  width: 200,
+                  marginBottom: 10
+                }}
+                date={dtInicio}
+                mode='date'
+                placeholder="Data Inicial"
+                format="DD/MM/YYYY"
+                confirmBtnText="Confirmar"
+                cancelBtnText="Cancelar"
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    marginLeft: 36, 
+                    backgroundColor: '#ccc'
+                  }
+                }}
+                onDateChange={(date) => {setDtInicio(date)}}
               />
 
-              <Text style={styles.label}>Data Final</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Informe a Data Final"
-                placeholderTextColor="#999"
-                keyboardType="numbers-and-punctuation"
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={dtFinal}
-                onChangeText={setDtFinal}
+              <Text style={modalStyle.label}>Data Final</Text>
+              <DatePicker
+                style={{
+                  width: 200,
+                  marginBottom: 10
+                }}
+                date={dtFinal}
+                mode='date'
+                placeholder="Data Final"
+                format="DD/MM/YYYY"
+                confirmBtnText="Confirmar"
+                cancelBtnText="Cancelar"
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    marginLeft: 36, 
+                    backgroundColor: '#ccc'
+                  }
+                }}
+                onDateChange={(date) => {setDtFinal(date)}}
               />
               
               <Button
-                onPress={() => {onFiltrar()}}
+                style={{
+                  marginBottom: 20
+                }}
+                onPress={() => {buscaDados()}}
                 title="Filtrar"
               >
               </Button>
@@ -337,10 +365,16 @@ const Documentos = () => {
       <View style={styles.row}>
         <Icon name="file" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Documentos</Text>
-        <TouchableOpacity activeOpacity = { .5 }  onPress={() => onFilter()}>
+        <TouchableOpacity activeOpacity = { .5 }  onPress={() => setModView(true)}>
           <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
         </TouchableOpacity>
       </View>
+
+      <Divider style={{ backgroundColor: 'gray' }} />
+      <View style={styles.row}>
+        <Text style={styles.subtitle}>{`Período de ${dtInicio} até ${dtFinal}`}</Text>
+      </View>
+      <Divider style={{ backgroundColor: 'gray' }} />
 
       <ScrollView>
         <View style={styles.list}>
@@ -401,6 +435,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
     textTransform: "uppercase",
+  },
+
+  subtitle: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#ff0',
+    width: width - 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5,
   },
 
 })

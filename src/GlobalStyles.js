@@ -243,6 +243,13 @@ export const modalStyle = {
     marginBottom: 8,
   },
 
+  labelData: {
+    fontWeight: 'bold',
+    justifyContent: 'center',
+    marginBottom: 8,
+    color: '#f7ff00',
+  },
+
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
