@@ -34,7 +34,7 @@ import DatePicker from 'react-native-datepicker'
 const { width } = Dimensions.get('window')
 const querystring = require('querystring')
 
-export default Recebimentos = ({ navigation }) => {
+const Recebimentos = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [recs, setRecs] = useState([])
@@ -318,3 +318,5 @@ const styles = StyleSheet.create({
   },
 
 })
+
+export default Recebimentos
