@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "fdc-mobile",
-    "slug": "Ficha_do_Carro",
+    "name": "Ficha do Carro",
+    "slug": "Ficha-do-Carro",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -29,10 +29,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.procyon.fdc"
+      "bundleIdentifier": "com.procyon.fdc",
+      "buildNumber": "2.0.0"
     },
     "android": {
       "package": "com.procyon.fdc",
+      "versionCode": 2,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBqitr0K9UhX_Se7tKwdcaZoPXE-eViE4Q"
