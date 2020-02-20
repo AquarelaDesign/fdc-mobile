@@ -21,18 +21,51 @@ import GlobalStyles, {
 import loading from '../../assets/json/car-scan.json'
 
 import Api from '../../services/oapi'
+import Axios from 'axios'
 
 import { Formik } from 'formik'
 import FormTextInput from '../../components/FormTextInput'
 import FormButton from '../../components/FormButton'
+import FormDropDown from '../../components/FormDropDown'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
 
+const Estados = [
+  { id: 'AC', name: 'AC' },
+  { id: 'AL', name: 'AL' },
+  { id: 'AM', name: 'AM' },
+  { id: 'AP', name: 'AP' },
+  { id: 'BA', name: 'BA' },
+  { id: 'CE', name: 'CE' },
+  { id: 'DF', name: 'DF' },
+  { id: 'ES', name: 'ES' },
+  { id: 'GO', name: 'GO' },
+  { id: 'MA', name: 'MA' },
+  { id: 'MG', name: 'MG' },
+  { id: 'MS', name: 'MS' },
+  { id: 'MT', name: 'MT' },
+  { id: 'PA', name: 'PA' },
+  { id: 'PB', name: 'PB' },
+  { id: 'PE', name: 'PE' },
+  { id: 'PI', name: 'PI' },
+  { id: 'PR', name: 'PR' },
+  { id: 'RJ', name: 'RJ' },
+  { id: 'RN', name: 'RN' },
+  { id: 'RO', name: 'RO' },
+  { id: 'RR', name: 'RR' },
+  { id: 'RS', name: 'RS' },
+  { id: 'SC', name: 'SC' },
+  { id: 'SE', name: 'SE' },
+  { id: 'SP', name: 'SP' },
+  { id: 'TO', name: 'TO' },
+]
+
 const NovoUsuario = ({ e_mail, buscaHistorico }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState(e_mail)
+  const [dadosCep, setDadosCep] = useState({})
   
   const initialValues = { 
     e_mail: '', 
@@ -43,8 +76,8 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
     endnum: '',
     endcom: '',
     bairro: '',
-    cidade: '',
-    uf: '',
+    cidade: 'Curitiba',
+    uf: 'PR',
   }
 
   useEffect(() => {
@@ -53,14 +86,84 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
     })
   }, [email])
 
+  const buscaCEP = async (pCEP) => {
+    setIsLoading(true)
+
+    if (pCEP !== '') {
+      const url = `http://wservice.procyon.com.br:3003/api/cep/${pCEP}`
+      
+      async function buscaDadosCEP() {
+        try {
+          await Axios.get(
+            url
+          ).then(response => {
+            // console.log('response', response)
+            if (response.status === 200) {
+              const { data, error, message } = response.data
+              if (error === true) {
+                ToastAndroid.showWithGravity(
+                  message,
+                  ToastAndroid.SHORT,
+                  ToastAndroid.TOP
+                )
+              } else {
+                console.log('data', data[0].data[0])
+                setDadosCep(data[0].data[0])
+              }
+            } else {
+            }
+            setIsLoading(false)
+          })
+        } catch (error) {
+          
+          const { response } = error
+          if (response !== undefined) {
+            console.log('err1', response.data.errors[0])
+            setIsLoading(false)
+          } else {
+            console.log('err2', error)
+            setIsLoading(false)
+          }
+        }
+        
+      }
+      buscaDadosCEP()
+    } else {
+      setIsLoading(false)
+    }
+
+  }
+
   const handleSubmit = (values) => {
     if (values.e_mail.length > 0
         ) {
       setIsLoading(true)
       Keyboard.dismiss()
       
-      if (email !== '') {
-        const enviaDados = async (values) => {
+      if (values.e_mail !== '') {
+
+        const dados = {
+          "ttfcusuc":[{
+             "e_mail":values.e_mail,
+             "nome": values.nome,
+             "fone": values.fone,
+             "cep": values.cep,
+             "endrua": values.endrua,
+             "endnum": values.endnum,
+             "endcom": values.endcom,
+             "bairro": values.bairro,
+             "cidade": values.cidade,
+             "uf": values.uf,
+             "codcid": '',
+             "codciddes": values.cidade,
+             "latit": '',
+             "longit": '',
+             "pais": '',
+          }]
+        }
+               
+
+        const enviaDados = async (jsonusu) => {
           try {
             await Api.post('', querystring.stringify({
               pservico: 'wfcusu',
@@ -79,7 +182,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                       ToastAndroid.CENTER
                     )
                   } else {
-                    buscaHistorico(ttfckmv)
+                    // buscaHistorico(ttfckmv)
                   }
                   setIsLoading(false)
                 } else {
@@ -88,7 +191,8 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
               } else {
                 setIsLoading(false)
               }
-            })
+            }
+            )
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
@@ -98,7 +202,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
             }
           }
         }
-        // enviaDados()
+        // enviaDados(values)
       }
     }
   }
@@ -209,6 +313,59 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 </View>
               </View> 
 
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '70%',}]}>
+                  <Text style={styles.legend}>CEP</Text>
+                </View>
+                <View style={[styles.vlegend, {width: '30%',}]}>
+                  <Text style={styles.legend}>UF</Text>
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '70%'}]}>
+                  <FormTextInput
+                    type={'zip-code'}
+                    name='cep'
+                    value={values.cep}
+                    style={styles.input}
+                    keyboardType="number-pad"
+                    autoCompleteType="postal-code"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={handleChange('cep')}
+                    onSubmitEditing={() => {
+                      let vCEP = values.cep
+                      buscaCEP(vCEP.replace('-',''))
+                    }}
+                  />
+                </View>
+                <View style={[styles.vlegend, {width: '30%'}]}>
+                  <FormDropDown
+                    onTextChange={text => console.log(text)}
+                    onItemSelect={item => alert(JSON.stringify(item))}
+                    textInputStyle={styles.input}
+                    itemStyle={{
+                      padding: 2,
+                      marginTop: 2,
+                      backgroundColor: '#FAF9F8',
+                      borderColor: '#bbb',
+                      borderWidth: 1,
+                    }}
+                    itemTextStyle={{
+                      color: '#222',
+                    }}
+                    items={Estados}
+                    defaultIndex={17}
+                    keyboardType="none"
+                    placeholder="UF"
+                    name='uf'
+                    value={values.uf}
+                    onChangeText={handleChange('uf')}
+                  />
+
+                </View>
+              </View> 
+
               <FormButton
                 style={styles.button}
                 type="outline"
@@ -267,7 +424,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#444',
     height: 44,
-    marginBottom: 5,
+    marginBottom: 0,
     marginLeft: 5, 
     marginRight: 5,
     borderRadius: 5,
