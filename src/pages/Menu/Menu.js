@@ -26,6 +26,7 @@ export default function Menu({ navigation }) {
       case 'INF':  navigation.navigate('InfoConfig'); break
       case 'COF':  navigation.navigate('Config'); break
       case 'USU':  navigation.navigate('Usuario'); break
+      case 'NEW':  navigation.navigate('NovoUsuario'); break
       default: Alert.alert(`Clicado em ${tipo}`); break
     }
   }
@@ -56,8 +57,11 @@ export default function Menu({ navigation }) {
               <Text style={GlobalStyles.boxText}>Sua conta</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity = { .5 }>
-            <View style={GlobalStyles.box}></View>
+          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('NEW')}>
+            <View style={GlobalStyles.box}>
+              <Icon name="user-plus" size={60} color="#007189" />
+              <Text style={GlobalStyles.boxText}>Novo Usuario</Text>
+            </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }>
             <View style={GlobalStyles.box}></View>
