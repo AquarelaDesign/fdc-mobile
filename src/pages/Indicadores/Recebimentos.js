@@ -2,31 +2,45 @@ import React, { useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
+  Button,
   Dimensions,
+  Image,
   SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
 
-import { ListItem } from 'react-native-elements'
-import NumberFormat from 'react-number-format'
-import Lottie from 'lottie-react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-
 import { LinearGradient } from '../../components/LinearGradient'
-import Api from '../../services/oapi'
-import { dataInicial, dataFinal } from '../../globais'
-import GlobalStyles from '../../GlobalStyles'
+
+import Lottie from 'lottie-react-native'
+import GlobalStyles, { modalStyle } from '../../GlobalStyles'
+
 import loading from '../../assets/json/car-scan.json'
 
+import Api from '../../services/oapi'
+
+import { ListItem, Overlay, Divider  } from 'react-native-elements'
+import NumberFormat from 'react-number-format'
+
+import Icon from 'react-native-vector-icons/FontAwesome'
+import btnLogo from '../../assets/filter.png'
+
+import { dataInicial, dataFinal } from '../../globais'
+import DatePicker from 'react-native-datepicker'
+
+const { width } = Dimensions.get('window')
 const querystring = require('querystring')
 
 export default Recebimentos = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [recs, setRecs] = useState([])
+  const [modView, setModView] = useState(false)
+  const [dtInicio, setDtInicio] = useState(dataInicial)
+  const [dtFinal, setDtFinal] = useState(dataFinal)
 
   const Cores = {
     CH: ['#4B0082', '#8B008B'],
@@ -51,23 +65,17 @@ export default Recebimentos = ({ navigation }) => {
   useEffect(() => {
     setIsLoading(true)
 
-    async function montaLista(pagto) {
-      let rec = []
-      pagto.map((item, i) => {
-        rec.push({
-          icon: Icones[item.tippag],
-          title: item.despag,
-          valor: item.valor,
-          linearGradientColors: Cores[item.tippag],
-        })
-
-      })
-      setRecs(rec)
-    }
-
     AsyncStorage.getItem('email').then(Email => {
       setEmail(Email)
+      buscaDados()
+    })
+  }, [email])
 
+  const buscaDados = async () => {
+    setModView(false)
+    setIsLoading(true)
+
+    if (email !== '') {
       async function buscaPas() {
         try {
           await Api.post('', querystring.stringify({
@@ -75,8 +83,8 @@ export default Recebimentos = ({ navigation }) => {
             pmetodo: 'ListaPassagens',
             pcodprg: 'TFCMON',
             pemail: email,
-            pdatini: dataInicial,
-            pdatfim: dataFinal,
+            pdatini: dtInicio,
+            pdatfim: dtFinal,
             psituac: 'TOD',
           })).then(response => {
             if (response.status === 200) {
@@ -99,8 +107,22 @@ export default Recebimentos = ({ navigation }) => {
         }
       }
       buscaPas()
+    }
+  }
+
+  const montaLista = async (pagto) => {
+    let rec = []
+    pagto.map((item, i) => {
+      rec.push({
+        icon: Icones[item.tippag],
+        title: item.despag,
+        valor: item.valor,
+        linearGradientColors: Cores[item.tippag],
+      })
+
     })
-  }, [email])
+    setRecs(rec)
+  }
 
   const formataValor = (valor) => {
     return (
@@ -114,7 +136,7 @@ export default Recebimentos = ({ navigation }) => {
     )
   }
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
@@ -122,10 +144,109 @@ export default Recebimentos = ({ navigation }) => {
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
+      <Overlay
+        isVisible={modView}
+        supportedOrientations={['portrait', 'landscape']}
+        windowBackgroundColor="rgba(0, 0, 0, .7)"
+        overlayBackgroundColor="transparent"
+        width="80%"
+        height="40%"
+        overlayStyle={{
+          backgroundColor: 'white',
+          borderRadius: 15,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 5,
+        }}
+        onBackdropPress={() => {
+          setModView(false)
+        }}>
+
+        <View style={modalStyle.modalContainer}>
+          <View style={modalStyle.innerContainer}>
+            
+            <View style={modalStyle.form}>
+              <Text style={modalStyle.label}>Data Inicial</Text>
+              <DatePicker
+                style={{
+                  width: 200,
+                  marginBottom: 10
+                }}
+                date={dtInicio}
+                mode='date'
+                placeholder="Data Inicial"
+                format="DD/MM/YYYY"
+                confirmBtnText="Confirmar"
+                cancelBtnText="Cancelar"
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    marginLeft: 36, 
+                    backgroundColor: '#ccc'
+                  }
+                }}
+                onDateChange={(date) => {setDtInicio(date)}}
+              />
+
+              <Text style={modalStyle.label}>Data Final</Text>
+              <DatePicker
+                style={{
+                  width: 200,
+                  marginBottom: 10
+                }}
+                date={dtFinal}
+                mode='date'
+                placeholder="Data Final"
+                format="DD/MM/YYYY"
+                confirmBtnText="Confirmar"
+                cancelBtnText="Cancelar"
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    marginLeft: 36, 
+                    backgroundColor: '#ccc'
+                  }
+                }}
+                onDateChange={(date) => {setDtFinal(date)}}
+              />
+              
+              <Button
+                style={{
+                  marginBottom: 20
+                }}
+                onPress={() => {buscaDados()}}
+                title="Filtrar"
+              >
+              </Button>
+            </View>
+          </View>
+        </View>
+      </Overlay>
+      
       <View style={styles.row}>
-        <Icon name="calculator" size={40} color="#007189" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Icon name="calculator" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Recebimentos</Text>
+        <TouchableOpacity activeOpacity = { .5 }  onPress={() => setModView(true)}>
+          <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
+        </TouchableOpacity>
       </View>
+
+      <Divider style={{ backgroundColor: 'gray' }} />
+      <View style={styles.row}>
+        <Text style={styles.subtitle}>{`Período de ${dtInicio} até ${dtFinal}`}</Text>
+      </View>
+      <Divider style={{ backgroundColor: 'gray' }} />
 
       <ScrollView>
         <View style={styles.list}>
@@ -138,7 +259,7 @@ export default Recebimentos = ({ navigation }) => {
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: '#FFFFF0', fontWeight: 'bold', fontSize: 14 }}
+              titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 13 }}
               rightTitle={formataValor(l.valor)}
               linearGradientProps={{
                 colors: l.linearGradientColors,
@@ -177,12 +298,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     color: '#FFF',
-    width: Dimensions.get('window').width - 10,
+    width: width - 115,
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
     textTransform: "uppercase",
+  },
+
+  subtitle: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#ff0',
+    width: width - 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5,
   },
 
 })
