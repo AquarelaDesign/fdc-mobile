@@ -5,6 +5,7 @@ import {
   Dimensions,
   Keyboard,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -26,58 +27,61 @@ import Axios from 'axios'
 import { Formik } from 'formik'
 import FormTextInput from '../../components/FormTextInput'
 import FormButton from '../../components/FormButton'
-import FormDropDown from '../../components/FormDropDown'
+import FormPicker from '../../components/FormPicker'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
 
 const Estados = [
-  { id: 'AC', name: 'AC' },
-  { id: 'AL', name: 'AL' },
-  { id: 'AM', name: 'AM' },
-  { id: 'AP', name: 'AP' },
-  { id: 'BA', name: 'BA' },
-  { id: 'CE', name: 'CE' },
-  { id: 'DF', name: 'DF' },
-  { id: 'ES', name: 'ES' },
-  { id: 'GO', name: 'GO' },
-  { id: 'MA', name: 'MA' },
-  { id: 'MG', name: 'MG' },
-  { id: 'MS', name: 'MS' },
-  { id: 'MT', name: 'MT' },
-  { id: 'PA', name: 'PA' },
-  { id: 'PB', name: 'PB' },
-  { id: 'PE', name: 'PE' },
-  { id: 'PI', name: 'PI' },
-  { id: 'PR', name: 'PR' },
-  { id: 'RJ', name: 'RJ' },
-  { id: 'RN', name: 'RN' },
-  { id: 'RO', name: 'RO' },
-  { id: 'RR', name: 'RR' },
-  { id: 'RS', name: 'RS' },
-  { id: 'SC', name: 'SC' },
-  { id: 'SE', name: 'SE' },
-  { id: 'SP', name: 'SP' },
-  { id: 'TO', name: 'TO' },
+  { label: 'AC', value: 'AC' },
+  { label: 'AL', value: 'AL' },
+  { label: 'AM', value: 'AM' },
+  { label: 'AP', value: 'AP' },
+  { label: 'BA', value: 'BA' },
+  { label: 'CE', value: 'CE' },
+  { label: 'DF', value: 'DF' },
+  { label: 'ES', value: 'ES' },
+  { label: 'GO', value: 'GO' },
+  { label: 'MA', value: 'MA' },
+  { label: 'MG', value: 'MG' },
+  { label: 'MS', value: 'MS' },
+  { label: 'MT', value: 'MT' },
+  { label: 'PA', value: 'PA' },
+  { label: 'PB', value: 'PB' },
+  { label: 'PE', value: 'PE' },
+  { label: 'PI', value: 'PI' },
+  { label: 'PR', value: 'PR' },
+  { label: 'RJ', value: 'RJ' },
+  { label: 'RN', value: 'RN' },
+  { label: 'RO', value: 'RO' },
+  { label: 'RR', value: 'RR' },
+  { label: 'RS', value: 'RS' },
+  { label: 'SC', value: 'SC' },
+  { label: 'SE', value: 'SE' },
+  { label: 'SP', value: 'SP' },
+  { label: 'TO', value: 'TO' },
 ]
 
 const NovoUsuario = ({ e_mail, buscaHistorico }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState(e_mail)
   const [dadosCep, setDadosCep] = useState({})
+  const [uf, setUF] = useState('PR')
+  const [endrua, setEndRua] = useState('')
+  const [mudouCEP, setMudouCEP] = useState(false)
   
   const initialValues = { 
     e_mail: '', 
     nome: '', 
     fone: '', 
     cep: '',
-    endrua: '',
+    endrua: endrua,
     endnum: '',
     endcom: '',
     bairro: '',
     cidade: 'Curitiba',
-    uf: 'PR',
+    uf: uf,
   }
 
   useEffect(() => {
@@ -92,7 +96,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
     if (pCEP !== '') {
       const url = `http://wservice.procyon.com.br:3003/api/cep/${pCEP}`
       
-      async function buscaDadosCEP() {
+      const buscaDadosCEP = async () => {
         try {
           await Axios.get(
             url
@@ -106,13 +110,18 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                   ToastAndroid.SHORT,
                   ToastAndroid.TOP
                 )
+                setIsLoading(false)
+                return false
               } else {
-                console.log('data', data[0].data[0])
+                // console.log('data', data[0].data[0])
                 setDadosCep(data[0].data[0])
+                setIsLoading(false)
+                return true
               }
             } else {
+              setIsLoading(false)
+              return false
             }
-            setIsLoading(false)
           })
         } catch (error) {
           
@@ -120,48 +129,56 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           if (response !== undefined) {
             console.log('err1', response.data.errors[0])
             setIsLoading(false)
+            return false
           } else {
             console.log('err2', error)
             setIsLoading(false)
+            return false
           }
         }
         
       }
-      buscaDadosCEP()
+      let dados =  buscaDadosCEP()
+      console.log('dados', dados)
+      return dados
     } else {
       setIsLoading(false)
+      return false
     }
 
   }
 
   const handleSubmit = (values) => {
+    
     if (values.e_mail.length > 0
         ) {
       setIsLoading(true)
       Keyboard.dismiss()
       
       if (values.e_mail !== '') {
-
+        // dadosCep
         const dados = {
           "ttfcusuc":[{
              "e_mail":values.e_mail,
              "nome": values.nome,
              "fone": values.fone,
              "cep": values.cep,
-             "endrua": values.endrua,
+             "endrua": values.endrua, // dadosCep.Logradouro
              "endnum": values.endnum,
              "endcom": values.endcom,
-             "bairro": values.bairro,
-             "cidade": values.cidade,
-             "uf": values.uf,
-             "codcid": '',
-             "codciddes": values.cidade,
-             "latit": '',
-             "longit": '',
-             "pais": '',
+             "bairro": values.bairro, // dadosCep.Bairro
+             "cidade": values.cidade, // dadosCep.Cidade
+             "uf": values.uf, // dadosCep.UF
+             "codcid": dadosCep ? dadosCep.cidade.cod_ibge : '',
+             "codciddes": values.cidade, // dadosCep.Cidade
+             "latit": dadosCep ? dadosCep.geo.latitude : '',
+             "longit": dadosCep ? dadosCep.geo.longitude : '',
+             "pais": 'Brasil',
           }]
         }
                
+        console.log('handleSubmit_values', dados)
+        setIsLoading(false)
 
         const enviaDados = async (jsonusu) => {
           try {
@@ -237,7 +254,9 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
             handleChange, 
             values, 
             handleSubmit,
+            setFieldValue,
           }) => (
+            <ScrollView style={styles.fragment}>
             <Fragment>
               <View style={styles.row}>
                 <View style={[styles.vlegend, {width: '100%',}]}>
@@ -281,7 +300,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                     keyboardType="default"
                     autoCompleteType="name"
                     autoCorrect={false}
-                    autoCapitalize="words"
+                    autoCapitalize="characters"
                     onChangeText={handleChange('nome')}
                   />
                 </View>
@@ -335,34 +354,132 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                     onChangeText={handleChange('cep')}
                     onSubmitEditing={() => {
                       let vCEP = values.cep
-                      buscaCEP(vCEP.replace('-',''))
+                      if (buscaCEP(vCEP.replace('-',''))) {
+                        setFieldValue('endrua', dadosCep.Logradouro)
+                      }
                     }}
                   />
                 </View>
                 <View style={[styles.vlegend, {width: '30%'}]}>
-                  <FormDropDown
-                    onTextChange={text => console.log(text)}
-                    onItemSelect={item => alert(JSON.stringify(item))}
-                    textInputStyle={styles.input}
-                    itemStyle={{
-                      padding: 2,
-                      marginTop: 2,
-                      backgroundColor: '#FAF9F8',
-                      borderColor: '#bbb',
-                      borderWidth: 1,
-                    }}
-                    itemTextStyle={{
-                      color: '#222',
-                    }}
+                  <FormPicker
+                    placeholder={{}}
                     items={Estados}
-                    defaultIndex={17}
-                    keyboardType="none"
-                    placeholder="UF"
-                    name='uf'
-                    value={values.uf}
+                    onValueChange={value => {setUF(value)}}
+                    InputAccessoryView={() => null}
+                    style={pickerSelectStyles}
+                    value={uf}
                     onChangeText={handleChange('uf')}
                   />
+                </View>
+              </View> 
 
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '100%',}]}>
+                  <Text style={styles.legend}>Endereço</Text>
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '100%'}]}>
+                  <FormTextInput
+                    type={'custom'}
+                    options={{
+                      mask: '**********************************************************************'
+                    }}
+                    name='endrua'
+                    value={values.endrua}
+                    style={styles.input}
+                    keyboardType="default"
+                    autoCompleteType="street-address"
+                    autoCorrect={false}
+                    autoCapitalize="characters"
+                    onChangeText={handleChange('endrua')}
+                  />
+                </View>
+              </View> 
+
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '30%',}]}>
+                  <Text style={styles.legend}>Número</Text>
+                </View>
+                <View style={[styles.vlegend, {width: '70%',}]}>
+                  <Text style={styles.legend}>Complemento</Text>
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '30%'}]}>
+                  <FormTextInput
+                    type={'custom'}
+                    options={{
+                      mask: '**********'
+                    }}
+                    name='endnum'
+                    value={values.endnum}
+                    style={styles.input}
+                    keyboardType="default"
+                    autoCompleteType="off"
+                    autoCorrect={false}
+                    autoCapitalize="characters"
+                    onChangeText={handleChange('endnum')}
+                  />
+                </View>
+                <View style={[styles.vlegend, {width: '70%'}]}>
+                  <FormTextInput
+                    type={'custom'}
+                    options={{
+                      mask: '**********************************************************************'
+                    }}
+                    name='endcom'
+                    value={values.endnum}
+                    style={styles.input}
+                    keyboardType="default"
+                    autoCompleteType="off"
+                    autoCorrect={false}
+                    autoCapitalize="characters"
+                    onChangeText={handleChange('endcom')}
+                  />
+                </View>
+              </View> 
+
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '50%',}]}>
+                  <Text style={styles.legend}>Bairro</Text>
+                </View>
+                <View style={[styles.vlegend, {width: '50%',}]}>
+                  <Text style={styles.legend}>Cidade</Text>
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={[styles.vlegend, {width: '50%'}]}>
+                  <FormTextInput
+                    type={'custom'}
+                    options={{
+                      mask: '**********************************************************************'
+                    }}
+                    name='bairro'
+                    value={values.bairro}
+                    style={styles.input}
+                    keyboardType="default"
+                    autoCompleteType="off"
+                    autoCorrect={false}
+                    autoCapitalize="characters"
+                    onChangeText={handleChange('bairro')}
+                  />
+                </View>
+                <View style={[styles.vlegend, {width: '50%'}]}>
+                  <FormTextInput
+                    type={'custom'}
+                    options={{
+                      mask: '**********************************************************************'
+                    }}
+                    name='cidade'
+                    value={values.cidade}
+                    style={styles.input}
+                    keyboardType="default"
+                    autoCompleteType="off"
+                    autoCorrect={false}
+                    autoCapitalize="characters"
+                    onChangeText={handleChange('cidade')}
+                  />
                 </View>
               </View> 
 
@@ -376,6 +493,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
               />
 
             </Fragment>
+            </ScrollView>
           )}
         </Formik>
 
@@ -391,13 +509,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  fragment: {
+    marginTop: 10,
+    marginBottom: 70,
+    marginRight: 10,
+    borderTopWidth: 0,
+  },
+
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    // paddingHorizontal: 5,
+    // marginRight: 50,
   },
 
   vlegend: {
-    marginTop: 5,
+    marginTop: 0,
     width: width,
   },
 
@@ -439,6 +566,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     borderColor: '#87CEFA',
+    marginLeft: (width / 2) - 70,
+    marginBottom: 20,
   },
 
   buttonText: {
@@ -459,6 +588,34 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
 
+})
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    color: '#444',
+    paddingRight: 30, // to ensure the text is never behind the icon
+    backgroundColor: '#FFF',
+    width: 87,
+  },
+  inputAndroid: {
+    fontSize: 14,
+    paddingHorizontal: 5,
+    paddingVertical: 7,
+    borderWidth: 1,
+    borderColor: '#444',
+    borderRadius: 3,
+    color: '#444',
+    paddingRight: 30, // to ensure the text is never behind the icon
+    backgroundColor: '#FFF',
+    width: 87,
+    marginTop: 4,
+  },
 })
 
 export default NovoUsuario

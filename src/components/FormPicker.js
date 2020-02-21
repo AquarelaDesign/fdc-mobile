@@ -11,7 +11,7 @@ class FormPicker extends React.PureComponent {
       onValueChange,
       InputAccessoryView,
       style,
-      value, 
+      value,
       error, 
     } = this.props
 
@@ -21,9 +21,10 @@ class FormPicker extends React.PureComponent {
           placeholder={placeholder}
           items={items}
           onValueChange={onValueChange}
-          InputAccessoryView={InputAccessoryView}
+          // InputAccessoryView={InputAccessoryView}
           style={style}
           value={value}
+          useNativeAndroidPickerStyle={false}
         />
       </View>
     )
