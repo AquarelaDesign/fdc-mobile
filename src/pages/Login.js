@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react'
 
 import { 
-  View, 
-  AsyncStorage, 
-  KeyboardAvoidingView, 
   Alert, 
+  AsyncStorage, 
+  Dimensions,
   Image, 
+  ImageBackground,
+  KeyboardAvoidingView, 
+  StyleSheet, 
   Text, 
   TextInput, 
   TouchableOpacity, 
-  StyleSheet, 
-  ImageBackground 
+  View, 
 } from 'react-native'
+
+import { Button } from 'react-native-elements'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 import * as Facebook from 'expo-facebook'
@@ -21,6 +24,8 @@ import api from '../services/api'
 
 import logo from '../assets/logo.png'
 import bg from '../assets/splash.png'
+
+const { width } = Dimensions.get('window')
 
 // No Motorola G7 Plus foi necessário habilitar (Android 9)
 // enabled={Platform.OS === 'ios'} 
@@ -106,7 +111,7 @@ export default function Login({ navigation }) {
     navigation.navigate('Home')
   }
 
-  async function handleSubmitFb() {
+  const handleSubmitFb = async () => {
     try {
       await Facebook.initializeAsync('3265336060162401')
       const {
@@ -133,7 +138,15 @@ export default function Login({ navigation }) {
   
   }
 
-  async function handleSubmit() {
+  const handleNovo = async () => {
+
+  }
+
+  const handleRecuperar = async () => {
+
+  }
+
+  const handleSubmit = async () => {
     if (email !== '') {
       try {
         if (email !== 'demo@demo.com') {
@@ -208,6 +221,38 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
 
         </View>
+
+        <View style={styles.row}>
+          <View style={{width: '50%'}}>
+            <Button
+              title="Novo Usuário?"
+              type="clear"
+              style={styles.buttonClear}
+              onPress={handleNovo}
+              titleStyle={styles.buttonTextClear}
+              icon={{
+                name: "person-add",
+                size: 15,
+                color: "white"
+              }}
+            />
+          </View>
+          <View style={{width: '50%'}}>
+            <Button
+              title="Esqueceu a senha?"
+              type="clear"
+              style={styles.buttonClear}
+              onPress={handleNovo}
+              titleStyle={styles.buttonTextClear}
+              icon={{
+                name: "mail",
+                size: 15,
+                color: "white"
+              }}
+            />
+          </View>
+        </View>
+
       </ImageBackground>
     </KeyboardAvoidingView>
   )
@@ -230,8 +275,8 @@ const styles = StyleSheet.create({
 
   form: {
     alignSelf: 'stretch',
-    paddingHorizontal: 30,
-    marginTop: 30,
+    paddingHorizontal: 20,
+    marginTop: 10,
   },
 
   label: {
@@ -254,6 +299,7 @@ const styles = StyleSheet.create({
   buttonFb: {
     marginTop: 10,
     backgroundColor: '#3B5998',
+    marginBottom: 10,
   },
 
   button: {
@@ -270,4 +316,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    // paddingHorizontal: 5,
+    marginLeft: 0,
+    marginRight: 10,
+  },
+
+  buttonClear: {
+    height: 35,
+    width: 140,
+    backgroundColor: '#4169E1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderColor: '#87CEFA',
+    marginLeft: (width / 2) - 70,
+    marginBottom: 20,
+  },
+
+  buttonTextClear: {
+    color: '#FFF',
+    // fontWeight: 'bold',
+    fontSize: 12,
+  },
+
 })
