@@ -153,6 +153,14 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
 
   }
 
+  const updateField = e => {
+    console.log('e', e)
+    // setValues({
+    //   ...values,
+    //   [e.target.name]: e.target.value
+    // })
+  }
+
   const handleSubmit = (values) => {
     
     if (values.e_mail.length > 0
@@ -249,6 +257,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
         </View>
 
         <ScrollView style={styles.fragment}>
+
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%',}]}>
               <Text style={styles.legend}>Email*</Text>
@@ -268,11 +277,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="email"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={setValues({'e_mail':values.e_mail})}
+                onChangeText={updateField('e_mail')}
               />
             </View>
           </View> 
-{/*
+
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%',}]}>
               <Text style={styles.legend}>Nome*</Text>
@@ -280,7 +289,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           </View>
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'custom'}
                 options={{
                   mask: '**********************************************************************'
@@ -292,12 +301,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="name"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={handleChange('nome')}
+                onChangeText={updateField}
               />
             </View>
           </View> 
-*/}
-{/*
+
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%',}]}>
               <Text style={styles.legend}>Telefone</Text>
@@ -305,7 +313,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           </View>
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'cel-phone'}
                 options={{
                   maskType: 'BRL',
@@ -319,12 +327,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="tel"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={handleChange('fone')}
+                onChangeText={updateField}
               />
             </View>
           </View> 
-*/}
-{/*
+
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '70%',}]}>
               <Text style={styles.legend}>CEP</Text>
@@ -335,7 +342,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           </View>
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '70%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'zip-code'}
                 name='cep'
                 value={values.cep}
@@ -344,7 +351,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="postal-code"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={handleChange('cep')}
+                onChangeText={updateField}
                 onSubmitEditing={() => {
                   let vCEP = values.cep
                   if (buscaCEP(vCEP.replace('-',''))) {
@@ -353,20 +360,20 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 }}
               />
             </View>
-            <View style={[styles.vlegend, {width: '30%'}]}>
-              <FormPicker
+            <View style={[styles.vlegend, {width: '30%', marginTop: 0}]}>
+              <RNPickerSelect
                 placeholder={{}}
                 items={Estados}
                 onValueChange={value => {setUF(value)}}
                 InputAccessoryView={() => null}
                 style={pickerSelectStyles}
                 value={uf}
-                onChangeText={handleChange('uf')}
+                onChangeText={updateField}
+                useNativeAndroidPickerStyle={false}
               />
             </View>
           </View> 
-*/}
-{/*
+
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%',}]}>
               <Text style={styles.legend}>Endereço</Text>
@@ -374,7 +381,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           </View>
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'custom'}
                 options={{
                   mask: '**********************************************************************'
@@ -386,12 +393,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="street-address"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={handleChange('endrua')}
+                onChangeText={updateField}
               />
             </View>
           </View> 
-*/}
-{/*
+
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '30%',}]}>
               <Text style={styles.legend}>Número</Text>
@@ -402,7 +408,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           </View>
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '30%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'custom'}
                 options={{
                   mask: '**********'
@@ -414,11 +420,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={handleChange('endnum')}
+                onChangeText={updateField}
               />
             </View>
             <View style={[styles.vlegend, {width: '70%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'custom'}
                 options={{
                   mask: '**********************************************************************'
@@ -430,12 +436,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={handleChange('endcom')}
+                onChangeText={updateField}
               />
             </View>
           </View> 
-*/}
-{/*
+
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '50%',}]}>
               <Text style={styles.legend}>Bairro</Text>
@@ -446,7 +451,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           </View>
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '50%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'custom'}
                 options={{
                   mask: '**********************************************************************'
@@ -458,11 +463,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={handleChange('bairro')}
+                onChangeText={updateField}
               />
             </View>
             <View style={[styles.vlegend, {width: '50%'}]}>
-              <FormTextInput
+              <TextInputMask
                 type={'custom'}
                 options={{
                   mask: '**********************************************************************'
@@ -474,13 +479,12 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={handleChange('cidade')}
+                onChangeText={updateField}
               />
             </View>
           </View> 
-*/}
-{/*
-          <FormButton
+
+          <Button
             style={styles.button}
             type="outline"
             onPress={handleSubmit}
@@ -488,7 +492,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
             buttonStyle={styles.button}
             titleStyle={styles.buttonText}
           />
-*/}
+
           </ScrollView>
 
         {isLoading ? Loading() : <></>}
