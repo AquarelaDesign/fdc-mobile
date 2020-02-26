@@ -248,259 +248,248 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           <Text style={styles.title}>Novo Usuário</Text>
         </View>
 
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values, {resetForm}) => {
-            handleSubmit(values)
-            resetForm()
-          }}
-        >
-          {({ 
-            handleChange, 
-            values, 
-            handleSubmit,
-            setFieldValue,
-          }) => (
-            <ScrollView style={styles.fragment}>
-            <Fragment>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%',}]}>
-                  <Text style={styles.legend}>Email*</Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%'}]}>
-                  <FormTextInput
-                    type={'custom'}
-                    options={{
-                      mask: '**********************************************************************'
-                    }}
-                    name='e_mail'
-                    value={values.e_mail}
-                    style={styles.input}
-                    keyboardType="email-address"
-                    autoCompleteType="email"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={handleChange('e_mail')}
-                  />
-                </View>
-              </View> 
-
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%',}]}>
-                  <Text style={styles.legend}>Nome*</Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%'}]}>
-                  <FormTextInput
-                    type={'custom'}
-                    options={{
-                      mask: '**********************************************************************'
-                    }}
-                    name='nome'
-                    value={values.nome}
-                    style={styles.input}
-                    keyboardType="default"
-                    autoCompleteType="name"
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    onChangeText={handleChange('nome')}
-                  />
-                </View>
-              </View> 
-
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%',}]}>
-                  <Text style={styles.legend}>Telefone</Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%'}]}>
-                  <FormTextInput
-                    type={'cel-phone'}
-                    options={{
-                      maskType: 'BRL',
-                      withDDD: true,
-                      dddMask: '(99) '
-                    }}
-                    name='fone'
-                    value={values.fone}
-                    style={styles.input}
-                    keyboardType="phone-pad"
-                    autoCompleteType="tel"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={handleChange('fone')}
-                  />
-                </View>
-              </View> 
-
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '70%',}]}>
-                  <Text style={styles.legend}>CEP</Text>
-                </View>
-                <View style={[styles.vlegend, {width: '30%',}]}>
-                  <Text style={styles.legend}>UF</Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '70%'}]}>
-                  <FormTextInput
-                    type={'zip-code'}
-                    name='cep'
-                    value={values.cep}
-                    style={styles.input}
-                    keyboardType="number-pad"
-                    autoCompleteType="postal-code"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={handleChange('cep')}
-                    onSubmitEditing={() => {
-                      let vCEP = values.cep
-                      if (buscaCEP(vCEP.replace('-',''))) {
-                        setFieldValue('endrua', dadosCep.Logradouro)
-                      }
-                    }}
-                  />
-                </View>
-                <View style={[styles.vlegend, {width: '30%'}]}>
-                  <FormPicker
-                    placeholder={{}}
-                    items={Estados}
-                    onValueChange={value => {setUF(value)}}
-                    InputAccessoryView={() => null}
-                    style={pickerSelectStyles}
-                    value={uf}
-                    onChangeText={handleChange('uf')}
-                  />
-                </View>
-              </View> 
-
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%',}]}>
-                  <Text style={styles.legend}>Endereço</Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '100%'}]}>
-                  <FormTextInput
-                    type={'custom'}
-                    options={{
-                      mask: '**********************************************************************'
-                    }}
-                    name='endrua'
-                    value={values.endrua}
-                    style={styles.input}
-                    keyboardType="default"
-                    autoCompleteType="street-address"
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    onChangeText={handleChange('endrua')}
-                  />
-                </View>
-              </View> 
-
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '30%',}]}>
-                  <Text style={styles.legend}>Número</Text>
-                </View>
-                <View style={[styles.vlegend, {width: '70%',}]}>
-                  <Text style={styles.legend}>Complemento</Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '30%'}]}>
-                  <FormTextInput
-                    type={'custom'}
-                    options={{
-                      mask: '**********'
-                    }}
-                    name='endnum'
-                    value={values.endnum}
-                    style={styles.input}
-                    keyboardType="default"
-                    autoCompleteType="off"
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    onChangeText={handleChange('endnum')}
-                  />
-                </View>
-                <View style={[styles.vlegend, {width: '70%'}]}>
-                  <FormTextInput
-                    type={'custom'}
-                    options={{
-                      mask: '**********************************************************************'
-                    }}
-                    name='endcom'
-                    value={values.endnum}
-                    style={styles.input}
-                    keyboardType="default"
-                    autoCompleteType="off"
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    onChangeText={handleChange('endcom')}
-                  />
-                </View>
-              </View> 
-
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '50%',}]}>
-                  <Text style={styles.legend}>Bairro</Text>
-                </View>
-                <View style={[styles.vlegend, {width: '50%',}]}>
-                  <Text style={styles.legend}>Cidade</Text>
-                </View>
-              </View>
-              <View style={styles.row}>
-                <View style={[styles.vlegend, {width: '50%'}]}>
-                  <FormTextInput
-                    type={'custom'}
-                    options={{
-                      mask: '**********************************************************************'
-                    }}
-                    name='bairro'
-                    value={values.bairro}
-                    style={styles.input}
-                    keyboardType="default"
-                    autoCompleteType="off"
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    onChangeText={handleChange('bairro')}
-                  />
-                </View>
-                <View style={[styles.vlegend, {width: '50%'}]}>
-                  <FormTextInput
-                    type={'custom'}
-                    options={{
-                      mask: '**********************************************************************'
-                    }}
-                    name='cidade'
-                    value={values.cidade}
-                    style={styles.input}
-                    keyboardType="default"
-                    autoCompleteType="off"
-                    autoCorrect={false}
-                    autoCapitalize="characters"
-                    onChangeText={handleChange('cidade')}
-                  />
-                </View>
-              </View> 
-
-              <FormButton
-                style={styles.button}
-                type="outline"
-                onPress={handleSubmit}
-                title="Gravar"
-                buttonStyle={styles.button}
-                titleStyle={styles.buttonText}
+        <ScrollView style={styles.fragment}>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%',}]}>
+              <Text style={styles.legend}>Email*</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%'}]}>
+              <TextInputMask
+                type={'custom'}
+                options={{
+                  mask: '**********************************************************************'
+                }}
+                name='e_mail'
+                value={values.e_mail}
+                style={styles.input}
+                keyboardType="email-address"
+                autoCompleteType="email"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={setValues({'e_mail':values.e_mail})}
               />
-
-            </Fragment>
-            </ScrollView>
-          )}
-        </Formik>
+            </View>
+          </View> 
+{/*
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%',}]}>
+              <Text style={styles.legend}>Nome*</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%'}]}>
+              <FormTextInput
+                type={'custom'}
+                options={{
+                  mask: '**********************************************************************'
+                }}
+                name='nome'
+                value={values.nome}
+                style={styles.input}
+                keyboardType="default"
+                autoCompleteType="name"
+                autoCorrect={false}
+                autoCapitalize="characters"
+                onChangeText={handleChange('nome')}
+              />
+            </View>
+          </View> 
+*/}
+{/*
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%',}]}>
+              <Text style={styles.legend}>Telefone</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%'}]}>
+              <FormTextInput
+                type={'cel-phone'}
+                options={{
+                  maskType: 'BRL',
+                  withDDD: true,
+                  dddMask: '(99) '
+                }}
+                name='fone'
+                value={values.fone}
+                style={styles.input}
+                keyboardType="phone-pad"
+                autoCompleteType="tel"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={handleChange('fone')}
+              />
+            </View>
+          </View> 
+*/}
+{/*
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '70%',}]}>
+              <Text style={styles.legend}>CEP</Text>
+            </View>
+            <View style={[styles.vlegend, {width: '30%',}]}>
+              <Text style={styles.legend}>UF</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '70%'}]}>
+              <FormTextInput
+                type={'zip-code'}
+                name='cep'
+                value={values.cep}
+                style={styles.input}
+                keyboardType="number-pad"
+                autoCompleteType="postal-code"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={handleChange('cep')}
+                onSubmitEditing={() => {
+                  let vCEP = values.cep
+                  if (buscaCEP(vCEP.replace('-',''))) {
+                    setFieldValue('endrua', dadosCep.Logradouro)
+                  }
+                }}
+              />
+            </View>
+            <View style={[styles.vlegend, {width: '30%'}]}>
+              <FormPicker
+                placeholder={{}}
+                items={Estados}
+                onValueChange={value => {setUF(value)}}
+                InputAccessoryView={() => null}
+                style={pickerSelectStyles}
+                value={uf}
+                onChangeText={handleChange('uf')}
+              />
+            </View>
+          </View> 
+*/}
+{/*
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%',}]}>
+              <Text style={styles.legend}>Endereço</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%'}]}>
+              <FormTextInput
+                type={'custom'}
+                options={{
+                  mask: '**********************************************************************'
+                }}
+                name='endrua'
+                value={values.endrua}
+                style={styles.input}
+                keyboardType="default"
+                autoCompleteType="street-address"
+                autoCorrect={false}
+                autoCapitalize="characters"
+                onChangeText={handleChange('endrua')}
+              />
+            </View>
+          </View> 
+*/}
+{/*
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '30%',}]}>
+              <Text style={styles.legend}>Número</Text>
+            </View>
+            <View style={[styles.vlegend, {width: '70%',}]}>
+              <Text style={styles.legend}>Complemento</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '30%'}]}>
+              <FormTextInput
+                type={'custom'}
+                options={{
+                  mask: '**********'
+                }}
+                name='endnum'
+                value={values.endnum}
+                style={styles.input}
+                keyboardType="default"
+                autoCompleteType="off"
+                autoCorrect={false}
+                autoCapitalize="characters"
+                onChangeText={handleChange('endnum')}
+              />
+            </View>
+            <View style={[styles.vlegend, {width: '70%'}]}>
+              <FormTextInput
+                type={'custom'}
+                options={{
+                  mask: '**********************************************************************'
+                }}
+                name='endcom'
+                value={values.endnum}
+                style={styles.input}
+                keyboardType="default"
+                autoCompleteType="off"
+                autoCorrect={false}
+                autoCapitalize="characters"
+                onChangeText={handleChange('endcom')}
+              />
+            </View>
+          </View> 
+*/}
+{/*
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '50%',}]}>
+              <Text style={styles.legend}>Bairro</Text>
+            </View>
+            <View style={[styles.vlegend, {width: '50%',}]}>
+              <Text style={styles.legend}>Cidade</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '50%'}]}>
+              <FormTextInput
+                type={'custom'}
+                options={{
+                  mask: '**********************************************************************'
+                }}
+                name='bairro'
+                value={values.bairro}
+                style={styles.input}
+                keyboardType="default"
+                autoCompleteType="off"
+                autoCorrect={false}
+                autoCapitalize="characters"
+                onChangeText={handleChange('bairro')}
+              />
+            </View>
+            <View style={[styles.vlegend, {width: '50%'}]}>
+              <FormTextInput
+                type={'custom'}
+                options={{
+                  mask: '**********************************************************************'
+                }}
+                name='cidade'
+                value={values.cidade}
+                style={styles.input}
+                keyboardType="default"
+                autoCompleteType="off"
+                autoCorrect={false}
+                autoCapitalize="characters"
+                onChangeText={handleChange('cidade')}
+              />
+            </View>
+          </View> 
+*/}
+{/*
+          <FormButton
+            style={styles.button}
+            type="outline"
+            onPress={handleSubmit}
+            title="Gravar"
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonText}
+          />
+*/}
+          </ScrollView>
 
         {isLoading ? Loading() : <></>}
       </LinearGradient>
@@ -549,20 +538,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
 
-  input: {
-    borderWidth: 1,
-    borderColor: '#444',
-    paddingHorizontal: 5,
-    fontSize: 14,
-    color: '#444',
-    height: 44,
-    marginBottom: 0,
-    marginLeft: 5, 
-    marginRight: 5,
-    borderRadius: 5,
-    backgroundColor: '#FFF',
-  },
-
   button: {
     height: 35,
     width: 140,
@@ -591,6 +566,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
     textTransform: "uppercase",
+  },
+
+  inputContainer: {
+    margin: 5
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: '#444',
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#444',
+    height: 44,
+    marginBottom: 20,
+    marginLeft: 15, 
+    marginRight: 15,
+    borderRadius: 2,
+    backgroundColor: '#FFF',
   },
 
 })
