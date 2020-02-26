@@ -24,16 +24,11 @@ import loading from '../../assets/json/car-scan.json'
 import Api from '../../services/oapi'
 import Axios from 'axios'
 
-// import { Formik } from 'formik'
-// import FormTextInput from '../../components/FormTextInput'
-// import FormButton from '../../components/FormButton'
-// import FormPicker from '../../components/FormPicker'
+import { Formik } from 'formik'
+import FormTextInput from '../../components/FormTextInput'
+import FormButton from '../../components/FormButton'
+import FormPicker from '../../components/FormPicker'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
-import { TextInputMask } from 'react-native-masked-text'
-import { Button } from 'react-native-elements'
-import RNPickerSelect, { defaultStyles } from 'react-native-picker-select'
-
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
@@ -72,11 +67,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState(e_mail)
   const [dadosCep, setDadosCep] = useState({})
+  const [uf, setUF] = useState('PR')
   const [endrua, setEndRua] = useState('')
   const [mudouCEP, setMudouCEP] = useState(false)
-  const [uf, setUF] = useState('PR')
-
-  const [values, setValues] = useState({ 
+  
+  const initialValues = { 
     e_mail: '', 
     nome: '', 
     fone: '', 
@@ -87,7 +82,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
     bairro: '',
     cidade: 'Curitiba',
     uf: uf,
-  })
+  }
 
   useEffect(() => {
     AsyncStorage.getItem('email').then(Email => {
