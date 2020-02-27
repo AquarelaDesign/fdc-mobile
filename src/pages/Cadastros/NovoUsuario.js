@@ -115,17 +115,29 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                   ToastAndroid.SHORT,
                   ToastAndroid.TOP
                 )
+                setMudouCEP(true)
                 setIsLoading(false)
-                return false
               } else {
-                // console.log('data', data[0].data[0])
-                setDadosCep(data[0].data[0])
+                const dataDados = data[0].data[0]
+                console.log('dataDados', dataDados)
+                setDadosCep(dataDados)
+                
+                setValues({
+                  ...values,
+                  endrua: dataDados.Logradouro,
+                  bairro: dataDados.Bairro,
+                  cidade: dataDados.Cidade,
+                  uf: dataDados.UF
+                })
+                // updateField('endrua', dataDados.Logradouro)
+                // updateField('bairro', dataDados.Bairro)
+                // updateField('cidade', dataDados.Cidade)
+                // updateField('uf', dataDados.UF)
+                setMudouCEP(false)
                 setIsLoading(false)
-                return true
               }
             } else {
               setIsLoading(false)
-              return false
             }
           })
         } catch (error) {
@@ -134,34 +146,29 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           if (response !== undefined) {
             console.log('err1', response.data.errors[0])
             setIsLoading(false)
-            return false
           } else {
             console.log('err2', error)
             setIsLoading(false)
-            return false
           }
         }
         
       }
-      let dados =  buscaDadosCEP()
-      console.log('dados', dados)
-      return dados
+      buscaDadosCEP()
     } else {
       setIsLoading(false)
-      return false
     }
 
   }
 
-  const updateField = e => {
-    console.log('e', e)
-    // setValues({
-    //   ...values,
-    //   [e.target.name]: e.target.value
-    // })
+  const updateField = async (field, text) => {
+    // console.log('field, text', field, text)
+    setValues({
+      ...values,
+      [field]: text
+    })
   }
 
-  const handleSubmit = (values) => {
+  const handleSubmit = () => {
     
     if (values.e_mail.length > 0
         ) {
@@ -182,7 +189,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
              "bairro": values.bairro, // dadosCep.Bairro
              "cidade": values.cidade, // dadosCep.Cidade
              "uf": values.uf, // dadosCep.UF
-             "codcid": dadosCep ? dadosCep.cidade.cod_ibge : '',
+             "codcid": dadosCep ? dadosCep.cidade[0].cod_ibge : '',
              "codciddes": values.cidade, // dadosCep.Cidade
              "latit": dadosCep ? dadosCep.geo.latitude : '',
              "longit": dadosCep ? dadosCep.geo.longitude : '',
@@ -277,7 +284,9 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="email"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={updateField('e_mail')}
+                onChangeText={text => {
+                  updateField('e_mail', text)
+                }}
               />
             </View>
           </View> 
@@ -301,7 +310,9 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="name"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={updateField}
+                onChangeText={text => {
+                  updateField('nome', text)
+                }}
               />
             </View>
           </View> 
@@ -327,7 +338,9 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="tel"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={updateField}
+                onChangeText={text => {
+                  updateField('fone', text)
+                }}
               />
             </View>
           </View> 
@@ -351,12 +364,12 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="postal-code"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={updateField}
+                onChangeText={text => {
+                  updateField('cep', text)
+                }}
                 onSubmitEditing={() => {
                   let vCEP = values.cep
-                  if (buscaCEP(vCEP.replace('-',''))) {
-                    setFieldValue('endrua', dadosCep.Logradouro)
-                  }
+                  buscaCEP(vCEP.replace('-',''))
                 }}
               />
             </View>
@@ -368,7 +381,10 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 InputAccessoryView={() => null}
                 style={pickerSelectStyles}
                 value={uf}
-                onChangeText={updateField}
+                editable = {mudouCEP}
+                onChangeText={text => {
+                  updateField('uf', text)
+                }}
                 useNativeAndroidPickerStyle={false}
               />
             </View>
@@ -393,7 +409,10 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="street-address"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={updateField}
+                editable = {mudouCEP}
+                onChangeText={text => {
+                  updateField('endrua', text)
+                }}
               />
             </View>
           </View> 
@@ -420,7 +439,9 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={updateField}
+                onChangeText={text => {
+                  updateField('endnum', text)
+                }}
               />
             </View>
             <View style={[styles.vlegend, {width: '70%'}]}>
@@ -430,13 +451,15 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                   mask: '**********************************************************************'
                 }}
                 name='endcom'
-                value={values.endnum}
+                value={values.endcom}
                 style={styles.input}
                 keyboardType="default"
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={updateField}
+                onChangeText={text => {
+                  updateField('endcom', text)
+                }}
               />
             </View>
           </View> 
@@ -463,7 +486,10 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={updateField}
+                editable = {mudouCEP}
+                onChangeText={text => {
+                  updateField('bairro', text)
+                }}
               />
             </View>
             <View style={[styles.vlegend, {width: '50%'}]}>
@@ -479,7 +505,10 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 autoCompleteType="off"
                 autoCorrect={false}
                 autoCapitalize="characters"
-                onChangeText={updateField}
+                editable = {mudouCEP}
+                onChangeText={text => {
+                  updateField('cidade', text)
+                }}
               />
             </View>
           </View> 
