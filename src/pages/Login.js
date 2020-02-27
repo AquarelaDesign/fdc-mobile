@@ -185,6 +185,7 @@ export default function Login({ navigation }) {
         style={styles.background}
         source={bg}
       >
+        <View style={{height: 65}}></View>
         <Image source={logo} />
 
         <View style={styles.form}>
@@ -232,8 +233,8 @@ export default function Login({ navigation }) {
               titleStyle={styles.buttonTextClear}
               icon={{
                 name: "person-add",
-                size: 15,
-                color: "white"
+                size: 20,
+                color: "#363636"
               }}
             />
           </View>
@@ -246,8 +247,8 @@ export default function Login({ navigation }) {
               titleStyle={styles.buttonTextClear}
               icon={{
                 name: "mail",
-                size: 15,
-                color: "white"
+                size: 20,
+                color: "#363636"
               }}
             />
           </View>
@@ -280,9 +281,10 @@ const styles = StyleSheet.create({
   },
 
   label: {
+    color: '#363636',
     fontWeight: 'bold',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 4,
   },
 
   input: {
@@ -291,6 +293,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     fontSize: 16,
     color: '#444',
+    backgroundColor: '#E6E6FA',
     height: 44,
     marginBottom: 20,
     borderRadius: 2,
@@ -338,7 +341,7 @@ const styles = StyleSheet.create({
   },
 
   buttonTextClear: {
-    color: '#FFF',
+    color: '#363636',
     // fontWeight: 'bold',
     fontSize: 12,
   },
