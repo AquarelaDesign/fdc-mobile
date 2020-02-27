@@ -69,7 +69,7 @@ export default function Home({ navigation }) {
 
       setToken(token)
       // salvar token na base do FDC
-      if (oficina.tknpsh !== token && email !== '') {
+      if (oficina.tokpsh !== token && email !== '') {
         salvaToken(token)
       }
     }
@@ -87,7 +87,7 @@ export default function Home({ navigation }) {
         // console.log('ofi', ofi)
         if (ofi.tipusu !== undefined) {
           if (token === null) {
-            setToken(ofi.reserv_ch3)
+            setToken(ofi.tokpsh)
           }
         }
         setIsLoading(false)
