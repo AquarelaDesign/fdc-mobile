@@ -32,6 +32,7 @@ const { width } = Dimensions.get('window')
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('')
+  const [oficina, setOficina] = useState({})
   const [password, setPassword] = useState('')
   const [Response, setResponse] = useState(null)
 
@@ -77,8 +78,10 @@ export default function Login({ navigation }) {
           })).then(response => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
+                console.log('response.data.ProDataSet', response.data.ProDataSet)
                 const { ttfcusu } = response.data.ProDataSet
                 AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu))
+                setOficina(ttfcusu)
               } 
             } else {
               console.log('response.status', response.status)
@@ -103,11 +106,12 @@ export default function Login({ navigation }) {
     setResponse(responseJSON)
     const face = JSON.parse(responseJSON)
     // console.log(face.email)
-    if (face.email === 'aquarela.design@gmail.com') {
-      setEmail('sandro.luizdepaula@gmail.com')
-    } else {
+    
+    // if (face.email === 'aquarela.design@gmail.com') {
+    //   setEmail('sandro.luizdepaula@gmail.com')
+    // } else {
       setEmail(face.email)
-    }
+    // }
     navigation.navigate('Home')
   }
 
@@ -139,7 +143,7 @@ export default function Login({ navigation }) {
   }
 
   const handleNovo = async () => {
-    navigation.navigate('NovoUsuario')
+    navigation.navigate('NovoUsuario', {email: email})
   }
 
   const handleRecuperar = async () => {

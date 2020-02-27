@@ -1,10 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
   AsyncStorage,
   Dimensions,
   Keyboard,
-  SafeAreaView,
+  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
@@ -24,16 +24,11 @@ import loading from '../../assets/json/car-scan.json'
 import Api from '../../services/oapi'
 import Axios from 'axios'
 
-// import { Formik } from 'formik'
-// import FormTextInput from '../../components/FormTextInput'
-// import FormButton from '../../components/FormButton'
-// import FormPicker from '../../components/FormPicker'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { TextInputMask } from 'react-native-masked-text'
 import { Button } from 'react-native-elements'
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select'
-
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
@@ -68,20 +63,32 @@ const Estados = [
   { label: 'TO', value: 'TO' },
 ]
 
-const NovoUsuario = ({ e_mail, buscaHistorico }) => {
+const NovoUsuario = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState(e_mail)
+  const [email, setEmail] = useState('')
   const [dadosCep, setDadosCep] = useState({})
-  const [endrua, setEndRua] = useState('')
   const [mudouCEP, setMudouCEP] = useState(false)
   const [uf, setUF] = useState('PR')
+  const [senha, setSenha] = useState('')
+  const [senha1, setSenha1] = useState('')
+  const [habilitaBotao, setHabilitaBotao] = useState(false)
+
+  useEffect(() => {
+    const tmp = navigation.getParam('email')
+    setEmail(tmp)
+
+    setValues({
+      ...values,
+      e_mail: tmp,
+    })
+  }, [])
 
   const [values, setValues] = useState({ 
     e_mail: '', 
     nome: '', 
     fone: '', 
     cep: '',
-    endrua: endrua,
+    endrua: '',
     endnum: '',
     endcom: '',
     bairro: '',
@@ -89,11 +96,11 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
     uf: uf,
   })
 
-  useEffect(() => {
-    AsyncStorage.getItem('email').then(Email => {
-      setEmail(Email)
-    })
-  }, [email])
+  const [mostraErro, setMostraErro] = useState({
+    e_mail: false, 
+    senha: false, 
+    senha1: false,
+  })
 
   const buscaCEP = async (pCEP) => {
     setIsLoading(true)
@@ -129,10 +136,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                   cidade: dataDados.Cidade,
                   uf: dataDados.UF
                 })
-                // updateField('endrua', dataDados.Logradouro)
-                // updateField('bairro', dataDados.Bairro)
-                // updateField('cidade', dataDados.Cidade)
-                // updateField('uf', dataDados.UF)
+
                 setMudouCEP(false)
                 setIsLoading(false)
               }
@@ -161,11 +165,75 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
   }
 
   const updateField = async (field, text) => {
-    // console.log('field, text', field, text)
     setValues({
       ...values,
       [field]: text
     })
+  }
+
+  const validate = (field) => {
+    setIsLoading(false)
+    
+    if (field === 'e_mail') {
+      if (values.e_mail.length === 0) {
+        ToastAndroid.showWithGravity(
+          'O Email deve ser informado',
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP
+        )
+        setMostraErro({...mostraErro, e_mail: true})
+      } else {
+        setMostraErro({...mostraErro, e_mail: false})
+      }
+    }
+
+    if (field === 'senha') {
+      if (senha === '') {
+        ToastAndroid.showWithGravity(
+          'A Senha deve ser informada',
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP
+        )
+        setMostraErro({...mostraErro, senha: true})
+      } else if (
+        (senha !== '' && senha1 === '') ||
+        (senha === '' && senha1 !== '') ||
+        (senha !== senha1)) {
+          ToastAndroid.showWithGravity(
+            'As Senhas não são iguais',
+            ToastAndroid.SHORT,
+            ToastAndroid.TOP
+          )
+          setMostraErro({...mostraErro, senha: true, senha1: true})
+      } else {
+        setMostraErro({...mostraErro, senha: false, senha1: false})
+      }
+    }
+
+    if (field === 'senha1') {
+      if (senha1 === '') {
+        ToastAndroid.showWithGravity(
+          'A Senha deve ser confirmada',
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP
+        )
+        setMostraErro({...mostraErro, senha1: true})
+      } else if (
+        (senha !== '' && senha1 === '') ||
+        (senha === '' && senha1 !== '') ||
+        (senha !== senha1)) {
+          ToastAndroid.showWithGravity(
+            'As Senhas não são iguais',
+            ToastAndroid.SHORT,
+            ToastAndroid.TOP
+          )
+          setMostraErro({...mostraErro, senha: true, senha1: true})
+      } else {
+        setMostraErro({...mostraErro, senha: false, senha1: false})
+        setHabilitaBotao(true)
+      }
+    }
+
   }
 
   const handleSubmit = () => {
@@ -174,9 +242,15 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
         ) {
       setIsLoading(true)
       Keyboard.dismiss()
+
+      validate('e_mail')
+      validate('senha')
+      validate('senha1')
       
       if (values.e_mail !== '') {
-        // dadosCep
+        
+        console.log('dadosCep', dadosCep)
+        
         const dados = {
           "ttfcusuc":[{
              "e_mail":values.e_mail,
@@ -204,11 +278,14 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           try {
             await Api.post('', querystring.stringify({
               pservico: 'wfcusu',
-              pmetodo: 'NovoUsuario',
+              pmetodo: 'GravaUsuario',
               pcodprg: '',
               pemail: email,
-              pjsonusu: jsonusu,
+              psenha: senha,
+              ptipusu: 'COF',
+              pjsonusu: JSON.stringify(jsonusu),
             })).then(response => {
+              console.log('enviaDados_response', response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttfckmv, ttretorno } = response.data.ProDataSet
@@ -219,7 +296,12 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                       ToastAndroid.CENTER
                     )
                   } else {
-                    // buscaHistorico(ttfckmv)
+                    ToastAndroid.showWithGravity(
+                      'Verifique sua caixa de entrada para confirmar o cadastro',
+                      ToastAndroid.SHORT,
+                      ToastAndroid.CENTER
+                    )
+                    navigation.goBack()
                   }
                   setIsLoading(false)
                 } else {
@@ -239,7 +321,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
             }
           }
         }
-        // enviaDados(values)
+        enviaDados(dados)
       }
     }
   }
@@ -251,7 +333,8 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 40,}]}>
+    <KeyboardAvoidingView behavior="padding" style={[GlobalStyles.container, {paddingTop: 40,}]}>
+    {/* <SafeAreaView style={[GlobalStyles.container, {paddingTop: 40,}]}> */}
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}
@@ -279,11 +362,17 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 }}
                 name='e_mail'
                 value={values.e_mail}
-                style={styles.input}
+                style={[styles.input, Object.assign({}, styles.input, { 
+                  borderColor: mostraErro.e_mail ? '#FF0000' : '#444',
+                  borderWidth: mostraErro.e_mail ? 2 : 1,
+                })]}
                 keyboardType="email-address"
                 autoCompleteType="email"
                 autoCorrect={false}
                 autoCapitalize="none"
+                onBlur={() => {
+                  validate('e_mail', values.e_mail)
+                }}
                 onChangeText={text => {
                   updateField('e_mail', text)
                 }}
@@ -513,6 +602,68 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
             </View>
           </View> 
 
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%',}]}>
+              <Text style={styles.legend}>Senha</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%'}]}>
+              <TextInputMask
+                type={'custom'}
+                options={{
+                  mask: '****************'
+                }}
+                name='senha'
+                value={senha}
+                style={[styles.input, Object.assign({}, styles.input, { 
+                  borderColor: mostraErro.senha ? '#FF0000' : '#444',
+                  borderWidth: mostraErro.senha ? 2 : 1,
+                })]}
+                keyboardType="default"
+                secureTextEntry={true}
+                autoCompleteType="off"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onBlur={() => {validate('senha', senha)}}
+                onChangeText={text => {
+                  setSenha(text)
+                }}
+              />
+            </View>
+          </View> 
+
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%',}]}>
+              <Text style={styles.legend}>Confirme a senha</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.vlegend, {width: '100%'}]}>
+              <TextInputMask
+                type={'custom'}
+                options={{
+                  mask: '****************'
+                }}
+                name='senha1'
+                value={senha1}
+                style={[styles.input, Object.assign({}, styles.input, { 
+                  borderColor: mostraErro.senha1 ? '#FF0000' : '#444',
+                  borderWidth: mostraErro.senha1 ? 2 : 1,
+                })]}
+                keyboardType="default"
+                secureTextEntry={true}
+                autoCompleteType="off"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onBlur={() => {validate('senha1', senha1)}}
+                onChangeText={text => {
+                  setSenha1(text)
+                }}
+              />
+            </View>
+          </View> 
+
           <Button
             style={styles.button}
             type="outline"
@@ -520,13 +671,14 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
             title="Gravar"
             buttonStyle={styles.button}
             titleStyle={styles.buttonText}
+            disabled={!habilitaBotao}
           />
 
           </ScrollView>
 
         {isLoading ? Loading() : <></>}
       </LinearGradient>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -580,7 +732,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#87CEFA',
     marginLeft: (width / 2) - 70,
-    marginBottom: 120,
+    marginBottom: 70,
   },
 
   buttonText: {
