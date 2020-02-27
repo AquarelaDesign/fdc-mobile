@@ -349,7 +349,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
             <View style={[styles.vlegend, {width: '70%',}]}>
               <Text style={styles.legend}>CEP</Text>
             </View>
-            <View style={[styles.vlegend, {width: '30%',}]}>
+            <View style={[styles.vlegend, {width: '30%', marginLeft: -15,}]}>
               <Text style={styles.legend}>UF</Text>
             </View>
           </View>
@@ -373,7 +373,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 }}
               />
             </View>
-            <View style={[styles.vlegend, {width: '30%', marginTop: 0}]}>
+            <View style={[styles.vlegend, {width: '30%', marginTop: -5}]}>
               <RNPickerSelect
                 placeholder={{}}
                 items={Estados}
@@ -381,7 +381,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 InputAccessoryView={() => null}
                 style={pickerSelectStyles}
                 value={uf}
-                editable = {mudouCEP}
+                disabled = {mudouCEP}
                 onChangeText={text => {
                   updateField('uf', text)
                 }}
@@ -418,15 +418,15 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
           </View> 
 
           <View style={styles.row}>
-            <View style={[styles.vlegend, {width: '30%',}]}>
+            <View style={[styles.vlegend, {width: '40%',}]}>
               <Text style={styles.legend}>Número</Text>
             </View>
-            <View style={[styles.vlegend, {width: '70%',}]}>
+            <View style={[styles.vlegend, {width: '60%',}]}>
               <Text style={styles.legend}>Complemento</Text>
             </View>
           </View>
           <View style={styles.row}>
-            <View style={[styles.vlegend, {width: '30%'}]}>
+            <View style={[styles.vlegend, {width: '40%'}]}>
               <TextInputMask
                 type={'custom'}
                 options={{
@@ -444,7 +444,7 @@ const NovoUsuario = ({ e_mail, buscaHistorico }) => {
                 }}
               />
             </View>
-            <View style={[styles.vlegend, {width: '70%'}]}>
+            <View style={[styles.vlegend, {width: '60%'}]}>
               <TextInputMask
                 type={'custom'}
                 options={{
@@ -580,7 +580,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#87CEFA',
     marginLeft: (width / 2) - 70,
-    marginBottom: 20,
+    marginBottom: 120,
   },
 
   buttonText: {
@@ -628,7 +628,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 5,
+    borderRadius: 2,
     color: '#444',
     paddingRight: 30, // to ensure the text is never behind the icon
     backgroundColor: '#FFF',
@@ -640,7 +640,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 7,
     borderWidth: 1,
     borderColor: '#444',
-    borderRadius: 3,
+    borderRadius: 1,
     color: '#444',
     paddingRight: 30, // to ensure the text is never behind the icon
     backgroundColor: '#FFF',

@@ -139,7 +139,7 @@ export default function Login({ navigation }) {
   }
 
   const handleNovo = async () => {
-
+    navigation.navigate('NovoUsuario')
   }
 
   const handleRecuperar = async () => {
@@ -243,7 +243,7 @@ export default function Login({ navigation }) {
               title="Esqueceu a senha?"
               type="clear"
               style={styles.buttonClear}
-              onPress={handleNovo}
+              onPress={handleRecuperar}
               titleStyle={styles.buttonTextClear}
               icon={{
                 name: "mail",
