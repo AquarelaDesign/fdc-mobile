@@ -59,7 +59,7 @@ const Usuario = ({ navigation }) => {
         setIsLoading(false)
       }
     })
-  }, [])
+  }, [oficina])
 
   useEffect(() => {
     if (!isBtnSenha) {
@@ -115,8 +115,6 @@ const Usuario = ({ navigation }) => {
       <Lottie source={loading} autoPlay loop />
     )
   }
-
-  // console.log('oficina', oficina)
 
   return (
     <KeyboardAvoidingView behavior="padding" style={[GlobalStyles.container, {paddingTop: 25,}]}>
