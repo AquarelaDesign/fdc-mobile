@@ -67,6 +67,7 @@ export default function Home({ navigation }) {
       const token = await Notifications.getExpoPushTokenAsync()
       const subscription = Notifications.addListener(_handleNotification)
 
+      // console.log('token', token, oficina.tokpsh)
       setToken(token)
       // salvar token na base do FDC
       if (oficina.tokpsh !== token && email !== '') {
@@ -84,7 +85,7 @@ export default function Home({ navigation }) {
           setIsOficina(ofi.tipusu === 'OFI' ? true : false)
           setOficina(JSON.parse(Oficina))
         }
-        // console.log('ofi', ofi)
+
         if (ofi.tipusu !== undefined) {
           if (token === null) {
             setToken(ofi.tokpsh)
@@ -97,12 +98,16 @@ export default function Home({ navigation }) {
     })
   }, [oficina])
 
-  if (token !== null && token !== undefined) {
-    // console.log('token', token)
-  }
+  useEffect(() => {
+    if (token !== null && token !== undefined) {
+      async function sToken() {
+        await AsyncStorage.setItem('tkpush', token)
+      }
+      sToken()
+    }
+  }, [token])
 
   _handleNotification = Notification => {
-    // do whatever you want to do with the notification
     setNotification(Notification)
   }
 
