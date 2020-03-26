@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput, 
+  ToastAndroid,
   TouchableOpacity, 
   View,
 } from 'react-native'
@@ -73,10 +74,11 @@ const Usuario = ({ navigation }) => {
     }  
   }, [senha, senha1])
 
-  async function handleEncerra() {
+  const handleEncerra = () => {
     try {
-      await AsyncStorage.setItem('oficina', '')
-      await AsyncStorage.setItem('token', '')
+      AsyncStorage.setItem('oficina', '')
+      AsyncStorage.setItem('token', '')
+      AsyncStorage.setItem('Autorizado', '')
 
       // Incluir Logout do facebook
       // https://stackoverflow.com/questions/51838676/how-to-logout-using-expo-facebook
@@ -93,13 +95,21 @@ const Usuario = ({ navigation }) => {
     if (isBtnSenha) {
       if (senha !== '' && senha1 !== '') {
         if (senha !== senha1) {
-          Alert.alert('As Senhas não são iguais')
+          ToastAndroid.showWithGravity(
+            'As Senhas não são iguais',
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          )
           return
         }
       } else if (
         (senha !== '' && senha1 === '') ||
         (senha === '' && senha1 !== '')) {
-        Alert.alert('As Senhas não são iguais')
+        ToastAndroid.showWithGravity(
+          'As Senhas não são iguais',
+          ToastAndroid.LONG,
+          ToastAndroid.TOP
+        )
         return
       }
       setBtnSenhaTit('Alterar Senha')
