@@ -1,5 +1,6 @@
 import { AsyncStorage } from 'react-native'
 import axios from 'axios'
+import publicIP from 'react-native-public-ip'
 
 const querystring = require('querystring')
 
@@ -8,8 +9,16 @@ const oapi = axios.create({
   timeout: 5000,
 })
 
+let wIP = '0.0.0.0'
+
+publicIP().then(ip => {
+  wIP = ip
+})
+.catch(error => {
+  console.log(error);
+})
+
 oapi.interceptors.request.use(async config => {
-  const wIP = '192.168.50.138'
 
   AsyncStorage.getItem('email').then(Email => {
     AsyncStorage.getItem('oficina').then(Oficina => {
