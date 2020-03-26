@@ -14,6 +14,7 @@ import GlobalStyles, {
   bg_colors, bg_start, bg_end
 } from '../../GlobalStyles'
 
+import openMap from 'react-native-open-maps'
 import MapView, { Marker } from 'react-native-maps'
 const { width, height } = Dimensions.get('window')
 
@@ -98,6 +99,10 @@ export default function Info({ navigation }) {
     })
   
   }, [dados])
+
+  const abreMap = () => {
+    openMap({ latitude: mker.coordinate.latitude, longitude: mker.coordinate.longitude })
+  }
   
   return (
     <SafeAreaView style={GlobalStyles.container}>
@@ -164,6 +169,8 @@ export default function Info({ navigation }) {
               coordinate={mker.coordinate}
               title={mker.title}
               description={mker.description}
+              stopPropagation={true}
+              onPress={() => abreMap()}
             />
           </MapView>
 

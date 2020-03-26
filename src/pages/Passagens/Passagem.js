@@ -14,6 +14,8 @@ import {
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from 'native-base'
 import { LinearGradient } from 'expo-linear-gradient'
 import Lottie from 'lottie-react-native'
+
+import openMap from 'react-native-open-maps'
 import MapView, { Marker } from 'react-native-maps'
 
 import GlobalStyles, {
@@ -391,13 +393,19 @@ export default function Passagem({ navigation }) {
               coordinate={mker.coordinate}
               title={mker.title}
               description={mker.description}
-            />
+              stopPropagation={true}
+              onPress={() => abreMap()}
+          />
           </MapView>
 
         </View>
       </LinearGradient>
     </View>
   )
+
+  const abreMap = () => {
+    openMap({ latitude: mker.coordinate.latitude, longitude: mker.coordinate.longitude })
+  }
 
   function Loading() {
     return (
