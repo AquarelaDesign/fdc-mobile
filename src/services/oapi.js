@@ -34,11 +34,12 @@ oapi.interceptors.request.use(async config => {
       })
     })
   })
-
+  // console.log('envio', config)
   return config
 })
 
 oapi.interceptors.response.use((response) => {
+  // console.log('retorno', response)
   return response
 },(error) => {
   if (error.response !== undefined) {

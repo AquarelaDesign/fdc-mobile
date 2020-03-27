@@ -404,7 +404,12 @@ export default function Passagem({ navigation }) {
   )
 
   const abreMap = () => {
-    openMap({ latitude: mker.coordinate.latitude, longitude: mker.coordinate.longitude })
+    openMap({ 
+      latitude: mker.coordinate.latitude, 
+      longitude: mker.coordinate.longitude,
+      end: '',
+      navigate_mode: 'preview'
+    })
   }
 
   function Loading() {

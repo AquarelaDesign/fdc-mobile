@@ -248,9 +248,7 @@ const NovoUsuario = ({ navigation }) => {
       validate('senha1')
       
       if (values.e_mail !== '') {
-        
-        console.log('dadosCep', dadosCep)
-        
+        // console.log('dadosCep', dadosCep)
         const dados = {
           "ttfcusuc":[{
              "e_mail":values.e_mail,
@@ -271,7 +269,7 @@ const NovoUsuario = ({ navigation }) => {
           }]
         }
                
-        console.log('handleSubmit_values', dados)
+        // console.log('handleSubmit_values', dados)
         setIsLoading(false)
 
         const enviaDados = async (jsonusu) => {
@@ -280,15 +278,15 @@ const NovoUsuario = ({ navigation }) => {
               pservico: 'wfcusu',
               pmetodo: 'GravaUsuario',
               pcodprg: '',
-              pemail: email,
+              pemail: values.e_mail,
               psenha: senha,
               ptipusu: 'COF',
               pjsonusu: JSON.stringify(jsonusu),
             })).then(response => {
-              console.log('enviaDados_response', response)
+              // console.log('enviaDados_response', response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
-                  const { ttfckmv, ttretorno } = response.data.ProDataSet
+                  const { ttfcusu, ttretorno } = response.data.ProDataSet
                   if (ttretorno.tipret === 'err') {
                     ToastAndroid.showWithGravity(
                       ttretorno.mensagem,
@@ -301,6 +299,9 @@ const NovoUsuario = ({ navigation }) => {
                       ToastAndroid.SHORT,
                       ToastAndroid.CENTER
                     )
+                    AsyncStorage.setItem('email', email)
+                    AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
+
                     navigation.goBack()
                   }
                   setIsLoading(false)
