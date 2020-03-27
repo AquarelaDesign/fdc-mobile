@@ -3,7 +3,6 @@
     "name": "Ficha do Carro",
     "slug": "Ficha-do-Carro",
     "privacy": "public",
-    "sdkVersion": "35.0.0",
     "platforms": [
       "ios",
       "android"
