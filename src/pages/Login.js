@@ -369,7 +369,7 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={[styles.container, {paddingTop: 75,}]}>
+    <KeyboardAvoidingView behavior="height" style={[styles.container, {paddingTop: 75,}]}>
       <Overlay
         isVisible={modView}
         supportedOrientations={['portrait', 'landscape']}

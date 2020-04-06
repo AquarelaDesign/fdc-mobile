@@ -127,7 +127,7 @@ const Usuario = ({ navigation }) => {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={[GlobalStyles.container, {paddingTop: 25,}]}>
+    <KeyboardAvoidingView behavior="height" style={[GlobalStyles.container, {paddingTop: 25,}]}>
       <View style={styles.scene}>
         <LinearGradient
           colors={bg_colors}

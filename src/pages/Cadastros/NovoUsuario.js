@@ -334,7 +334,7 @@ const NovoUsuario = ({ navigation }) => {
   }
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={[GlobalStyles.container, {paddingTop: 40,}]}>
+    <KeyboardAvoidingView behavior="height" style={[GlobalStyles.container, {paddingTop: 40,}]}>
     {/* <SafeAreaView style={[GlobalStyles.container, {paddingTop: 40,}]}> */}
       <LinearGradient
         colors={bg_colors}
