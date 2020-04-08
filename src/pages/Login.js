@@ -45,6 +45,9 @@ export default function Login({ navigation }) {
   const [token, setToken] = useState('')
   const [tkpush, setTkpush] = useState('')
   const [modView, setModView] = useState(false)
+  const [mvSenha, setMvSenha] = useState(false)
+  const [novaSenha, setNovaSenha] = useState('')
+  const [confSenha, setConfSenha] = useState('')
   const [codseg, setCodseg] = useState('')
   const [icodseg, setIcodseg] = useState('')
   const [notification, setNotification] = useState('')
@@ -97,11 +100,13 @@ export default function Login({ navigation }) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttfcusu } = response.data.ProDataSet
                 AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
-                if (ttfcusu.situsu === 'P') {
+                if (ttfcusu[0].situsu === 'P') {
                   setCodseg(ttfcusu.codseg)
                   setModView(true)
+                } else if (ttfcusu[0].situsu === 'R') {
+                  setMvSenha(true)
                 }
-                setOficina(ttfcusu)
+                setOficina(ttfcusu[0])
               } 
             } else {
               ToastAndroid.showWithGravity(
@@ -172,7 +177,6 @@ export default function Login({ navigation }) {
         )
       }
     } catch ({ message }) {
-      console.log('message', message)
       ToastAndroid.showWithGravity(
         `Facebook Login Error: ${message}`,
         ToastAndroid.LONG,
@@ -187,6 +191,77 @@ export default function Login({ navigation }) {
   }
 
   const handleRecuperar = async () => {
+    if (email === '') {
+      ToastAndroid.showWithGravity(
+        'Preencha o campo e-mail e tente novamente...',
+        ToastAndroid.LONG,
+        ToastAndroid.TOP
+      )
+      return
+    }
+
+    try {
+      await Api.post('', querystring.stringify({
+        pservico: 'wfcusu',
+        pmetodo: 'RecuperaSenha',
+        pcodprg: '',
+        pemail: email,
+      })).then(response => {
+        if (response.status === 200) {
+          if (response.data.ProDataSet !== undefined) {
+            const { ttfcusu, ttretorno } = response.data.ProDataSet
+
+            ToastAndroid.showWithGravity(
+              ttretorno[0].mensagem,
+              ToastAndroid.LONG,
+              ToastAndroid.TOP
+            )
+
+            setOficina(ttfcusu[0])
+            registerForPushNotifications(email)
+            
+            AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
+            AsyncStorage.setItem('token', token)
+            AsyncStorage.setItem('Autorizado', '')
+            setCodseg(ttfcusu[0].codseg)
+
+            console.log('codseg', ttfcusu[0].codseg)
+            
+            setModView(false)
+            setMvSenha(false)
+
+            if (ttfcusu[0].situsu === 'P') {
+              setModView(true)
+            } else if (ttfcusu[0].situsu === 'R') {
+              setMvSenha(true)
+            } else {
+              AsyncStorage.setItem('Autorizado', 'S')
+              navigation.navigate('Home')
+            }
+
+          } 
+        } else {
+          ToastAndroid.showWithGravity(
+            response.status,
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          )
+        }
+      })
+
+    }
+    catch (error) {
+      const { response } = error
+      if (response !== undefined) {
+        Alert.alert(response.data.errors[0])
+      } else {
+        ToastAndroid.showWithGravity(
+          'Falha ao conectar com o servidor, por favor tente mais tarde.',
+          ToastAndroid.LONG,
+          ToastAndroid.TOP
+        )
+      }
+    }
 
   }
 
@@ -245,7 +320,82 @@ export default function Login({ navigation }) {
         ToastAndroid.LONG,
         ToastAndroid.TOP
       )
-}
+    }
+  }
+
+  const GravaSenha = async () => {
+    if (icodseg !== codseg) {
+      ToastAndroid.showWithGravity(
+        'Código Inválido!!!',
+        ToastAndroid.LONG,
+        ToastAndroid.TOP
+      )
+      return
+    }
+
+    if (novaSenha === confSenha) {
+      try {
+        await Api.post('', querystring.stringify({
+          pservico: 'wfcusu',
+          pmetodo: 'GravaSenha',
+          pcodprg: '',
+          pemail: email,
+          psenha: novaSenha,
+          pcodseg: icodseg,
+        })).then(response => {
+          if (response.status === 200) {
+            if (response.data.ProDataSet !== undefined) {
+              const { ttfcusu, ttretorno } = response.data.ProDataSet
+
+              ToastAndroid.showWithGravity(
+                ttretorno[0].mensagem,
+                ToastAndroid.LONG,
+                ToastAndroid.TOP
+              )
+
+              setModView(false)
+              setMvSenha(false)
+
+              if (ttfcusu[0].situsu === 'P') {
+                setCodseg(ttfcusu[0].codseg)
+                setModView(true)
+              } else if (ttfcusu.situsu === 'R') {
+                setMvSenha(true)
+              } else {
+                AsyncStorage.setItem('Autorizado', 'S')
+                navigation.navigate('Home')
+              }
+
+            } 
+          } else {
+            ToastAndroid.showWithGravity(
+              response.status,
+              ToastAndroid.LONG,
+              ToastAndroid.TOP
+            )
+          }
+        })
+
+      }
+      catch (error) {
+        const { response } = error
+        if (response !== undefined) {
+          Alert.alert(response.data.errors[0])
+        } else {
+          ToastAndroid.showWithGravity(
+            'Falha ao conectar com o servidor, por favor tente mais tarde.',
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          )
+        }
+      }
+    } else {
+      ToastAndroid.showWithGravity(
+        'As senhas informadas não coincidem!',
+        ToastAndroid.LONG,
+        ToastAndroid.TOP
+      )
+    }
   }
 
   const handleSubmit = async () => {
@@ -261,15 +411,24 @@ export default function Login({ navigation }) {
             pemail: email,
             psenha: password,
           })).then(response => {
+            // console.log('response', response)
             if (response.status === 200) {
+
+              // console.log('response.data', response.data)
+
+              if (response.data === '') {
+                ToastAndroid.showWithGravity(
+                  'Usuário não encontrado!',
+                  ToastAndroid.LONG,
+                  ToastAndroid.TOP
+                )
+              }
+
               if (response.data.ProDataSet !== undefined) {
                 const { ttfcusu, ttretorno } = response.data.ProDataSet
                 
                 setOficina(ttfcusu[0])
                 registerForPushNotifications(email)
-                
-                AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
-                AsyncStorage.setItem('token', token)
                 
                 if (ttretorno[0].tipret !== '') {
                   ToastAndroid.showWithGravity(
@@ -278,8 +437,17 @@ export default function Login({ navigation }) {
                     ToastAndroid.TOP
                   )
                 }
+
+                AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
+                AsyncStorage.setItem('token', token)
+                AsyncStorage.setItem('Autorizado', '')
                 
-                if (ttfcusu[0].situsu === 'P') {
+                setMvSenha(false)
+                setModView(false)
+                
+                if (ttfcusu.situsu === 'R') {
+                  setMvSenha(true)
+                } else if (ttfcusu[0].situsu === 'P') {
                   setCodseg(ttfcusu[0].codseg)
                   setModView(true)
                 } else {
@@ -307,7 +475,6 @@ export default function Login({ navigation }) {
 
           if (response.status === 200) {
             const { oficina, token } = response.data
-            console.log('oficina', oficina)
             await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
             await AsyncStorage.setItem('token', token)
 
@@ -351,7 +518,6 @@ export default function Login({ navigation }) {
 
   async function registerForPushNotifications(Email) {
     const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
-    // console.log('status', status)
     if (status !== 'granted') {
       const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
       if (status !== 'granted') {
@@ -360,7 +526,6 @@ export default function Login({ navigation }) {
     }
     const token = await Notifications.getExpoPushTokenAsync()
     const subscription = Notifications.addListener(_handleNotification)
-    // console.log('token', token, oficina.tokpsh)
     setToken(token)
     // salvar token na base do FDC
     if (oficina.tokpsh !== token && email !== '') {
@@ -412,6 +577,80 @@ export default function Login({ navigation }) {
                 }}
                 onPress={() => {validaCodseg()}}
                 title="Validar"
+              >
+              </Button>
+
+            </View>
+          </View>
+        </View>
+      </Overlay>
+
+      <Overlay
+        isVisible={mvSenha}
+        supportedOrientations={['portrait', 'landscape']}
+        windowBackgroundColor="rgba(0, 0, 0, .7)"
+        overlayBackgroundColor="transparent"
+        width="90%"
+        height={350}
+        overlayStyle={{
+          backgroundColor: 'white',
+          borderRadius: 15,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.8,
+          shadowRadius: 5,
+        }}
+        onBackdropPress={() => {
+          setMvSenha(false)
+        }}>
+
+        <View style={modalStyle.modalContainer}>
+          <View style={modalStyle.innerContainer}>
+            
+            <View style={[modalStyle.form, {paddingHorizontal: 20}]}>
+              <Text style={[modalStyle.label, {fontSize: 16, alignSelf: 'center', marginTop: -20,}]}>Informe a Nova Senha</Text>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Digite a Senha"
+                placeholderTextColor="#999"
+                keyboardType="default"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={true}
+                value={novaSenha}
+                onChangeText={setNovaSenha}
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder="Confirme a Senha"
+                placeholderTextColor="#999"
+                keyboardType="default"
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={true}
+                value={confSenha}
+                onChangeText={setConfSenha}
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder="Digite o Código"
+                placeholderTextColor="#999"
+                keyboardType="default"
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={icodseg}
+                onChangeText={setIcodseg}
+              />
+
+              <Button
+                style={{
+                  marginBottom: 20
+                }}
+                onPress={() => {GravaSenha()}}
+                title="Confirmar"
               >
               </Button>
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
 import {
-  Alert,
   AsyncStorage,
   KeyboardAvoidingView, 
   Dimensions,
@@ -48,8 +47,8 @@ const Usuario = ({ navigation }) => {
 
   useEffect(() => {
     AsyncStorage.getItem('oficina').then(Oficina => {
-      // console.log('Oficina', Oficina)
-      if (Oficina) {
+      if (Oficina !== undefined) {
+        console.log('Oficina', Oficina)
         const ofi = JSON.parse(Oficina)
         if (ofi.nome !== undefined) {
           setOficina(ofi[0])
@@ -60,7 +59,7 @@ const Usuario = ({ navigation }) => {
         setIsLoading(false)
       }
     })
-  }, [oficina])
+  }, [])
 
   useEffect(() => {
     if (!isBtnSenha) {

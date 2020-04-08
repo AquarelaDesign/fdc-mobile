@@ -72,6 +72,7 @@ const NovoUsuario = ({ navigation }) => {
   const [senha, setSenha] = useState('')
   const [senha1, setSenha1] = useState('')
   const [habilitaBotao, setHabilitaBotao] = useState(false)
+  const [vwEnd, setVwEnd] = useState(false)
 
   useEffect(() => {
     const tmp = navigation.getParam('email')
@@ -113,7 +114,6 @@ const NovoUsuario = ({ navigation }) => {
           await Axios.get(
             url
           ).then(response => {
-            // console.log('response', response)
             if (response.status === 200) {
               const { data, error, message } = response.data
               if (error === true) {
@@ -126,7 +126,8 @@ const NovoUsuario = ({ navigation }) => {
                 setIsLoading(false)
               } else {
                 const dataDados = data[0].data[0]
-                console.log('dataDados', dataDados)
+
+                setVwEnd(true)
                 setDadosCep(dataDados)
                 
                 setValues({
@@ -148,14 +149,14 @@ const NovoUsuario = ({ navigation }) => {
           
           const { response } = error
           if (response !== undefined) {
-            console.log('err1', response.data.errors[0])
+            // console.log('err1', response.data.errors[0])
             setIsLoading(false)
           } else {
-            console.log('err2', error)
+            // console.log('err2', error)
             setIsLoading(false)
           }
         }
-        
+        setVwEnd(true)
       }
       buscaDadosCEP()
     } else {
@@ -248,7 +249,7 @@ const NovoUsuario = ({ navigation }) => {
       validate('senha1')
       
       if (values.e_mail !== '') {
-        // console.log('dadosCep', dadosCep)
+        // // console.log('dadosCep', dadosCep)
         const dados = {
           "ttfcusuc":[{
              "e_mail":values.e_mail,
@@ -269,7 +270,7 @@ const NovoUsuario = ({ navigation }) => {
           }]
         }
                
-        // console.log('handleSubmit_values', dados)
+        // // console.log('handleSubmit_values', dados)
         setIsLoading(false)
 
         const enviaDados = async (jsonusu) => {
@@ -283,7 +284,7 @@ const NovoUsuario = ({ navigation }) => {
               ptipusu: 'COF',
               pjsonusu: JSON.stringify(jsonusu),
             })).then(response => {
-              // console.log('enviaDados_response', response)
+              // //console.log('enviaDados_response', response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttfcusu, ttretorno } = response.data.ProDataSet
@@ -294,25 +295,24 @@ const NovoUsuario = ({ navigation }) => {
                       ToastAndroid.CENTER
                     )
                   } else {
-                    ToastAndroid.showWithGravity(
-                      'Verifique sua caixa de entrada para confirmar o cadastro',
-                      ToastAndroid.SHORT,
-                      ToastAndroid.CENTER
-                    )
-                    AsyncStorage.setItem('email', email)
                     AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
-
-                    navigation.goBack()
                   }
-                  setIsLoading(false)
-                } else {
-                  setIsLoading(false)
                 }
+
+                ToastAndroid.showWithGravity(
+                  `Verifique sua caixa de entrada do email '${values.e_mail}' para confirmar o cadastro`,
+                  ToastAndroid.SHORT,
+                  ToastAndroid.CENTER
+                )
+
+                AsyncStorage.setItem('email', values.e_mail)
+                navigation.goBack()
+                setIsLoading(false)
               } else {
+                navigation.goBack()
                 setIsLoading(false)
               }
-            }
-            )
+            })
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
@@ -440,7 +440,7 @@ const NovoUsuario = ({ navigation }) => {
               <Text style={styles.legend}>CEP</Text>
             </View>
             <View style={[styles.vlegend, {width: '30%', marginLeft: -15,}]}>
-              <Text style={styles.legend}>UF</Text>
+              <Text style={styles.legend}>{vwEnd ? 'UF' : ''}</Text>
             </View>
           </View>
           <View style={styles.row}>
@@ -463,7 +463,9 @@ const NovoUsuario = ({ navigation }) => {
                 }}
               />
             </View>
+
             <View style={[styles.vlegend, {width: '30%', marginTop: -5}]}>
+              {vwEnd ? 
               <RNPickerSelect
                 placeholder={{}}
                 items={Estados}
@@ -477,9 +479,11 @@ const NovoUsuario = ({ navigation }) => {
                 }}
                 useNativeAndroidPickerStyle={false}
               />
+              : <></>}
             </View>
           </View> 
 
+          {vwEnd ? <>
           <View style={styles.row}>
             <View style={[styles.vlegend, {width: '100%',}]}>
               <Text style={styles.legend}>Endereço</Text>
@@ -664,6 +668,7 @@ const NovoUsuario = ({ navigation }) => {
               />
             </View>
           </View> 
+          </> : <></>}
 
           <Button
             style={styles.button}
