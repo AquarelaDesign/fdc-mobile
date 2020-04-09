@@ -2,6 +2,8 @@ import { YellowBox } from 'react-native'
 
 YellowBox.ignoreWarnings([
   'Unrecognized WebSocket',
+  'Warning: componentWillReceiveProps',
+  'Warning: DatePickerAndroid',
   // 'Error: timeout of',
   "Warning: Can't perform a",
   // 'Setting a timer',

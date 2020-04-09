@@ -167,7 +167,7 @@ const Contas = () => {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 15,}]}>
+    <SafeAreaView style={[GlobalStyles.container, { marginTop: 35, }]}>
       <Overlay
         isVisible={modView}
         supportedOrientations={['portrait', 'landscape']}
@@ -310,7 +310,7 @@ const Contas = () => {
 const styles = StyleSheet.create({
   list: {
     marginTop: 10,
-    marginBottom: 50,
+    marginBottom: 10,
     borderTopWidth: 0,
   },
 

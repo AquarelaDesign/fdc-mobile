@@ -171,7 +171,7 @@ const Mensagens = () => {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 35,}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: 35,}]}>
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}
@@ -192,7 +192,7 @@ const Mensagens = () => {
               round
               searchIcon={{ size: 24 }}
               
-              containerStyle={searchStyle.containerStyle}
+              containerStyle={[searchStyle.containerStyle, { marginTop: 20, width: Dimensions.get('window').width }]}
               inputStyle={searchStyle.inputStyle}
               leftIconContainerStyle={searchStyle.leftIconContainerStyle}
               rightIconContainerStyle={searchStyle.rightIconContainerStyle}
@@ -203,7 +203,7 @@ const Mensagens = () => {
               onClear={text => SearchFilterFunction('')}
               value={filtrar}
             />
-            ) : null}
+            ) : <></>}
             <FlatList
               style={styles.list}
               data={mensFilter}
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: 5,
     flexGrow: 0,
-    marginBottom: 90,
+    // marginBottom: 90,
   },
 
   listItem: {

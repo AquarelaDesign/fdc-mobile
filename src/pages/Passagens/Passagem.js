@@ -412,14 +412,14 @@ export default function Passagem({ navigation }) {
     })
   }
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: -50}]}>
       <Container>
         <Header hasTabs/>
         <Tabs initialPage={0}>
@@ -498,10 +498,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: 200,
     marginVertical: 50,
-  },
-
-  scene: {
-    flex: 1,
   },
 
   noLabel: {

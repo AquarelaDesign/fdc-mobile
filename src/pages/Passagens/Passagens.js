@@ -291,14 +291,14 @@ export default function Passagens({ navigation }) {
     navigation.navigate('Browser',{ uri: _url })
   }
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {marginTop: -15}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: 0}]}>
       {
         pass === undefined ? 
           <Text style={styles.msgText}
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
     textAlign: 'justify',
-    marginTop: height - (height / 2) - 40, 
+    // marginTop: height - (height / 2) - 40, 
     paddingRight: 10,
     width: width - 20, 
   },

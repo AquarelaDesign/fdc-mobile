@@ -1,5 +1,14 @@
-import React, { useState } from 'react'
-import { Animated, Dimensions, View, Image, ScrollView, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect } from 'react'
+
+import { 
+  Animated, 
+  Dimensions, 
+  View, 
+  Image, 
+  ScrollView, 
+  TouchableOpacity 
+} from 'react-native'
+
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer'
 import { createStackNavigator } from 'react-navigation-stack'
@@ -13,16 +22,6 @@ import _routes from './_routes'
 import loading from './assets/json/car.json'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
-
-const styles = {
-  flex: 10,
-  position: 'absolute',
-  width: '100%',
-  height: 50,
-  padding: 10,
-  backgroundColor: 'transparent',
-  marginBottom: 30,
-}
 
 const CustomDrawerContentComponent = props => (
   <View style={{ flex: 1, backgroundColor: '#43484d' }}>
@@ -52,8 +51,15 @@ const Routes = createAppContainer(
     {
       headerMode: 'screen',
       headerTransparent: true,
+
       defaultNavigationOptions: ({ navigation }) => ({
-        header:
+        headerForceInset: { top: 'never', bottom: 'never' },
+        headerTintColor: "#fff",
+        headerStyle: {
+          backgroundColor: "#4169E1",
+        },
+  
+        headerLeft:
           <TouchableOpacity
             style={styles}
             onPress={() => navigation.goBack()}>
@@ -113,6 +119,19 @@ export default () => {
     return Promise.all(cacheImages);
   }
 
+  useEffect(() => {
+    // setTimeout(
+    //   () =>
+    //     this.setState({ align: 'flex-start' }, function() {
+    //       this.setState({
+    //         alignsecond: true,
+    //       });
+    //     }),
+    //   3000
+    // );
+    setIsReady(true)
+  }, [])
+
   if (!isReady) {
     return (
       <AppLoading
@@ -125,3 +144,15 @@ export default () => {
 
   return <Routes />
 }
+
+const styles = {
+  flex: 1,
+  // position: 'absolute',
+  width: '100%',
+  height: 50,
+  padding: 10,
+  backgroundColor: 'transparent',
+  // marginBottom: 30,
+  marginTop: -20,
+}
+ 

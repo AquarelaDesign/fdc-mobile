@@ -146,7 +146,7 @@ export default function Km({ navigation }) {
     bResumo()
   }
 
-  function Atualizacao() {
+  const Atualizacao = () => {
     return (
       <View style={styles.scene}>
         <AtualizaKM placa={placa} buscaHistorico={buscaHistorico} />
@@ -156,15 +156,22 @@ export default function Km({ navigation }) {
 
   const FlatList_header_hist = () => {
     var Sticky_header_View = (
-      <View style={[listStyle.listItem, listStyle.header_style]}>
-        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '34%', textAlign: 'left' }]}>Data</Text> 
-        <Text style={[listStyle.listHeadText, { width: '17%' }]}>KM</Text> 
-        <Text style={[listStyle.listHeadText, { width: '17%' }]}>Qtde</Text> 
+      <View style={[listStyle.listItem, listStyle.header_style, { height: 38 }]}>
+        <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '32%', textAlign: 'left' }]}>Data</Text> 
+        <Text style={[listStyle.listHeadText, { width: '20%' }]}>KM</Text> 
+        <Text style={[listStyle.listHeadText, { width: '16%' }]}>Qtde</Text> 
         <Text style={[listStyle.listHeadText, { width: '17%' }]}>R$</Text> 
         <Text style={[listStyle.listHeadText, { width: '15%' }]}>Tanq.</Text> 
       </View>
     )
     return Sticky_header_View
+  }
+  
+  const getRandom = () => {
+    const min = 1
+    const max = 100
+    const rand = min + Math.random() * (max - min)
+    return rand.toString()
   }
   
   const Historico = () => (
@@ -178,21 +185,24 @@ export default function Km({ navigation }) {
         <FlatList 
           style={listStyle.list}
           data={historico}
-          keyExtractor={historico => `${historico.idgpas}${historico.hortra}`}
+          keyExtractor={historico => historico.idgpas.toString() + historico.hortra.toString() + getRandom()}
           
           // numColumns={5}
           renderItem={({ item, index }) => (
-            <View style={[listStyle.listItem, { backgroundColor: colors[index % colors.length] }]}>
-              <Text style={[listStyle.listText, { paddingLeft: 10, width: '34%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
-              <Text style={[listStyle.listText, { width: '17%' }]}>{item.kilome}</Text> 
-              <Text style={[listStyle.listText, { width: '17%' }]}>{item.quant}</Text> 
+            <>
+            {/*console.log('item', item)*/}
+            <View style={[listStyle.listItem, { height: 38, backgroundColor: colors[index % colors.length] }]}>
+              <Text style={[listStyle.listText, { paddingLeft: 10, width: '32%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
+              <Text style={[listStyle.listText, { width: '20%' }]}>{item.kilome}</Text> 
+              <Text style={[listStyle.listText, { width: '16%' }]}>{item.quant}</Text> 
               <Text style={[listStyle.listText, { width: '17%' }]}>{item.valor}</Text> 
               <Image 
-                style={{flex: 1, marginTop: 5, marginLeft: 15, alignSelf: "center", }} 
-                resizeMode='contain' 
+                style={{flex: 1, height: 25, width: 35, marginTop: 5, marginLeft: 15, alignSelf: "center", }} 
+                // resizeMode='contain' 
                 source={item.tanqch ? cheio : parcial} 
               />
-            </View>
+            </View> 
+            </>
           )}
 
           ListHeaderComponent={FlatList_header_hist}
@@ -251,14 +261,14 @@ export default function Km({ navigation }) {
     </View>
   )
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {marginTop: -15}]}>
+    <SafeAreaView style={[GlobalStyles.container, { marginTop: 0 }]}>
       <Container>
         <Header hasTabs/>
         <Tabs initialPage={initialTab}>
@@ -281,12 +291,12 @@ export default function Km({ navigation }) {
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
-    marginTop: 10,
+    //  marginTop: 10,
   },
   
   tabContainer: {
     flex: 1,
-    marginTop: 38,
+    // marginTop: 38,
   },
 
   row: {
@@ -315,5 +325,13 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
 
+  listText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    textAlign: 'right',
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  
 
 })

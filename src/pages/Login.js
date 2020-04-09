@@ -410,8 +410,9 @@ export default function Login({ navigation }) {
             pcodprg: '',
             pemail: email,
             psenha: password,
+            porigem: 'tfcpar',
           })).then(response => {
-            // console.log('response', response)
+            console.log('response', response)
             if (response.status === 200) {
 
               // console.log('response.data', response.data)
@@ -427,17 +428,18 @@ export default function Login({ navigation }) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttfcusu, ttretorno } = response.data.ProDataSet
                 
-                setOficina(ttfcusu[0])
-                registerForPushNotifications(email)
-                
                 if (ttretorno[0].tipret !== '') {
                   ToastAndroid.showWithGravity(
                     ttretorno[0].mensagem,
                     ToastAndroid.LONG,
                     ToastAndroid.TOP
                   )
+                  return
                 }
 
+                setOficina(ttfcusu[0])
+                registerForPushNotifications(email)
+                
                 AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
                 AsyncStorage.setItem('token', token)
                 AsyncStorage.setItem('Autorizado', '')

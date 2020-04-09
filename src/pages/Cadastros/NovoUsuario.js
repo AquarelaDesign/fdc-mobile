@@ -696,7 +696,7 @@ const styles = StyleSheet.create({
 
   fragment: {
     marginTop: 10,
-    marginBottom: 70,
+    // marginBottom: 70,
     marginRight: 10,
     borderTopWidth: 0,
   },

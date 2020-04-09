@@ -93,14 +93,14 @@ export default function Etiquetas({ navigation }) {
     return rand.toString()
   }
   
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 40,}]}>
+    <SafeAreaView style={[GlobalStyles.container, { marginTop: 55 }]}>
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}

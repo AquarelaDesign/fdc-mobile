@@ -174,9 +174,9 @@ export const listStyle = {
   },
 
   list: {
-    paddingHorizontal: 5,
+    // paddingHorizontal: 5,
     flexGrow: 0,
-    marginBottom: 90,
+    // marginBottom: 10,
   },
 
   listItem: {

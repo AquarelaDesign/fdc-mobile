@@ -167,7 +167,7 @@ const Promocoes = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {paddingTop: 25,}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: 0,}]}>
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}
