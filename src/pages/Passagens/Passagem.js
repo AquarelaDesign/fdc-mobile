@@ -419,7 +419,7 @@ export default function Passagem({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {marginTop: -50}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: 0}]}>
       <Container>
         <Header hasTabs/>
         <Tabs initialPage={0}>
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
 
   scene: {
     flex: 1,
-    marginTop: 10,
+    marginTop: 0,
   },
   
   tabContainer: {

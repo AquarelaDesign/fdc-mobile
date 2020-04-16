@@ -46,6 +46,7 @@ export default function Login({ navigation }) {
   const [tkpush, setTkpush] = useState('')
   const [modView, setModView] = useState(false)
   const [mvSenha, setMvSenha] = useState(false)
+  const [fbOK, setFbOK] = useState(false)
   const [novaSenha, setNovaSenha] = useState('')
   const [confSenha, setConfSenha] = useState('')
   const [codseg, setCodseg] = useState('')
@@ -144,9 +145,12 @@ export default function Login({ navigation }) {
     //   setEmail('sandro.luizdepaula@gmail.com')
     // } else {
       setEmail(face.email)
+      setFbOK(true)
+      AsyncStorage.setItem('Autorizado', 'S')
+      buscaUsuario(face.email)
     // }
     // navigation.navigate('Home')
-    handleSubmit()
+    // handleSubmit()
   }
 
   const _handleNotification = Notification => {
@@ -225,8 +229,7 @@ export default function Login({ navigation }) {
             AsyncStorage.setItem('Autorizado', '')
             setCodseg(ttfcusu[0].codseg)
 
-            console.log('codseg', ttfcusu[0].codseg)
-            
+            // console.log('codseg', ttfcusu[0].codseg)
             setModView(false)
             setMvSenha(false)
 
@@ -399,126 +402,206 @@ export default function Login({ navigation }) {
   }
 
   const handleSubmit = async () => {
-    if (email !== '') {
-      try {
-        await AsyncStorage.setItem('email', email)
-        if (email !== 'demo@demo.com') {
-
-          await Api.post('', querystring.stringify({
-            pservico: 'wfcusu',
-            pmetodo: 'Autentica',
-            pcodprg: '',
-            pemail: email,
-            psenha: password,
-            porigem: 'tfcpar',
-          })).then(response => {
-            console.log('response', response)
-            if (response.status === 200) {
-
-              // console.log('response.data', response.data)
-
-              if (response.data === '') {
-                ToastAndroid.showWithGravity(
-                  'Usuário não encontrado!',
-                  ToastAndroid.LONG,
-                  ToastAndroid.TOP
-                )
-              }
-
-              if (response.data.ProDataSet !== undefined) {
-                const { ttfcusu, ttretorno } = response.data.ProDataSet
-                
-                if (ttretorno[0].tipret !== '') {
-                  ToastAndroid.showWithGravity(
-                    ttretorno[0].mensagem,
-                    ToastAndroid.LONG,
-                    ToastAndroid.TOP
-                  )
-                  return
-                }
-
-                setOficina(ttfcusu[0])
-                registerForPushNotifications(email)
-                
-                AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
-                AsyncStorage.setItem('token', token)
-                AsyncStorage.setItem('Autorizado', '')
-                
-                setMvSenha(false)
-                setModView(false)
-                
-                if (ttfcusu.situsu === 'R') {
-                  setMvSenha(true)
-                } else if (ttfcusu[0].situsu === 'P') {
-                  setCodseg(ttfcusu[0].codseg)
-                  setModView(true)
-                } else {
-                  AsyncStorage.setItem('Autorizado', 'S')
-                  navigation.navigate('Home')
-                }
-                
-              } 
-            } else {
-              ToastAndroid.showWithGravity(
-                response.status,
-                ToastAndroid.LONG,
-                ToastAndroid.TOP
-              )
-            }
-          })
-          /*
-          const response = await api.post('/oapi/login', {
-            "email": email,
-            "senha": password
-          })
-          
-          await AsyncStorage.setItem('email', email)
-          registerForPushNotifications(email)
-
-          if (response.status === 200) {
-            const { oficina, token } = response.data
-            await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
-            await AsyncStorage.setItem('token', token)
-
-            if (oficina.situsu === 'P') {
-              setCodseg(oficina.codseg)
-              setModView(true)
-            }
-          }
-          */
-        } else {
-          await AsyncStorage.setItem('email', email)
-          await AsyncStorage.setItem('oficina', { e_mail: email })
-          await AsyncStorage.setItem('token', '')
-          await AsyncStorage.setItem('Autorizado', '')
-        }
-      }
-      catch (error) {
-        const { response } = error
-        if (response !== undefined) {
-          ToastAndroid.showWithGravity(
-            response.data.errors[0],
-            ToastAndroid.LONG,
-            ToastAndroid.TOP
-          )
-        } else {
-          ToastAndroid.showWithGravity(
-            'Falha ao conectar com o servidor, por favor tente mais tarde.',
-            ToastAndroid.LONG,
-            ToastAndroid.TOP
-          )
-        }
-      }
-    } else {
+    if (fbOK === true) {
+      navigation.navigate('Home')
+      return
+    }
+    
+    if (email === '') {
       ToastAndroid.showWithGravity(
         'E-mail deve ser informado!',
         ToastAndroid.LONG,
         ToastAndroid.TOP
       )
+      return
+    }
+
+    try {
+      await AsyncStorage.setItem('email', email)
+      if (email !== 'demo@demo.com') {
+
+        await Api.post('', querystring.stringify({
+          pservico: 'wfcusu',
+          pmetodo: 'Autentica',
+          pcodprg: '',
+          pemail: email,
+          psenha: password,
+          porigem: 'tfcpar',
+        })).then(response => {
+          if (response.status === 200) {
+            if (response.data === '') {
+              ToastAndroid.showWithGravity(
+                'Usuário não encontrado!',
+                ToastAndroid.LONG,
+                ToastAndroid.TOP
+              )
+            }
+
+            if (response.data.ProDataSet !== undefined) {
+              const { ttfcusu, ttretorno } = response.data.ProDataSet
+              
+              if (ttretorno[0].tipret !== '') {
+                ToastAndroid.showWithGravity(
+                  ttretorno[0].mensagem,
+                  ToastAndroid.LONG,
+                  ToastAndroid.TOP
+                )
+                return
+              }
+
+              setOficina(ttfcusu[0])
+              registerForPushNotifications(email)
+              
+              AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
+              AsyncStorage.setItem('token', token)
+              AsyncStorage.setItem('Autorizado', '')
+              
+              setMvSenha(false)
+              setModView(false)
+              
+              if (ttfcusu.situsu === 'R') {
+                setMvSenha(true)
+              } else if (ttfcusu[0].situsu === 'P') {
+                setCodseg(ttfcusu[0].codseg)
+                setModView(true)
+              } else {
+                AsyncStorage.setItem('Autorizado', 'S')
+                navigation.navigate('Home')
+              }
+              
+            } 
+          } else {
+            ToastAndroid.showWithGravity(
+              response.status,
+              ToastAndroid.LONG,
+              ToastAndroid.TOP
+            )
+          }
+        })
+        /*
+        const response = await api.post('/oapi/login', {
+          "email": email,
+          "senha": password
+        })
+        
+        await AsyncStorage.setItem('email', email)
+        registerForPushNotifications(email)
+
+        if (response.status === 200) {
+          const { oficina, token } = response.data
+          await AsyncStorage.setItem('oficina', JSON.stringify(oficina))
+          await AsyncStorage.setItem('token', token)
+
+          if (oficina.situsu === 'P') {
+            setCodseg(oficina.codseg)
+            setModView(true)
+          }
+        }
+        */
+      } else {
+        await AsyncStorage.setItem('email', email)
+        await AsyncStorage.setItem('oficina', { e_mail: email })
+        await AsyncStorage.setItem('token', '')
+        await AsyncStorage.setItem('Autorizado', '')
+      }
+    }
+    catch (error) {
+      const { response } = error
+      if (response !== undefined) {
+        ToastAndroid.showWithGravity(
+          response.data.errors[0],
+          ToastAndroid.LONG,
+          ToastAndroid.TOP
+        )
+      } else {
+        ToastAndroid.showWithGravity(
+          'Falha ao conectar com o servidor, por favor tente mais tarde.',
+          ToastAndroid.LONG,
+          ToastAndroid.TOP
+        )
+      }
     }
   }
 
-  async function registerForPushNotifications(Email) {
+  const buscaUsuario = async (Email) => {
+    try {
+      await Api.post('', querystring.stringify({
+        pservico: 'wfcusu',
+        pmetodo: 'BuscaUsuario',
+        pcodprg: '',
+        pemail: Email,
+      })).then(response => {
+        if (response.status === 200) {
+          if (response.data === '') {
+            ToastAndroid.showWithGravity(
+              'Usuário não encontrado!',
+              ToastAndroid.LONG,
+              ToastAndroid.TOP
+            )
+          }
+
+          if (response.data.ProDataSet !== undefined) {
+            const { ttfcusu, ttretorno } = response.data.ProDataSet
+            
+            if (ttretorno[0].tipret !== '') {
+              ToastAndroid.showWithGravity(
+                ttretorno[0].mensagem,
+                ToastAndroid.LONG,
+                ToastAndroid.TOP
+              )
+              return
+            }
+
+            setOficina(ttfcusu[0])
+            registerForPushNotifications(email)
+            
+            AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu[0]))
+            AsyncStorage.setItem('token', token)
+            AsyncStorage.setItem('Autorizado', '')
+            
+            setMvSenha(false)
+            setModView(false)
+            
+            if (ttfcusu.situsu === 'R') {
+              setMvSenha(true)
+            } else if (ttfcusu[0].situsu === 'P') {
+              setCodseg(ttfcusu[0].codseg)
+              setModView(true)
+            } else {
+              AsyncStorage.setItem('Autorizado', 'S')
+              navigation.navigate('Home')
+            }
+            
+          } 
+        } else {
+          ToastAndroid.showWithGravity(
+            response.status,
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          )
+        }
+      })
+
+    }
+    catch (error) {
+      const { response } = error
+      if (response !== undefined) {
+        ToastAndroid.showWithGravity(
+          response.data.errors[0],
+          ToastAndroid.LONG,
+          ToastAndroid.TOP
+        )
+      } else {
+        ToastAndroid.showWithGravity(
+          'Falha ao conectar com o servidor, por favor tente mais tarde.',
+          ToastAndroid.LONG,
+          ToastAndroid.TOP
+        )
+      }
+    }
+  }
+
+  const registerForPushNotifications = async (Email) => {
     const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
     if (status !== 'granted') {
       const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
@@ -536,7 +619,7 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView behavior="height" style={[styles.container, {paddingTop: 75,}]}>
+    <KeyboardAvoidingView behavior="padding" style={[styles.container, {paddingTop: 40,}]}>
       <Overlay
         isVisible={modView}
         supportedOrientations={['portrait', 'landscape']}
@@ -742,7 +825,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: -50,
+    // marginTop: -50,
   },
 
   background: {

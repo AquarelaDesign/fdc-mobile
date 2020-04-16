@@ -28,7 +28,7 @@ oapi.interceptors.request.use(async config => {
       }
 
       config.params = querystring.stringify({
-        widtrans: `${codemp}|1|1|${Email}`,
+        widtrans: `${codemp}|1|9999|${Email}`,
         wip: wIP,
         wseqaba: 0,
       })

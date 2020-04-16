@@ -152,7 +152,7 @@ export default function ListaPlacas({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: 0}]}>
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}

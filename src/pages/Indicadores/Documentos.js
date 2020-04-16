@@ -48,42 +48,57 @@ const Documentos = () => {
     dev: "NFe Devolução",
     imp: "NFe Importada",
     pas: "Passagem",
-    rps: "RPS",
-    nfse: "NFSe",
+    rps: "RPS Sem Converter",
+    nfse: "RPS Convertido",
     err: "Com Erro",
     orc: "Orçamento",
-    val: "NFe",
+    val: "NFe Válida",
     geral: "Total",
   }
 
   const Cores = {
     canval: ['#6f0000', '#fc6767'],
-    cancel: ['#200122', '#6f0000'],
-    inu: ['#000000', '#434343'],
-    dev: ['#3F51B5', '#2196F3'],
-    imp: ['#134E5E', '#71B280'],
+    cancel: ['#FE642E','#B40404'],
+    inu: ['#434343','#000000'],
+    dev: ['#2196F3','#3F51B5'],
+    imp: ['#71B280','#134E5E'],
     pas: ['#FFD600', '#FF9800'],
-    rps: ['#2193b0', '#134E5E'],
-    nfse: ['#4CAF50', '#8BC34A'],
+    rps: ['#FE9A2E', '#FF4000'],
+    nfse: ['#64FE2E', '#5FB404'],
     err: ['#F44336', '#E91E63'],
     orc: ['#FF9800', '#F44336'],
-    val: ['#061700', '#56ab2f'],
+    val: ['#64FE2E', '#A5DF00'],
     geral: ['#4B0082', '#8B008B'],
   }
   
   const Icones = {
-    canval: "close",
-    cancel: "times-circle-o",
-    inu: "times-circle",
-    dev: "refresh",
-    imp: "cloud-download",
-    pas: "car",
-    rps: "cogs",
+    canval: "cancel",
+    cancel: "close",
+    inu: "minus-circle",
+    dev: "sync",
+    imp: "file-download",
+    pas: "wrench",
+    rps: "file-excel",
     nfse: "file-o",
-    err: "warning",
-    orc: "calculator",
+    err: "alert",
+    orc: "file-document-edit-outline",
     val: "check",
     geral: "flag",
+  }
+
+  const Tipos = {
+    canval: "material-community",
+    cancel: "material-community",
+    inu: "material-community",
+    dev: "material-community",
+    imp: "material-community",
+    pas: "material-community",
+    rps: "material-community",
+    nfse: "font-awesome",
+    err: "material-community",
+    orc: "material-community",
+    val: "material-community",
+    geral: "font-awesome",
   }
 
   useEffect(() => {
@@ -243,6 +258,7 @@ const Documentos = () => {
         doc.push({
           icon: Icones[key],
           title: Legendas[key],
+          type: Tipos[key],
           linearGradientColors: Cores[key],
           valor: value,
         })
@@ -383,7 +399,7 @@ const Documentos = () => {
               key={i}
               leftIcon={{
                 name: l.icon,
-                type: 'font-awesome',
+                type: l.type,
                 color: 'blue',
               }}
               title={l.title}

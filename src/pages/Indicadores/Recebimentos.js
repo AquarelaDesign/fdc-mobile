@@ -90,6 +90,7 @@ const Recebimentos = () => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttpagto } = response.data.ProDataSet
+                console.log('ttpagto', ttpagto)
                 montaLista(ttpagto)
               }
             } 
@@ -113,9 +114,12 @@ const Recebimentos = () => {
   const montaLista = async (pagto) => {
     let rec = []
     pagto.map((item, i) => {
+      var perc = parseFloat(item.perc)
+      var percc = perc.toFixed(2)
       rec.push({
         icon: Icones[item.tippag],
         title: item.despag,
+        subtitle: item.qtdtot + ' (' + percc + '%)',
         valor: item.valor,
         linearGradientColors: Cores[item.tippag],
       })
@@ -260,6 +264,8 @@ const Recebimentos = () => {
               }}
               title={l.title}
               titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 13 }}
+              subtitle={l.subtitle}
+              subtitleStyle={{ color: '#BCF5A9', fontWeight: 'bold', fontSize: 10 }}
               rightTitle={formataValor(l.valor)}
               linearGradientProps={{
                 colors: l.linearGradientColors,

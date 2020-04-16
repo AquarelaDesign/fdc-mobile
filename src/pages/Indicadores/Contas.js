@@ -30,6 +30,7 @@ import btnLogo from '../../assets/filter.png'
 
 import { dataInicial, dataFinal } from '../../globais'
 import DatePicker from 'react-native-datepicker'
+import publicIP from 'react-native-public-ip'
 
 const { width } = Dimensions.get('window')
 const querystring = require('querystring')
@@ -42,6 +43,24 @@ const Contas = () => {
   const [modView, setModView] = useState(false)
   const [dtInicio, setDtInicio] = useState(dataInicial)
   const [dtFinal, setDtFinal] = useState(dataFinal)
+  const [wip, setWip] = useState('0.0.0.0')
+  const [codemp, setCodemp] = useState('')
+
+  
+  useEffect(() => {
+    AsyncStorage.getItem('oficina').then(Oficina => {
+      publicIP().then(ip => {
+        setWip(ip)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+        
+      if (Oficina !== undefined && Oficina !== null) {
+        setCodemp(Oficina.codemp !== undefined && Oficina.codemp !== null ? Oficina.codemp : '')
+      }
+    })
+  }, [])
 
   useEffect(() => {
     setIsLoading(true)
@@ -67,7 +86,11 @@ const Contas = () => {
             pdtini: dtInicio,
             pdtfim: dtFinal,
             ptipcon: 'A',
-          })).then(response => {
+            widtrans: `${codemp}|1|9999|${email}`,
+            wip: wip,
+            wseqaba: 0,
+              })).then(response => {
+            // console.log('response', response)
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttresumo } = response.data.ProDataSet

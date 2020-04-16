@@ -4,6 +4,7 @@ import {
   AsyncStorage,
   Dimensions,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   Image,
   Text,
@@ -36,6 +37,8 @@ import outros from '../assets/Outros.png'
 const { width } = Dimensions.get('window')
 
 const querystring = require('querystring')
+
+StatusBar.setHidden(true)
 
 export default function Home({ navigation }) {  
   const [isLoading, setIsLoading] = useState(false)

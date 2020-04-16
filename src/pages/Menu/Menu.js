@@ -57,11 +57,14 @@ export default function Menu({ navigation }) {
               <Text style={GlobalStyles.boxText}>Sua conta</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('NEW')}>
+          {/* <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('NEW')}>
             <View style={GlobalStyles.box}>
               <Icon name="user-plus" size={60} color="#007189" />
               <Text style={GlobalStyles.boxText}>Novo Usuario</Text>
             </View>
+          </TouchableOpacity> */}
+          <TouchableOpacity activeOpacity = { .5 }>
+            <View style={GlobalStyles.box}></View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }>
             <View style={GlobalStyles.box}></View>

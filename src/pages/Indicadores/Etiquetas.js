@@ -70,6 +70,58 @@ const Etiquetas = () => {
     async function montaLista(dados) {
       let etq = []
 
+      // console.log('dados', dados)
+
+      etq.push({
+        icon: "tag-multiple",
+        title: "Abertas",
+        type: 'material-community',
+        linearGradientColors: ['#2193b0', '#134E5E'],
+        valor: dados[0].qtetqtot,
+      })
+
+      etq.push({
+        icon: "check-box-outline",
+        title: "Normais",
+        type: 'material-community',
+        linearGradientColors: ['#4CAF50', '#8BC34A'],
+        valor: dados[0].qtetqn,
+      })
+
+      etq.push({
+        icon: "alert",
+        title: "Próximas",
+        type: 'material-community',
+        linearGradientColors: ['#FF9800', '#F44336'],
+        valor: dados[0].qtetqp,
+      })
+
+      etq.push({
+        icon: "close",
+        title: "Vencidas",
+        type: 'material-community',
+        linearGradientColors: ['#F44336', '#E91E63'],
+        valor: dados[0].qtetqv,
+      })
+
+      etq.push({
+        icon: "thumbs-up",
+        title: "Efetuadas",
+        type: 'font-awesome',
+        linearGradientColors: ['#3F51B5', '#2196F3'],
+        valor: dados[0].qtreal,
+      })
+
+      etq.push({
+        icon: "thumbs-down",
+        title: "Perdidas",
+        type: 'font-awesome',
+        linearGradientColors: ['#061700', '#56ab2f'],
+        valor: dados[0].qtperd,
+      })
+
+
+/*
       for (let [key, value] of Object.entries(dados)) {
         if (value !== 0) {
           for (let [k, v] of Object.entries(value)) {
@@ -82,7 +134,7 @@ const Etiquetas = () => {
           }
         }
       }
-
+*/
       setEtqs(etq)
       setIsLoading(false)
     }
@@ -139,14 +191,14 @@ const Etiquetas = () => {
     setModView(true)
   }
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, { marginTop: 35, }]}>
+    <SafeAreaView style={[GlobalStyles.container, GlobalStyles.AndroidSafeArea]}>
       <Overlay
         isVisible={modView}
         supportedOrientations={['portrait', 'landscape']}
@@ -200,7 +252,7 @@ const Etiquetas = () => {
               key={i}
               leftIcon={{
                 name: l.icon,
-                type: 'font-awesome',
+                type: l.type,
                 color: 'blue',
               }}
               title={l.title}

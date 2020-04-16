@@ -75,6 +75,7 @@ const Usuario = ({ navigation }) => {
 
   const handleEncerra = () => {
     try {
+      callGraph()
       AsyncStorage.setItem('oficina', '')
       AsyncStorage.setItem('token', '')
       AsyncStorage.setItem('Autorizado', '')
@@ -90,7 +91,26 @@ const Usuario = ({ navigation }) => {
     }
   }
 
-  async function handleSenha() {
+  const callGraph = async () => {
+    var token = oficina.idface
+
+    const resp = await fetch(
+      `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,about,picture`
+    )
+    const responseJSON = JSON.stringify(await resp.json())
+    const face = JSON.parse(responseJSON)
+
+    var lParams = `access_token=${token}`
+    const response = await fetch(
+      `https://graph.facebook.com/${face.id}/permissions`,{
+      method : 'DELETE',
+      body: lParams
+    })
+    // console.log('response', response)
+
+  }
+
+  const handleSenha = async () => {
     if (isBtnSenha) {
       if (senha !== '' && senha1 !== '') {
         if (senha !== senha1) {

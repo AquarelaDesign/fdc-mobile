@@ -105,7 +105,7 @@ export default function Info({ navigation }) {
   }
   
   return (
-    <SafeAreaView style={GlobalStyles.container}>
+    <SafeAreaView style={[GlobalStyles.container, { marginTop: 35, }]}>
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}
