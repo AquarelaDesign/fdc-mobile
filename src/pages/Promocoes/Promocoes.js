@@ -140,7 +140,7 @@ const Promocoes = ({ navigation }) => {
     setFiltrar('')
   }
  
-  function SearchFilterFunction(text) {
+  const SearchFilterFunction = (text) => {
     // passando o texto inserido em textinput
     const newData = promo.filter(function(item) {
       // aplicar filtro ao texto inserido na barra de pesquisa
@@ -160,14 +160,14 @@ const Promocoes = ({ navigation }) => {
     return rand.toString()
   }
   
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {marginTop: 0,}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: -20,}]}>
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}

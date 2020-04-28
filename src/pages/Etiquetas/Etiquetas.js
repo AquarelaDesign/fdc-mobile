@@ -100,7 +100,7 @@ export default function Etiquetas({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {marginTop: 55}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: 35}]}>
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}

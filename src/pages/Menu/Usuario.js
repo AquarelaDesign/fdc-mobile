@@ -139,7 +139,7 @@ const Usuario = ({ navigation }) => {
     }
   }
 
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 10,
     height: 42,
-    backgroundColor: '#007189',
+    backgroundColor: '#27a2b3',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 2,

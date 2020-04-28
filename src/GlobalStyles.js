@@ -5,13 +5,12 @@ import {
 
 import { LinearGradient } from 'expo-linear-gradient'
 
-const bg_color = 'rgba(65,105,225,1)' //'#4169E1'
+const bg_color = '#0dbce3'
 const im_color = 'rgba(135,206,250,1)' //'#87CEFA'
-
 const width = Dimensions.get('window').width
 
-export const colors = ['rgba(30,144,255,1)', 'rgba(0,191,255,1)']
-export const bg_colors = ['#6495ED', '#1E90FF', '#007189']
+export const colors = ['#27a2b3', '#0DC9E3']
+export const bg_colors = ['#218da3', '#1db5b8']
 export const bg_start = { x: 1, y: 0.45 }
 export const bg_end = { x: 0, y: 0.75 }
 export const _url = 'https://www.fichadocarro.com.br'
@@ -24,7 +23,7 @@ export default StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#007189',
+    backgroundColor: '#0DC9E3',
   },
 
   background: {
@@ -33,6 +32,14 @@ export default StyleSheet.create({
     height: '100%',
     justifyContent: 'flex-start',
     alignItems: 'center',
+  },
+
+  bglinear: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: '100%',
   },
 
   boxContainer: {
@@ -61,6 +68,7 @@ export default StyleSheet.create({
     fontSize: 12,
     color: '#FFFFFF',
     marginTop: 10,
+    fontWeight: 'bold',
   },
 
   boxSpace: {
@@ -72,7 +80,7 @@ export default StyleSheet.create({
     resizeMode: "contain",
     alignSelf: "center",
     marginTop: 0,
-    backgroundColor: '#007189',
+    backgroundColor: '#27a2b3',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -170,7 +178,12 @@ export const searchStyle = {
 export const listStyle = {
   header_style: {
     fontWeight: 'bold',
-    backgroundColor: '#4169E1', 
+    backgroundColor: '#0db5e3', 
+  },
+
+  tab_style: {
+    fontWeight: 'bold',
+    backgroundColor: '#0d99bf', 
   },
 
   list: {
@@ -191,10 +204,15 @@ export const listStyle = {
   listHeadText: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: '#ff0',
+    color: '#FFF', // '#ff0'
     textAlign: 'right',
     flexDirection: 'row',
     alignSelf: 'center',
+  },
+
+  listIcon: {
+    fontSize: 15,
+    color: '#FFF', // '#ff0'
   },
 
   listText: {

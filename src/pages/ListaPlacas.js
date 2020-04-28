@@ -89,13 +89,13 @@ export default function ListaPlacas({ navigation }) {
     })
   }, [email, oficina, tipo])
   
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
   }
 
-  function handleNavigate(placa) {
+  const handleNavigate = (placa) => {
     switch (tipo) {
       case 'EXC': ExcluiVeiculo(placa); break
       case 'PAS': navigation.navigate('Passagens', { placa }); break
@@ -105,7 +105,7 @@ export default function ListaPlacas({ navigation }) {
     }
   }
 
-  function ExcluiVeiculo(placa) {
+  const ExcluiVeiculo = (placa) => {
     Alert.alert(
       placa,
       `Confirma a Exclusão da Placa?`,
@@ -156,8 +156,8 @@ export default function ListaPlacas({ navigation }) {
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}
-        start={bg_start}
-        end={bg_end}
+        // start={bg_start}
+        // end={bg_end}
         >
         <Image style={styles.logo} source={logo} />
         <Text style={styles.title}>Selecione a placa para consulta</Text>
@@ -216,7 +216,8 @@ const styles = StyleSheet.create({
   },
   
   listText: {
-    fontSize: 22,
+    paddingTop: 3,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',

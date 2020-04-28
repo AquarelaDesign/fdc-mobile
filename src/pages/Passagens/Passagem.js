@@ -419,20 +419,20 @@ export default function Passagem({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {marginTop: 0}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: -20}]}>
       <Container>
         <Header hasTabs/>
         <Tabs initialPage={0}>
-          <Tab heading={ <TabHeading><Icon name="md-paper" /></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-paper" /></TabHeading>}>
             {Relatos()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-construct" /></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-construct" /></TabHeading>}>
             {Servicos()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-cog" /></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-cog" /></TabHeading>}>
             {Pecas()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-information-circle-outline" /></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-information-circle-outline" /></TabHeading>}>
             {Info()}
           </Tab>
         </Tabs>

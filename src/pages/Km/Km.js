@@ -268,17 +268,17 @@ export default function Km({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, { marginTop: 0 }]}>
+    <SafeAreaView style={[GlobalStyles.container, { marginTop: -20 }]}>
       <Container>
         <Header hasTabs/>
         <Tabs initialPage={initialTab}>
-          <Tab heading={ <TabHeading><Icon name="md-create" /></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-create" /></TabHeading>}>
             {Atualizacao()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-paper" /></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-paper" /></TabHeading>}>
             {Historico()}
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="md-clipboard" /></TabHeading>}>
+          <Tab heading={ <TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-clipboard" /></TabHeading>}>
             {Resumo()}
           </Tab>
         </Tabs>

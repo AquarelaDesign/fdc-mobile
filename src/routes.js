@@ -12,19 +12,19 @@ import {
 import { createAppContainer } from 'react-navigation'
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer'
 import { createStackNavigator } from 'react-navigation-stack'
-import { Ionicons } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 import SafeAreaView from 'react-native-safe-area-view'
 import Lottie from 'lottie-react-native'
 
 import { AppLoading } from 'expo'
 
 import _routes from './_routes'
-import loading from './assets/json/car.json'
+import loading from './assets/json/car-scan.json'
 
 const WINDOW_WIDTH = Dimensions.get('window').width
 
 const CustomDrawerContentComponent = props => (
-  <View style={{ flex: 1, backgroundColor: '#43484d' }}>
+  <View style={{ flex: 1, backgroundColor: '#27a2b3' }}>
     <View
       style={{ marginTop: 40, justifyContent: 'center', alignItems: 'center' }}
     >
@@ -56,17 +56,18 @@ const Routes = createAppContainer(
         headerForceInset: { top: 'never', bottom: 'never' },
         headerTintColor: "#fff",
         headerStyle: {
-          backgroundColor: "#4169E1",
+          backgroundColor: "#218da3",
+          height: 35,
         },
   
         headerLeft:
           <TouchableOpacity
             style={styles}
             onPress={() => navigation.goBack()}>
-            <Ionicons
-              style={{ color: '#ffffff', width: 50, height: 50 }}
-              name={'ios-arrow-dropleft'}
-              size={50} />
+            <FontAwesome
+              style={{ color: '#ffffff', width: 40, height: 30 }}
+              name={'long-arrow-left'}
+              size={30} />
           </TouchableOpacity>
       }),
     },
@@ -149,7 +150,7 @@ const styles = {
   flex: 1,
   // position: 'absolute',
   width: '100%',
-  height: 50,
+  height: 30,
   padding: 10,
   backgroundColor: 'transparent',
   // marginBottom: 30,

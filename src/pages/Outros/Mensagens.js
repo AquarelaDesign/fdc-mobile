@@ -81,6 +81,7 @@ const Mensagens = () => {
             }), { 
               signal: signal 
             }).then(response => {
+              console.log('response', response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttpush } = response.data.ProDataSet
@@ -144,7 +145,7 @@ const Mensagens = () => {
     setFiltrar('')
   }
 
-  function SearchFilterFunction(text) {
+  const SearchFilterFunction = (text) => {
     // passando o texto inserido em textinput
     const newData = mens.filter(function(item) {
       // aplicar filtro ao texto inserido na barra de pesquisa
@@ -164,7 +165,7 @@ const Mensagens = () => {
     return rand.toString()
   }
   
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
@@ -192,7 +193,7 @@ const Mensagens = () => {
               round
               searchIcon={{ size: 24 }}
               
-              containerStyle={[searchStyle.containerStyle, { marginTop: 20, width: Dimensions.get('window').width }]}
+              containerStyle={[searchStyle.containerStyle, { marginTop: 0, width: Dimensions.get('window').width }]}
               inputStyle={searchStyle.inputStyle}
               leftIconContainerStyle={searchStyle.leftIconContainerStyle}
               rightIconContainerStyle={searchStyle.rightIconContainerStyle}

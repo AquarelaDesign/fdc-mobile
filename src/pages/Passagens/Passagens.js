@@ -11,7 +11,15 @@ import {
   View,
 } from 'react-native'
 
-import {Container, Header, Tab, Tabs, TabHeading, Icon } from 'native-base'
+import {
+  Container, 
+  Header, 
+  Tab, 
+  Tabs, 
+  TabHeading, 
+  Icon 
+} from 'native-base'
+
 import { LinearGradient } from 'expo-linear-gradient'
 import Lottie from 'lottie-react-native'
 
@@ -152,13 +160,13 @@ export default function Passagens({ navigation }) {
         <Text style={[listStyle.listHeadText, { paddingLeft: 10, width: '35%', textAlign: 'left' }]}>Data</Text> 
         <Text style={[listStyle.listHeadText, { width: '20%' }]}>KM</Text> 
         <Text style={[listStyle.listHeadText, { width: '15%' }]}>
-          <Icon name="md-paper" style={{color: '#ff0', fontSize: 15}}/>
+          <Icon name="md-paper" style={listStyle.listIcon}/>
         </Text> 
         <Text style={[listStyle.listHeadText, {  width: '15%' }]}>
-          <Icon name="md-construct" style={{color: '#ff0', fontSize: 15}}/>
+          <Icon name="md-construct" style={listStyle.listIcon}/>
         </Text> 
         <Text style={[listStyle.listHeadText, { width: '15%' }]}>
-          <Icon name="md-cog" style={{color: '#ff0', fontSize: 15}}/>
+          <Icon name="md-cog" style={listStyle.listIcon}/>
         </Text> 
       </View>
     )
@@ -298,7 +306,7 @@ export default function Passagens({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.container, {marginTop: 0}]}>
+    <SafeAreaView style={[GlobalStyles.container, {marginTop: -20}]}>
       {
         pass === undefined ? 
           <Text style={styles.msgText}
@@ -314,13 +322,13 @@ export default function Passagens({ navigation }) {
         <Container>
           <Header hasTabs/>
           <Tabs initialPage={0}>
-            <Tab heading={ <TabHeading><Icon name="md-car" /></TabHeading>}>
+            <Tab heading={<TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-car" /></TabHeading>}>
               {Passagem()}
             </Tab>
-            <Tab heading={ <TabHeading><Icon name="md-construct" /></TabHeading>}>
+            <Tab heading={<TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-construct" /></TabHeading>}>
               {Servicos()}
             </Tab>
-            <Tab heading={ <TabHeading><Icon name="md-cog" /></TabHeading>}>
+            <Tab heading={<TabHeading style={{backgroundColor: '#0d99bf'}}><Icon name="md-cog" /></TabHeading>}>
               {Pecas()}
             </Tab>
           </Tabs>

@@ -160,7 +160,7 @@ export default function Home({ navigation }) {
     
   }
   
-  function Loading() {
+  const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
     )
@@ -170,9 +170,9 @@ export default function Home({ navigation }) {
     <SafeAreaView style={GlobalStyles.container}>
       <LinearGradient
         colors={bg_colors}
-        style={GlobalStyles.background}
-        start={bg_start}
-        end={bg_end}
+        style={GlobalStyles.bglinear}
+        // start={bg_start}
+        // end={bg_end}
         >
         <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('PAR')}>
           <View style={styles.boxBtn}>
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
 
   boxBtn: {
     marginTop: 60,
-    width: width + 60,
+    width: width + 40,
     height: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
