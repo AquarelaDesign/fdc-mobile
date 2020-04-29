@@ -16,7 +16,7 @@ import {
 import { LinearGradient } from '../../components/LinearGradient'
 
 import Lottie from 'lottie-react-native'
-import GlobalStyles, { modalStyle } from '../../GlobalStyles'
+import GlobalStyles, { modalStyle, ico_color } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
 
@@ -70,6 +70,11 @@ const Documentos = () => {
     val: ['#64FE2E', '#A5DF00'],
     geral: ['#4B0082', '#8B008B'],
   }
+
+  const colors = [
+    ['#97f4fc','#97f4fc'], 
+    ['#6be8f2','#6be8f2']
+  ]
   
   const Icones = {
     canval: "cancel",
@@ -125,8 +130,6 @@ const Documentos = () => {
           ).then(response => {
             if (response.status === 200) {
               const { ListaDocs } = response.data.Lista
-              // console.log('response', response)
-              // console.log('ListaDocs', ListaDocs)
               calculaNotas(ListaDocs)
             } else {
               buscaNotas()
@@ -137,10 +140,8 @@ const Documentos = () => {
           
           const { response } = error
           if (response !== undefined) {
-            // console.log('err1', response.data.errors[0])
             setIsLoading(false)
           } else {
-            // console.log('err2', error)
             setIsLoading(false)
           }
         }
@@ -171,7 +172,7 @@ const Documentos = () => {
       ListaDocs.forEach((value, key) => {
         const _tipo = value.TipoNF;
   
-        if (value.Tipo === 'CAN' || value.Situacao === 'C') { // Cancelado
+        if (value.Tipo === 'CAN' || value.Situacao === 'C') {
           if (value.Tipo === 'VAL') {
             totais.canval++
             totais.geral++
@@ -275,11 +276,18 @@ const Documentos = () => {
         displayType={'text'}
         fixedDecimalScale={true}
         decimalScale={0}
-        renderText={value => <Text style={GlobalStyles.listaValor}>{value}</Text>}
+        renderText={value => <Text style={styles.rightTitleStyle}>{value}</Text>}
       />
     )
   }
 
+  const getRandom = () => {
+    const min = 1
+    const max = 100
+    const rand = min + Math.random() * (max - min)
+    return rand.toString()
+  }
+  
   const Loading = () => {
     return (
       <Lottie source={loading} autoPlay loop />
@@ -379,7 +387,7 @@ const Documentos = () => {
       </Overlay>
       
       <View style={styles.row}>
-        <Icon name="file" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Icon name="file" size={40} color={ico_color} style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Documentos</Text>
         <TouchableOpacity activeOpacity = { .5 }  onPress={() => setModView(true)}>
           <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
@@ -396,27 +404,24 @@ const Documentos = () => {
         <View style={styles.list}>
           {docs.map((l, i) => (
             <ListItem
-              key={i}
+              key={i + getRandom()}
               leftIcon={{
                 name: l.icon,
                 type: l.type,
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 13, }}
+              titleStyle={{ color: '#007189', fontWeight: 'bold', fontSize: 13, }}
               rightTitle={formataValor(l.valor)}
-              rightTitleStyle={{ color: 'green', fontWeight: 'bold', fontSize: 13, }}
               linearGradientProps={{
-                colors: l.linearGradientColors,
+                colors: colors[i % colors.length],
                 start: [1, 0],
                 end: [0.2, 0],
               }}
               ViewComponent={LinearGradient}
               containerStyle={{
                 marginHorizontal: 16,
-                marginVertical: 8,
-                borderRadius: 8,
-                marginBottom: 5,
+                borderRadius: 5,
               }}
             />
           ))}
@@ -456,12 +461,18 @@ const styles = StyleSheet.create({
   subtitle: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: '#ff0',
+    color: '#FFF',
     width: width - 10,
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 5,
+  },
+
+  rightTitleStyle: { 
+    color: '#0026ff', 
+    fontWeight: 'bold', 
+    fontSize: 15, 
   },
 
 })

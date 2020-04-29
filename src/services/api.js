@@ -12,7 +12,6 @@ api.interceptors.request.use(async config => {
   AsyncStorage.getItem('email').then(Email => {
     AsyncStorage.getItem('token').then(Token => {
       if (Token) {
-        // config.headers.Authorization = `Bearer ${Token}`;
         config.headers.Authorization = Token
       }
     })

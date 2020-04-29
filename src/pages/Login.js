@@ -24,8 +24,6 @@ import { Notifications } from 'expo'
 import * as Permissions from 'expo-permissions'
 
 import { modalStyle } from '../GlobalStyles'
-// import Alerta from '../components/Alerta'
-// import api from '../services/api'
 import Api from '../services/oapi'
 
 import logo from '../assets/logo.png'
@@ -34,8 +32,6 @@ import bg from '../assets/splash.png'
 const { width } = Dimensions.get('window')
 
 const querystring = require('querystring')
-// No Motorola G7 Plus foi necessário habilitar (Android 9)
-// enabled={Platform.OS === 'ios'} 
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('')
@@ -131,7 +127,6 @@ export default function Login({ navigation }) {
   }
 
   const callGraph = async token => {
-    /// Look at the fields... I don't have an `about` on my profile but everything else should get returned.
     const response = await fetch(
       `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,about,picture`
     )
@@ -139,18 +134,10 @@ export default function Login({ navigation }) {
     const responseJSON = JSON.stringify(await response.json())
     setResponse(responseJSON)
     const face = JSON.parse(responseJSON)
-    // console.log(face.email)
-    
-    // if (face.email === 'aquarela.design@gmail.com') {
-    //   setEmail('sandro.luizdepaula@gmail.com')
-    // } else {
-      setEmail(face.email)
-      setFbOK(true)
-      AsyncStorage.setItem('Autorizado', 'S')
-      buscaUsuario(face.email)
-    // }
-    // navigation.navigate('Home')
-    // handleSubmit()
+    setEmail(face.email)
+    setFbOK(true)
+    AsyncStorage.setItem('Autorizado', 'S')
+    buscaUsuario(face.email)
   }
 
   const _handleNotification = Notification => {
@@ -229,7 +216,6 @@ export default function Login({ navigation }) {
             AsyncStorage.setItem('Autorizado', '')
             setCodseg(ttfcusu[0].codseg)
 
-            // console.log('codseg', ttfcusu[0].codseg)
             setModView(false)
             setMvSenha(false)
 
@@ -825,7 +811,6 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // marginTop: -50,
   },
 
   background: {
@@ -886,7 +871,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    // paddingHorizontal: 5,
     marginLeft: 0,
     marginRight: 10,
   },
@@ -905,7 +889,6 @@ const styles = StyleSheet.create({
 
   buttonTextClear: {
     color: '#363636',
-    // fontWeight: 'bold',
     fontSize: 12,
   },
 

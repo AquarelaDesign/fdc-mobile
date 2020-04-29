@@ -48,7 +48,6 @@ const Usuario = ({ navigation }) => {
   useEffect(() => {
     AsyncStorage.getItem('oficina').then(Oficina => {
       if (Oficina !== undefined) {
-        console.log('Oficina', Oficina)
         const ofi = JSON.parse(Oficina)
         if (ofi.nome !== undefined) {
           setOficina(ofi[0])
@@ -80,14 +79,9 @@ const Usuario = ({ navigation }) => {
       AsyncStorage.setItem('token', '')
       AsyncStorage.setItem('Autorizado', '')
 
-      // Incluir Logout do facebook
-      // https://stackoverflow.com/questions/51838676/how-to-logout-using-expo-facebook
-
       navigation.navigate('Login')
     }
     catch (error) {
-      console.log(error)
-      // const { response } = error
     }
   }
 
@@ -106,8 +100,6 @@ const Usuario = ({ navigation }) => {
       method : 'DELETE',
       body: lParams
     })
-    // console.log('response', response)
-
   }
 
   const handleSenha = async () => {
@@ -300,7 +292,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#007189',
     textAlign: 'left',
-    // height: 20,
   },
 
   vtext: {
@@ -313,8 +304,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#F0E68C',
     textAlign: 'left',
-    // width: '100%',
-    // height: 20,
   },
 
   form: {

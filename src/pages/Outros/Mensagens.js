@@ -81,7 +81,6 @@ const Mensagens = () => {
             }), { 
               signal: signal 
             }).then(response => {
-              console.log('response', response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttpush } = response.data.ProDataSet
@@ -135,7 +134,6 @@ const Mensagens = () => {
     }
     
     return () => {
-      // console.log('isCancelled', isCancelled)
       isCancelled = true
     }      
   
@@ -146,9 +144,7 @@ const Mensagens = () => {
   }
 
   const SearchFilterFunction = (text) => {
-    // passando o texto inserido em textinput
     const newData = mens.filter(function(item) {
-      // aplicar filtro ao texto inserido na barra de pesquisa
       const itemData = item.placa ? item.placa.toUpperCase() : ''.toUpperCase()
       const textData = text.toUpperCase()
       return itemData.indexOf(textData) > -1
@@ -260,7 +256,6 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: 5,
     flexGrow: 0,
-    // marginBottom: 90,
   },
 
   listItem: {

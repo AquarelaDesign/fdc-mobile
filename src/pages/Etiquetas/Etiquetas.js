@@ -60,10 +60,8 @@ export default function Etiquetas({ navigation }) {
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              // console.log('1=>', response.data.errors[0])
               setIsLoading(false)
             } else {
-              // console.log('2=>', error)
               setIsLoading(false)
             }
           }

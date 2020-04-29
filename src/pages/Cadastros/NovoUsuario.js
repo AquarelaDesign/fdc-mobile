@@ -149,10 +149,8 @@ const NovoUsuario = ({ navigation }) => {
           
           const { response } = error
           if (response !== undefined) {
-            // console.log('err1', response.data.errors[0])
             setIsLoading(false)
           } else {
-            // console.log('err2', error)
             setIsLoading(false)
           }
         }
@@ -249,28 +247,26 @@ const NovoUsuario = ({ navigation }) => {
       validate('senha1')
       
       if (values.e_mail !== '') {
-        // // console.log('dadosCep', dadosCep)
         const dados = {
           "ttfcusuc":[{
              "e_mail":values.e_mail,
              "nome": values.nome,
              "fone": values.fone,
              "cep": values.cep,
-             "endrua": values.endrua, // dadosCep.Logradouro
+             "endrua": values.endrua,
              "endnum": values.endnum,
              "endcom": values.endcom,
-             "bairro": values.bairro, // dadosCep.Bairro
-             "cidade": values.cidade, // dadosCep.Cidade
-             "uf": values.uf, // dadosCep.UF
+             "bairro": values.bairro,
+             "cidade": values.cidade,
+             "uf": values.uf,
              "codcid": dadosCep ? dadosCep.cidade[0].cod_ibge : '',
-             "codciddes": values.cidade, // dadosCep.Cidade
+             "codciddes": values.cidade,
              "latit": dadosCep ? dadosCep.geo.latitude : '',
              "longit": dadosCep ? dadosCep.geo.longitude : '',
              "pais": 'Brasil',
           }]
         }
                
-        // // console.log('handleSubmit_values', dados)
         setIsLoading(false)
 
         const enviaDados = async (jsonusu) => {
@@ -284,7 +280,6 @@ const NovoUsuario = ({ navigation }) => {
               ptipusu: 'COF',
               pjsonusu: JSON.stringify(jsonusu),
             })).then(response => {
-              // //console.log('enviaDados_response', response)
               if (response.status === 200) {
                 if (response.data.ProDataSet !== undefined) {
                   const { ttfcusu, ttretorno } = response.data.ProDataSet
@@ -696,7 +691,6 @@ const styles = StyleSheet.create({
 
   fragment: {
     marginTop: 10,
-    // marginBottom: 70,
     marginRight: 10,
     borderTopWidth: 0,
   },
@@ -704,8 +698,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    // paddingHorizontal: 5,
-    // marginRight: 50,
   },
 
   vlegend: {
@@ -788,7 +780,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius: 2,
     color: '#444',
-    paddingRight: 30, // to ensure the text is never behind the icon
+    paddingRight: 30,
     backgroundColor: '#FFF',
     width: 87,
   },
@@ -800,7 +792,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: '#444',
     borderRadius: 1,
     color: '#444',
-    paddingRight: 30, // to ensure the text is never behind the icon
+    paddingRight: 30,
     backgroundColor: '#FFF',
     width: 87,
     marginTop: 4,

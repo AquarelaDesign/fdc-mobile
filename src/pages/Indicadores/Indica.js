@@ -16,7 +16,7 @@ import {
 import { LinearGradient } from '../../components/LinearGradient'
 
 import Lottie from 'lottie-react-native'
-import GlobalStyles, { modalStyle } from '../../GlobalStyles'
+import GlobalStyles, { modalStyle, ico_color } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
 
@@ -94,7 +94,7 @@ const Indica = () => {
       icon: "gears",
       title: "Peças",
       subtitle: `${calcTot(dados[0].qtdtot,dados[0].perpec,0)} Passagens (${retValor(dados[0].perpec, 'decimal')} %) \n${retValor(dados[0].vlpec, 'currency')}`,
-      linearGradientColors: ['#3F51B5', '#2196F3'],
+      linearGradientColors: ['#52a7eb', '#52a7eb'],
       valor: parseFloat(dados[0].vlpec)
     })
 
@@ -102,7 +102,7 @@ const Indica = () => {
       icon: "wrench",
       title: "Serviços",
       subtitle: `${calcTot(dados[0].qtdtot,dados[0].perserv,0)} Passagens (${retValor(dados[0].perserv, 'decimal')} %) \n${retValor(dados[0].vlserv, 'currency')}`,
-      linearGradientColors: ['#4CAF50', '#8BC34A'],
+      linearGradientColors: ['#99bf6d', '#99bf6d'],
       valor: parseFloat(dados[0].vlserv)
     })
     
@@ -110,7 +110,7 @@ const Indica = () => {
       icon: "calculator",
       title: "Total",
       subtitle: `${calcTot(dados[0].qtdtot,100,0)} Passagens (${100} %) \n${retValor(dados[0].vltotal, 'currency')}`,
-      linearGradientColors: ['#F44336', '#E91E63'],
+      linearGradientColors: ['#eb8a83', '#eb8a83'],
       valor: parseFloat(dados[0].vltotal)
     })
     
@@ -118,7 +118,7 @@ const Indica = () => {
       icon: "flag",
       title: "Ticket Médio",
       subtitle: `\n${retValor(dados[0].tikmed, 'currency')}`,
-      linearGradientColors: ['#FF9800', '#F44336'],
+      linearGradientColors: ['#ffce85', '#ffce85'],
       valor: parseFloat(dados[0].tikmed)
     })
     
@@ -251,7 +251,7 @@ const Indica = () => {
       </Overlay>
 
       <View style={styles.row}>
-        <Icon name="check-square" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Icon name="check-square" size={40} color={ico_color} style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Indicadores</Text>
         <TouchableOpacity activeOpacity = { .5 }  onPress={() => setModView(true)}>
           <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
@@ -275,9 +275,9 @@ const Indica = () => {
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 17, }}
+              titleStyle={{ color: '#007189', fontWeight: 'bold', fontSize: 17, }}
               subtitle={l.subtitle}
-              subtitleStyle={{ color: 'white', fontSize: 14,  }}
+              subtitleStyle={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}
               linearGradientProps={{
                 colors: l.linearGradientColors,
                 start: [1, 0],
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: '#ff0',
+    color: '#FFFFFF',
     width: width - 10,
     paddingHorizontal: 20,
     justifyContent: 'center',

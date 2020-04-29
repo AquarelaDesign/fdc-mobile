@@ -363,7 +363,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
     textAlign: 'justify',
-    // marginTop: height - (height / 2) - 40, 
     paddingRight: 10,
     width: width - 20, 
   },

@@ -9,8 +9,6 @@ class FormSwitch extends React.PureComponent {
     return (
       <View
         style={{
-          // flexDirection: "row",
-          // alignItems: "center",
           marginTop: 10
         }}
       >
@@ -19,10 +17,6 @@ class FormSwitch extends React.PureComponent {
           ios_backgroundColor={error ? "red" : "transparent"}
           onValueChange={setFieldValue}
         />
-        {/* {label ?
-          <Text style={{ marginLeft: 10, flex: 1 }}>{label}</Text>
-          : <Text></Text>
-        } */}
       </View>
     )
   }

@@ -121,15 +121,17 @@ export default () => {
   }
 
   useEffect(() => {
-    // setTimeout(
-    //   () =>
-    //     this.setState({ align: 'flex-start' }, function() {
-    //       this.setState({
-    //         alignsecond: true,
-    //       });
-    //     }),
-    //   3000
-    // );
+    /*
+    setTimeout(
+      () =>
+        this.setState({ align: 'flex-start' }, function() {
+          this.setState({
+            alignsecond: true,
+          });
+        }),
+      3000
+    );
+    */
     setIsReady(true)
   }, [])
 
@@ -148,12 +150,10 @@ export default () => {
 
 const styles = {
   flex: 1,
-  // position: 'absolute',
   width: '100%',
   height: 30,
   padding: 10,
   backgroundColor: 'transparent',
-  // marginBottom: 30,
   marginTop: -20,
 }
  

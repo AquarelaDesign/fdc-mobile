@@ -4,10 +4,8 @@ YellowBox.ignoreWarnings([
   'Unrecognized WebSocket',
   'Warning: componentWillReceiveProps',
   'Warning: DatePickerAndroid',
-  // 'Error: timeout of',
   "Warning: Can't perform a",
-  // 'Setting a timer',
-  // "Possible Unhandled Promise Rejection",
+  "Possible Unhandled Promise Rejection",
 ])
 
 export { default } from './src/routes'

@@ -80,8 +80,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     marginBottom: 20,
-    // marginTop: height - (height / 2) - 40, 
-    // paddingTop: 30,
     width: width - 10, 
   },
 
@@ -92,9 +90,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    // marginTop: height - (height / 2) - 40, 
     paddingTop: 30,
-    // padding: 10,
     width: width - 10, 
   },
 

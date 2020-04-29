@@ -202,7 +202,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#00FFFF',
     textAlign: 'left',
-    // height: 20,
   },
 
   vtext: {
@@ -215,8 +214,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#F0E68C',
     textAlign: 'left',
-    // width: '100%',
-    // height: 20,
   },
 
   map: {

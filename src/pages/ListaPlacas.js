@@ -132,9 +132,7 @@ export default function ListaPlacas({ navigation }) {
               } catch (error) {
                 const { response } = error
                 if (response !== undefined) {
-                  console.log(response.data.errors[0])
                 } else {
-                  console.log(error)
                 }
               }
             }
@@ -144,7 +142,7 @@ export default function ListaPlacas({ navigation }) {
         },
         {
           text: 'Cancelar',
-          onPress: () => console.log('Cancelar Pressionado!'),
+          onPress: () => {},
         }
 
       ]
@@ -156,8 +154,6 @@ export default function ListaPlacas({ navigation }) {
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.background}
-        // start={bg_start}
-        // end={bg_end}
         >
         <Image style={styles.logo} source={logo} />
         <Text style={styles.title}>Selecione a placa para consulta</Text>

@@ -70,7 +70,6 @@ export default function Home({ navigation }) {
       const token = await Notifications.getExpoPushTokenAsync()
       const subscription = Notifications.addListener(_handleNotification)
 
-      // console.log('token', token, oficina.tokpsh)
       setToken(token)
       // salvar token na base do FDC
       if (oficina.tokpsh !== token && email !== '') {
@@ -133,12 +132,10 @@ export default function Home({ navigation }) {
                 AsyncStorage.setItem('oficina', JSON.stringify(ttfcusu))
               } 
             } else {
-              console.log('response.status', response.status)
             }
           })
         } catch (error) {
           const { response } = error
-          console.log('error', response)
         }
       }
       GravaToken()
@@ -171,8 +168,6 @@ export default function Home({ navigation }) {
       <LinearGradient
         colors={bg_colors}
         style={GlobalStyles.bglinear}
-        // start={bg_start}
-        // end={bg_end}
         >
         <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('PAR')}>
           <View style={styles.boxBtn}>

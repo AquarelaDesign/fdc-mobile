@@ -103,7 +103,6 @@ export default function Km({ navigation }) {
 
       setHistorico(kmOrd)
       setIsLoading(false)
-      // setInitialTab(1)
     } else {
       bHistorico()
     }
@@ -124,7 +123,6 @@ export default function Km({ navigation }) {
           if (response.status === 200) {
             if (response.data.ProDataSet !== undefined) {
               const { ttreskm } = response.data.ProDataSet
-              // console.log('ttreskm', placa, ttreskm)
               if (ttreskm[0] !== undefined) {
                 setResumo(ttreskm[0])
               }
@@ -135,10 +133,8 @@ export default function Km({ navigation }) {
       } catch (error) {
         const { response } = error
         if (response !== undefined) {
-          // console.log(response.data.errors[0])
           setIsLoading(false)
         } else {
-          // console.log(error)
           setIsLoading(false)
         }
       }
@@ -187,10 +183,7 @@ export default function Km({ navigation }) {
           data={historico}
           keyExtractor={historico => historico.idgpas.toString() + historico.hortra.toString() + getRandom()}
           
-          // numColumns={5}
           renderItem={({ item, index }) => (
-            <>
-            {/*console.log('item', item)*/}
             <View style={[listStyle.listItem, { height: 38, backgroundColor: colors[index % colors.length] }]}>
               <Text style={[listStyle.listText, { paddingLeft: 10, width: '32%', textAlign: 'left', }]}>{item.dtatufor}</Text> 
               <Text style={[listStyle.listText, { width: '20%' }]}>{item.kilome}</Text> 
@@ -198,11 +191,9 @@ export default function Km({ navigation }) {
               <Text style={[listStyle.listText, { width: '17%' }]}>{item.valor}</Text> 
               <Image 
                 style={{flex: 1, height: 25, width: 35, marginTop: 5, marginLeft: 15, alignSelf: "center", }} 
-                // resizeMode='contain' 
                 source={item.tanqch ? cheio : parcial} 
               />
             </View> 
-            </>
           )}
 
           ListHeaderComponent={FlatList_header_hist}
@@ -291,12 +282,10 @@ export default function Km({ navigation }) {
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
-    //  marginTop: 10,
   },
   
   tabContainer: {
     flex: 1,
-    // marginTop: 38,
   },
 
   row: {

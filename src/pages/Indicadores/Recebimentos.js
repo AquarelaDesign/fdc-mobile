@@ -16,7 +16,7 @@ import {
 import { LinearGradient } from '../../components/LinearGradient'
 
 import Lottie from 'lottie-react-native'
-import GlobalStyles, { modalStyle } from '../../GlobalStyles'
+import GlobalStyles, { modalStyle, ico_color } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
 
@@ -41,7 +41,7 @@ const Recebimentos = () => {
   const [modView, setModView] = useState(false)
   const [dtInicio, setDtInicio] = useState(dataInicial)
   const [dtFinal, setDtFinal] = useState(dataFinal)
-
+  /*
   const Cores = {
     CH: ['#4B0082', '#8B008B'],
     CT: ['#0000FF', '#2196F3'],
@@ -50,6 +50,16 @@ const Recebimentos = () => {
     DI: ['#4CAF50', '#8BC34A'],
     TR: ['#FF9800', '#F44336'],
     DE: ['#4682B4', '#0f9b0f'],
+  }
+  */
+  const Cores = {
+    CH: ['#c77b67', '#c77b67'],
+    CT: ['#56a0b3', '#56a0b3'],
+    BO: ['#ffce85', '#ffce85'],
+    OU: ['#eb8a83', '#eb8a83'],
+    DI: ['#99bf6d', '#99bf6d'],
+    TR: ['#eda02d', '#eda02d'],
+    DE: ['#4682B4', '#4682B4'],
   }
   
   const Icones = {
@@ -90,7 +100,6 @@ const Recebimentos = () => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
                 const { ttpagto } = response.data.ProDataSet
-                console.log('ttpagto', ttpagto)
                 montaLista(ttpagto)
               }
             } 
@@ -99,10 +108,8 @@ const Recebimentos = () => {
         } catch (error) {
           const { response } = error
           if (response !== undefined) {
-            // console.log(response.data.errors[0])
             setIsLoading(false)
           } else {
-            // console.log(error)
             setIsLoading(false)
           }
         }
@@ -239,7 +246,7 @@ const Recebimentos = () => {
       </Overlay>
       
       <View style={styles.row}>
-        <Icon name="calculator" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Icon name="calculator" size={40} color={ico_color} style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Recebimentos</Text>
         <TouchableOpacity activeOpacity = { .5 }  onPress={() => setModView(true)}>
           <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
@@ -263,7 +270,7 @@ const Recebimentos = () => {
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 13 }}
+              titleStyle={{ color: '#007189', fontWeight: 'bold', fontSize: 13 }}
               subtitle={l.subtitle}
               subtitleStyle={{ color: '#BCF5A9', fontWeight: 'bold', fontSize: 10 }}
               rightTitle={formataValor(l.valor)}
@@ -315,7 +322,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: '#ff0',
+    color: '#FFF',
     width: width - 10,
     paddingHorizontal: 20,
     justifyContent: 'center',

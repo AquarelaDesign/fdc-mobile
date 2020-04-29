@@ -141,9 +141,7 @@ const Promocoes = ({ navigation }) => {
   }
  
   const SearchFilterFunction = (text) => {
-    // passando o texto inserido em textinput
     const newData = promo.filter(function(item) {
-      // aplicar filtro ao texto inserido na barra de pesquisa
       const itemData = item.placa ? item.placa.toUpperCase() : ''.toUpperCase()
       const textData = text.toUpperCase()
       return itemData.indexOf(textData) > -1

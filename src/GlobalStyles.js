@@ -6,7 +6,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 
 const bg_color = '#0dbce3'
-const im_color = 'rgba(135,206,250,1)' //'#87CEFA'
+const im_color = 'rgba(135,206,250,1)'
 const width = Dimensions.get('window').width
 
 export const colors = ['#27a2b3', '#0DC9E3']
@@ -14,6 +14,7 @@ export const bg_colors = ['#218da3', '#1db5b8']
 export const bg_start = { x: 1, y: 0.45 }
 export const bg_end = { x: 0, y: 0.75 }
 export const _url = 'https://www.fichadocarro.com.br'
+export const ico_color = '#007189'
 
 export default StyleSheet.create({
   AndroidSafeArea: {
@@ -154,7 +155,6 @@ export const searchStyle = {
     height: 60,
     marginBottom: 5,
     marginTop: 5,
-    // width: Dimensions.get('window').width - 10,
   },
   
   inputStyle: {
@@ -187,9 +187,7 @@ export const listStyle = {
   },
 
   list: {
-    // paddingHorizontal: 5,
     flexGrow: 0,
-    // marginBottom: 10,
   },
 
   listItem: {
@@ -204,7 +202,7 @@ export const listStyle = {
   listHeadText: {
     fontWeight: 'bold',
     fontSize: 14,
-    color: '#FFF', // '#ff0'
+    color: '#FFF',
     textAlign: 'right',
     flexDirection: 'row',
     alignSelf: 'center',
@@ -212,7 +210,7 @@ export const listStyle = {
 
   listIcon: {
     fontSize: 15,
-    color: '#FFF', // '#ff0'
+    color: '#FFF',
   },
 
   listText: {

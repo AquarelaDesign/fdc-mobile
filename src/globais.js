@@ -12,7 +12,6 @@ export const getOficina = () => {
     })
   }
   catch (e) {
-    console.log('Erro Oficina', e)
   }
 }
 export const getEmail = () => {

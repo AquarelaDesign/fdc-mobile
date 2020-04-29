@@ -51,7 +51,6 @@ export default function FAQ({ navigation }) {
     for (item of faqs.menu) {
       items.push(
         <Accordian
-          // style={styles.accordian}
           key={getRandom()}
           title={item.title}
           data={item.data}

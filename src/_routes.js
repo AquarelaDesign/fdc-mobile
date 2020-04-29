@@ -46,7 +46,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'locked-closed',
-      // drawerIcon: <Icon name="lock" size={20} color="#7159c1" />,
       headerShown: false,
     }),
   },
@@ -56,8 +55,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLockMode: 'unlocked',
       drawerIcon: <Icon name="home" size={20} color="#7159c1" />,
-      // title: 'Home',
-      // headerTransparent: true,
       headerShown: false,
     }),
   },
@@ -76,7 +73,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -86,7 +82,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -96,7 +91,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -106,7 +100,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -116,7 +109,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -126,7 +118,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -136,7 +127,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -146,7 +136,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -156,7 +145,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -166,7 +154,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -176,7 +163,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -186,7 +172,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },
@@ -196,7 +181,6 @@ const routes = {
     navigationOptions: ({ navigation }) => ({
       drawerLabel: () => null,
       drawerLockMode: 'unlocked',
-      // drawerIcon: <Icon name="list-alt" size={20} color="#7159c1" />,
       headerTransparent: true,
     }),
   },

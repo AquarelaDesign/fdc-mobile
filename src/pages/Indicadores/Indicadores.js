@@ -13,7 +13,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient'
 
 import GlobalStyles, {
-  bg_colors, bg_start, bg_end
+  bg_colors, bg_start, bg_end, ico_color
 } from '../../GlobalStyles'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -32,7 +32,6 @@ export default function Indicadores({ navigation }) {
     }
   }
   
-  // style={[GlobalStyles.AndroidSafeArea, styles.container]}
   return (
     <SafeAreaView style={GlobalStyles.container}>
       <LinearGradient
@@ -49,31 +48,31 @@ export default function Indicadores({ navigation }) {
         <View style={GlobalStyles.boxContainer}>
           <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('ETQ')}>
             <View style={GlobalStyles.box}>
-              <Icon name="tags" size={60} color="#007189" />
+              <Icon name="tags" size={60} color={ico_color} />
               <Text style={GlobalStyles.boxText}>Etiquetas</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('IND')}>
             <View style={GlobalStyles.box}>
-              <Icon name="check-square" size={60} color="#007189" />
+              <Icon name="check-square" size={60} color={ico_color} />
               <Text style={GlobalStyles.boxText}>Indicadores</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('CON')}>
             <View style={GlobalStyles.box}>
-              <Icon name="money" size={60} color="#007189" />
+              <Icon name="money" size={60} color={ico_color} />
               <Text style={GlobalStyles.boxText}>Contas</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('REC')}>
             <View style={GlobalStyles.box}>
-              <Icon name="calculator" size={60} color="#007189" />
+              <Icon name="calculator" size={60} color={ico_color} />
               <Text style={GlobalStyles.boxText}>Recebimentos</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity = { .5 }  onPress={() => onPress('DOC')}>
             <View style={GlobalStyles.box}>
-              <Icon name="file" size={60} color="#007189" />
+              <Icon name="file" size={60} color={ico_color} />
               <Text style={GlobalStyles.boxText}>Documentos</Text>
             </View>
           </TouchableOpacity>

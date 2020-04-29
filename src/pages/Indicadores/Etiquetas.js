@@ -4,19 +4,17 @@ import {
   AsyncStorage,
   Button,
   Dimensions,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient'
 
 import Lottie from 'lottie-react-native'
-import GlobalStyles, { modalStyle } from '../../GlobalStyles'
+import GlobalStyles, { modalStyle, ico_color } from '../../GlobalStyles'
 
 import loading from '../../assets/json/car-scan.json'
 
@@ -26,7 +24,6 @@ import { ListItem, Overlay } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
-import btnLogo from '../../assets/filter.png'
 
 const querystring = require('querystring')
 const { width } = Dimensions.get('window')
@@ -37,46 +34,17 @@ const Etiquetas = () => {
   const [etqs, setEtqs] = useState([])
   const [modView, setModView] = useState(false)
 
-  const Legendas = {
-    qtetqn: "Abertas",
-    qtetqp: "Normais",
-    qtetqtot: "Próximas",
-    qtetqv: "Vencidas",
-    qtperd: "Efetuadas",
-    qtreal: "Perdidas"
-  }
-
-  const Cores = {
-    qtetqn: ['#4CAF50', '#8BC34A'],
-    qtetqp: ['#2193b0', '#134E5E'],
-    qtetqtot: ['#FF9800', '#F44336'],
-    qtetqv: ['#F44336', '#E91E63'],
-    qtperd: ['#3F51B5', '#2196F3'],
-    qtreal: ['#061700', '#56ab2f'],
-  }
-  
-  const Icones = {
-    qtetqn: "tags",
-    qtetqp: "check",
-    qtetqtot: "warning",
-    qtetqv: "times-circle",
-    qtperd: "flag",
-    qtreal: "close",
-  }
-
   useEffect(() => {
     setIsLoading(true)
 
     async function montaLista(dados) {
       let etq = []
 
-      // console.log('dados', dados)
-
       etq.push({
         icon: "tag-multiple",
         title: "Abertas",
         type: 'material-community',
-        linearGradientColors: ['#2193b0', '#134E5E'],
+        linearGradientColors: ['#56a0b3', '#56a0b3'],
         valor: dados[0].qtetqtot,
       })
 
@@ -84,7 +52,7 @@ const Etiquetas = () => {
         icon: "check-box-outline",
         title: "Normais",
         type: 'material-community',
-        linearGradientColors: ['#4CAF50', '#8BC34A'],
+        linearGradientColors: ['#99bf6d', '#99bf6d'],
         valor: dados[0].qtetqn,
       })
 
@@ -92,7 +60,7 @@ const Etiquetas = () => {
         icon: "alert",
         title: "Próximas",
         type: 'material-community',
-        linearGradientColors: ['#FF9800', '#F44336'],
+        linearGradientColors: ['#ffce85', '#ffce85'],
         valor: dados[0].qtetqp,
       })
 
@@ -100,7 +68,7 @@ const Etiquetas = () => {
         icon: "close",
         title: "Vencidas",
         type: 'material-community',
-        linearGradientColors: ['#F44336', '#E91E63'],
+        linearGradientColors: ['#eb8a83', '#eb8a83'],
         valor: dados[0].qtetqv,
       })
 
@@ -108,7 +76,7 @@ const Etiquetas = () => {
         icon: "thumbs-up",
         title: "Efetuadas",
         type: 'font-awesome',
-        linearGradientColors: ['#3F51B5', '#2196F3'],
+        linearGradientColors: ['#52a7eb', '#52a7eb'],
         valor: dados[0].qtreal,
       })
 
@@ -116,25 +84,10 @@ const Etiquetas = () => {
         icon: "thumbs-down",
         title: "Perdidas",
         type: 'font-awesome',
-        linearGradientColors: ['#061700', '#56ab2f'],
+        linearGradientColors: ['#232621', '#232621'],
         valor: dados[0].qtperd,
       })
 
-
-/*
-      for (let [key, value] of Object.entries(dados)) {
-        if (value !== 0) {
-          for (let [k, v] of Object.entries(value)) {
-            etq.push({
-              icon: Icones[k],
-              title: Legendas[k],
-              linearGradientColors: Cores[k],
-              valor: v,
-            })
-          }
-        }
-      }
-*/
       setEtqs(etq)
       setIsLoading(false)
     }
@@ -161,10 +114,8 @@ const Etiquetas = () => {
           } catch (error) {
             const { response } = error
             if (response !== undefined) {
-              // console.log('Error-1', response.data.errors[0])
               setIsLoading(false)
             } else {
-              // console.log('Error-2', error)
               setIsLoading(false)
             }
           }
@@ -184,11 +135,6 @@ const Etiquetas = () => {
         renderText={value => <Text style={GlobalStyles.listaValor}>{value}</Text>}
       />
     )
-  }
-
-  const onFilter = () => {
-    // alert('Filtro')
-    setModView(true)
   }
 
   const Loading = () => {
@@ -238,11 +184,8 @@ const Etiquetas = () => {
       </Overlay>
 
       <View style={styles.row}>
-        <Icon name="tags" size={40} color="#f7ff00" style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
+        <Icon name="tags" size={40} color={ico_color} style={{marginLeft: 20, marginTop: 30, marginBottom: 10, }}/>
         <Text style={styles.title}>Etiquetas</Text>
-        {/* <TouchableOpacity activeOpacity = { .5 }  onPress={() => onFilter()}>
-          <Image style={modalStyle.boxIcone} source={btnLogo} tintColor='#FFFFFF'/>
-        </TouchableOpacity> */}
       </View>
 
       <ScrollView>
@@ -256,7 +199,7 @@ const Etiquetas = () => {
                 color: 'blue',
               }}
               title={l.title}
-              titleStyle={{ color: '#f7ff00', fontWeight: 'bold', fontSize: 13, }}
+              titleStyle={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 13, }}
               rightTitle={formataValor(l.valor)}
               rightTitleStyle={{ color: 'green', fontWeight: 'bold', fontSize: 13, }}
               linearGradientProps={{
