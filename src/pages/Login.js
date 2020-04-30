@@ -43,6 +43,7 @@ export default function Login({ navigation }) {
   const [modView, setModView] = useState(false)
   const [mvSenha, setMvSenha] = useState(false)
   const [fbOK, setFbOK] = useState(false)
+  const [fbErr, setFbErr] = useState(false)
   const [novaSenha, setNovaSenha] = useState('')
   const [confSenha, setConfSenha] = useState('')
   const [codseg, setCodseg] = useState('')
@@ -160,7 +161,9 @@ export default function Login({ navigation }) {
       if (type === 'success') {
         callGraph(token)
         salvaToken(token, 'facebook')
+        setFbErr(false)
       } else {
+        setFbErr(true)
         ToastAndroid.showWithGravity(
           `Falha na comunicação [${type}]`,
           ToastAndroid.LONG,
@@ -764,8 +767,11 @@ export default function Login({ navigation }) {
           <TouchableOpacity onPress={handleSubmit} style={styles.button}>
             <Text style={styles.buttonText}>Iniciar sessão</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleSubmitFb} style={[styles.button, styles.buttonFb]}>
+          {/* fbErr */}
+          <TouchableOpacity 
+            onPress={handleSubmitFb} 
+            style={[styles.button, styles.buttonFb]}
+            disabled={fbErr}>
             <Icon name="facebook-square" size={20} color="#FFFFFF" />
             <Text style={styles.buttonText}> facebook</Text>
           </TouchableOpacity>
