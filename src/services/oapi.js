@@ -22,17 +22,23 @@ oapi.interceptors.request.use(async config => {
   AsyncStorage.getItem('email').then(Email => {
     AsyncStorage.getItem('oficina').then(Oficina => {
       let codemp = ''
+      let codfil = 0
+      Oficina = JSON.parse(Oficina)
       if (Oficina !== undefined && Oficina !== null) {
-        codemp = Oficina.codemp !== undefined && Oficina.codemp !== null ? Oficina.codemp : ''
+        if (Oficina.codsia !== undefined && Oficina.codsia !== null) {
+          codemp = Oficina.codsia.substring(0, 2)
+          codfil = parseInt(Oficina.codsia.substring(5, 2))
+        } 
       }
 
       config.params = querystring.stringify({
-        widtrans: `${codemp}|1|9999|${Email}`,
+        widtrans: `${codemp}|${codfil}|9999|${Email}`,
         wip: wIP,
         wseqaba: 0,
       })
     })
   })
+  // console.log('config', config)
   return config
 })
 

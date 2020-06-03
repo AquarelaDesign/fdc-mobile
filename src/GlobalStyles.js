@@ -256,7 +256,7 @@ export const modalStyle = {
   label: {
     fontWeight: 'bold',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 3,
   },
 
   labelData: {

@@ -18,12 +18,17 @@ api.interceptors.request.use(async config => {
 
     AsyncStorage.getItem('oficina').then(Oficina => {
       let codemp = ''
+      let codfil = 0
+      Oficina = JSON.parse(Oficina)
       if (Oficina !== undefined && Oficina !== null) {
-        codemp = Oficina.codemp !== undefined && Oficina.codemp !== null ? Oficina.codemp : ''
+        if (Oficina.codsia !== undefined && Oficina.codsia !== null) {
+          codemp = Oficina.codsia.substring(0, 2)
+          codfil = parseInt(Oficina.codsia.substring(5, 2))
+        } 
       }
 
       config.params = {
-        widtrans: `${codemp}|1|1|${Email}`,
+        widtrans: `${codemp}|${codfil}|9999|${email}`,
         wip: wIP,
         wseqaba: 0,
       }

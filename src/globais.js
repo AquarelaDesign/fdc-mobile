@@ -29,9 +29,12 @@ export const getRandom = () => {
 
 // Período do Mês
 moment.locale('pt-BR')
-export const dataInicial = moment().startOf('month').format('L');
-export const dataFinal = moment().endOf('month').format('L');
+export const dataInicial = moment().startOf('month').format('L')
+export const dataFinal = moment().endOf('month').format('L')
 
 // Últimos 30 dias
-export const dataInicial30 = moment().subtract(30, 'days').format('L');
-export const dataFinal30   = moment().format('L');
+export const dataInicial30 = moment().subtract(30, 'days').format('L')
+export const dataFinal30 = moment().format('L')
+
+export const dataAtual = moment().format('L')
+export const horaAtual = moment().format('LTS')

@@ -24,16 +24,35 @@ import Api from '../../services/oapi'
 
 import { ListItem, Overlay, Divider  } from 'react-native-elements'
 import NumberFormat from 'react-number-format'
+import RNPickerSelect, { defaultStyles } from 'react-native-picker-select'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 import btnLogo from '../../assets/filter.png'
 
-import { dataInicial, dataFinal } from '../../globais'
+import { dataInicial, dataAtual } from '../../globais'
 import DatePicker from 'react-native-datepicker'
 import publicIP from 'react-native-public-ip'
 
 const { width } = Dimensions.get('window')
 const querystring = require('querystring')
+
+const TipCon = [
+  { label: 'Ambos', value: 'A' },
+  { label: 'Pagar', value: 'P' },
+  { label: 'Receber', value: 'R' },
+]
+
+const SitTit = [
+  { label: 'Ambos', value: 'T' },
+  { label: 'Abertos', value: 'A' },
+  { label: 'Fechados', value: 'F' },
+]
+
+const TitDat = [
+  { label: 'Vencimento', value: 'V' },
+  { label: 'Emissão', value: 'E' },
+  { label: 'Pagamento', value: 'P' },
+]
 
 const Contas = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -42,10 +61,13 @@ const Contas = () => {
   const [resumo, setResumo] = useState([])
   const [modView, setModView] = useState(false)
   const [dtInicio, setDtInicio] = useState(dataInicial)
-  const [dtFinal, setDtFinal] = useState(dataFinal)
+  const [dtFinal, setDtFinal] = useState(dataAtual)
+  const [tipcon, setTipcon] = useState('A')
+  const [sittit, setSittit] = useState('T')
+  const [tipdat, setTipdat] = useState('V')
   const [wip, setWip] = useState('0.0.0.0')
   const [codemp, setCodemp] = useState('')
-
+  const [codfil, setCodfil] = useState(0)
   
   useEffect(() => {
     AsyncStorage.getItem('oficina').then(Oficina => {
@@ -54,12 +76,15 @@ const Contas = () => {
       })
       .catch(error => {
       })
-        
+      Oficina = JSON.parse(Oficina)
       if (Oficina !== undefined && Oficina !== null) {
-        setCodemp(Oficina.codemp !== undefined && Oficina.codemp !== null ? Oficina.codemp : '')
+        if (Oficina.codsia !== undefined && Oficina.codsia !== null) {
+          setCodemp(Oficina.codsia.substring(0, 2))
+          setCodfil(parseInt(Oficina.codsia.substring(5, 2)))
+        } 
       }
     })
-  }, [])
+  }, [codemp, codfil])
 
   useEffect(() => {
     setIsLoading(true)
@@ -79,36 +104,44 @@ const Contas = () => {
         try {
           await Api.post('', querystring.stringify({
             pservico: 'wfcfin',
-            pmetodo: 'ListaResumo',
+            pmetodo: 'listaTitulos',
             pcodprg: 'TFCFIN',
             pemail: email,
             pdtini: dtInicio,
             pdtfim: dtFinal,
-            ptipcon: 'A',
-            widtrans: `${codemp}|1|9999|${email}`,
+            ptipcon: tipcon,
+            psittit: sittit,
+            ptipdoc: 'TD',
+            ptipdat: tipdat,
+            widtrans: `${codemp}|${codfil}|9999|${email}`,
             wip: wip,
             wseqaba: 0,
               })).then(response => {
             if (response.status === 200) {
               if (response.data.ProDataSet !== undefined) {
-                const { ttresumo } = response.data.ProDataSet
-                setResumo(ttresumo)
+                const { tttotfin, ttfcfin } = response.data.ProDataSet
+                // setResumo(ttresumo)
 
-                let totpag = 0
-                let totrec = 0
                 let qtpag = 0
                 let qtrec = 0
+                /*
+                let totpag = 0
+                let totrec = 0
                 
-                ttresumo.forEach((value, key) => {
+                ttfcfin.forEach((value, key) => {
+                  
                   totpag += value.totpag
-                  totrec += value.totrec
                   qtpag += value.qtpag
+                  
+                  totrec += value.totrec
                   qtrec += value.qtrec
+
                 })
-  
+                */
+
                 const totais = { 
-                  totpag,
-                  totrec,
+                  totpag: tttotfin[0].vlpagabe,
+                  totrec: tttotfin[0].vlrecabe,
                   qtpag,
                   qtrec
                 }
@@ -194,12 +227,12 @@ const Contas = () => {
         windowBackgroundColor="rgba(0, 0, 0, .7)"
         overlayBackgroundColor="transparent"
         width="80%"
-        height="40%"
+        height={480}
         overlayStyle={{
-          backgroundColor: 'white',
+          backgroundColor: 'white', 
           borderRadius: 15,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
+          shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.8,
           shadowRadius: 5,
         }}
@@ -207,15 +240,15 @@ const Contas = () => {
           setModView(false)
         }}>
 
-        <View style={modalStyle.modalContainer}>
+        <View style={[modalStyle.modalContainer, { padding: 10 }]}>
           <View style={modalStyle.innerContainer}>
             
-            <View style={modalStyle.form}>
+            <View style={[modalStyle.form, {marginTop: 0}]}>
               <Text style={modalStyle.label}>Data Inicial</Text>
               <DatePicker
                 style={{
                   width: 200,
-                  marginBottom: 10
+                  marginBottom: 5
                 }}
                 date={dtInicio}
                 mode='date'
@@ -242,7 +275,7 @@ const Contas = () => {
               <DatePicker
                 style={{
                   width: 200,
-                  marginBottom: 10
+                  marginBottom: 5
                 }}
                 date={dtFinal}
                 mode='date'
@@ -264,10 +297,61 @@ const Contas = () => {
                 }}
                 onDateChange={(date) => {setDtFinal(date)}}
               />
+
+              <Text style={modalStyle.label}>Classificação</Text>
+              <RNPickerSelect
+                placeholder={{}}
+                items={TitDat}
+                onValueChange={value => {setTipdat(value)}}
+                InputAccessoryView={() => null}
+                style={pickerSelectStyles}
+                value={tipdat}
+                // onChangeText={text => {
+                //   updateField('label', text)
+                // }}
+                useNativeAndroidPickerStyle={false}
+              />
+
+              <Text style={modalStyle.label}>Tipo</Text>
+              <RNPickerSelect
+                placeholder={{}}
+                items={TipCon}
+                onValueChange={value => {setTipcon(value)}}
+                InputAccessoryView={() => null}
+                style={pickerSelectStyles}
+                value={tipcon}
+                // onChangeText={text => {
+                //   updateField('label', text)
+                // }}
+                useNativeAndroidPickerStyle={false}
+              />
+
+              <Text style={[modalStyle.label, { marginTop: 5, }]}>Situação</Text>
+              <RNPickerSelect
+                placeholder={{}}
+                items={SitTit}
+                onValueChange={value => {setSittit(value)}}
+                InputAccessoryView={() => null}
+                style={pickerSelectStyles}
+                value={sittit}
+                // onChangeText={text => {
+                //   updateField('label', text)
+                // }}
+                useNativeAndroidPickerStyle={false}
+              />
+
+              <View
+                style={{
+                  borderBottomColor: '#464646',
+                  borderBottomWidth: 0,
+                  height: 15,
+                }}
+              />
               
               <Button
                 style={{
-                  marginBottom: 20
+                  // marginTop: 20,
+                  marginBottom: 5,
                 }}
                 onPress={() => {buscaDados()}}
                 title="Filtrar"
@@ -363,5 +447,34 @@ const styles = StyleSheet.create({
   },
 
 })
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 2,
+    color: '#444',
+    paddingRight: 30,
+    backgroundColor: '#FFF',
+    width: 200,
+  },
+  inputAndroid: {
+    fontSize: 14,
+    paddingHorizontal: 5,
+    paddingVertical: 7,
+    borderWidth: 1,
+    borderColor: '#444',
+    borderRadius: 1,
+    color: '#444',
+    paddingRight: 30,
+    backgroundColor: '#FFF',
+    width: 200,
+    marginTop: 4,
+  },
+})
+
 
 export default Contas
